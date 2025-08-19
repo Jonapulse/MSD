@@ -14,11 +14,8 @@ int main(int argc, const char * argv[]){
     // insert code here...
     std::cout << "Hello, Whirled!\n";
     
-    std::cout << "Enter a number:\n";
-    std::cin >> number1;
-    
-    std::cout << "Enter another:\n";
-    std::cin >> number2;
+    std::cout << "Enter two numbers:\n";
+    std::cin >> number1 >> number2;
     
     std::cout << "The sum of these numbers is " << (number1 + number2) << "\n";
     
