@@ -12,10 +12,6 @@ int main(int argc, const char * argv[]) {
     
     int centPrice;
     int centsPaid;
-    int quarterStock = 2;
-    int dimeStock = 2;
-    int nickelStock = 2;
-    int pennyStock = 2;
     
     cout << "Enter item price in cents:\n";
     cin >> centPrice;
