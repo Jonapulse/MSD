@@ -15,8 +15,22 @@ int main(int argc, const char * argv[]) {
     
     cout << "Enter item price in cents:\n";
     cin >> centPrice;
+    if(centPrice < 0)
+    {
+        cout << "Error: Price cannot be negative.\n";
+        return 1;
+    }
     cout << "Enter amount paid in cents:\n";
     cin >> centsPaid;
+    if(centsPaid < 0)
+    {
+        cout << "Error: Amount paid cannot be negative.\n";
+        return 1;
+    } else if (centsPaid < centPrice)
+    {
+        cout << "Insufficient funds for item.\n";
+        return 1;
+    }
     
     int change = centsPaid - centPrice;
     cout << "Change = " << change << " cents:\n";
