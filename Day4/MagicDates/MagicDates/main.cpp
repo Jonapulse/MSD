@@ -20,13 +20,34 @@ int main(int argc, const char * argv[]) {
     std::cout << "Please input a date (mm/dd/yyyy) to discover if it is... MAGIC...";
     std::cin >> inputDate;
     
+    //Copying inputDate for destructive removal of date info to maintain a copy of the original input
+    //
     std::string inputDateCopy = inputDate;
-    //We will harvest the leading value and then remove it from the input string at '/'
-    monthDigits = inputDateCopy.substr(0, inputDate.find('/'));
-    inputDateCopy = inputDateCopy.substr(inputDate.find('/') + 1);
-    dayDigits = inputDateCopy.substr(0, inputDate.find('/'));
-    inputDateCopy = inputDateCopy.substr(inputDate.find('/') + 1);
+    monthDigits = inputDateCopy.substr(0, inputDateCopy.find('/'));
+    inputDateCopy = inputDateCopy.substr(inputDateCopy.find('/') + 1);
+    dayDigits = inputDateCopy.substr(0, inputDateCopy.find('/'));
+    inputDateCopy = inputDateCopy.substr(inputDateCopy.find('/') + 1);
     yearDigits = inputDateCopy;
+    
+    //Error checking (allows single digit entry for days and months)
+    //
+    if(monthDigits.length() == 0 || monthDigits.length() > 2 || std::stoi(monthDigits) > 12)
+    {
+        std::cout << "ERROR: Invalid value entered for month.\n";
+        return 1;
+    }
+    //NOTE: Will accept some invalid days 29-31
+    if(dayDigits.length() == 0 || dayDigits.length() > 2 || std::stoi(dayDigits) > 31)
+    {
+        std::cout << "ERROR: Invalid value entered for day.\n";
+        return 1;
+    }
+    //NOTE: Will accept any 4-digit year.
+    if(yearDigits.length() != 4)
+    {
+        std::cout << "ERROR: Invalid value entered for year.\n";
+        return 1;
+    }
     
     int month = std::stoi(monthDigits);
     int day = std::stoi(dayDigits);

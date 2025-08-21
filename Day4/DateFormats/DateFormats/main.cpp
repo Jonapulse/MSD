@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "Please input a date (mm/dd/yyyy) to convert to (month dd, yyyy): ";
     std::cin >> inputDate;
     
-    //Copying inputDate for destructive remova0l of date info to maintain a copy of the original input
+    //Copying inputDate for destructive removal of date info to maintain a copy of the original input
     //
     std::string inputDateCopy = inputDate;
     monthDigits = inputDateCopy.substr(0, inputDateCopy.find('/'));
