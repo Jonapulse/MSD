@@ -16,7 +16,7 @@ int main(int argc, const char * argv[]) {
      Output: string Roman Numeral
      */
     
-    string romanNum;
+    string romanNum = "";
     
     int inputNum;
     cout << "Enter a number to Romanticize (convert to Roman Numeral):  ";
