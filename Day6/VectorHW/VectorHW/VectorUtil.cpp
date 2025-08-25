@@ -106,7 +106,8 @@ int Average( vector<int> input )
     
     for(int i = 0; i < input.size(); i++)
         total += input[i];
-    return total / input.size();
+    int average = total / input.size();
+    return (int)(total / (double)input.size());
 }
 
 
@@ -130,7 +131,7 @@ int Average( vector<int> input )
  *   An empty vector is considered sorted, since there are no items out of order
  *   A single-item vector is considered sorted, since there are no items out of order
  */
-bool IsSorted( vector<int> input )
+bool IsSorted( vector<int> input)
 {
     //We'll record each value to verify it is less than or equal to its neighbor
     int previousValue = input[0];
@@ -139,6 +140,7 @@ bool IsSorted( vector<int> input )
     {
         if(previousValue > input[i])
             return false;
+        previousValue = input[i];
     }
     
     return true;

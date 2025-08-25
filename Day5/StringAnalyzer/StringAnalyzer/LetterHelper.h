@@ -5,8 +5,8 @@
 //  Created by Jonathan Pulsipher on 8/25/25.
 //
 
-#ifndef LetterHelper_H
-#define LetterHelper_H
+#ifndef LETTERHELPER_H
+#define LETTERHELPER_H
 
 #include <vector>
 

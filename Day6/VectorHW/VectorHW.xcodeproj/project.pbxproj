@@ -22,22 +22,9 @@
 		7232C5CD2E5CB1D000D35BDD /* VectorHW */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VectorHW; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		7232C5E12E5CB2F800D35BDD /* Exceptions for "VectorHW" folder in "VectorHW" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				VectorTest.cpp,
-			);
-			target = 7232C5CC2E5CB1D000D35BDD /* VectorHW */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7232C5CF2E5CB1D000D35BDD /* VectorHW */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				7232C5E12E5CB2F800D35BDD /* Exceptions for "VectorHW" folder in "VectorHW" target */,
-			);
 			path = VectorHW;
 			sourceTree = "<group>";
 		};

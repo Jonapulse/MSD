@@ -5,8 +5,8 @@
 //  Created by Jonathan Pulsipher on 8/25/25.
 //
 
-#ifndef WordHelper_H
-#define WordHelper_H
+#ifndef WORDHELPER_H
+#define WORDHELPER_H
 
 #include <string>
 #include "LetterHelper.h"
