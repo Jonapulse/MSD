@@ -7,82 +7,9 @@
 
 #include <iostream>
 #include <string>
+#include "LetterHelper.h"
+#include "WordHelper.h"
 using namespace std;
-
-bool IsTerminator(char c)
-{
-    return c == '.' || c == '?' || c == '!';
-}
-
-bool IsPunctuation(char c)
-{
-    return IsTerminator(c) || c == ',';
-}
-
-bool IsVowel(char c)
-{
-    return c == 'a' || c == 'A' || c == 'e' || c == 'E' || c == 'i' || c == 'I'
-        || c == 'o' || c == 'O' || c == 'u' || c == 'U' || c == 'y' || c == 'Y';
-}
-
-bool isConsonant(char c)
-{
-    return !(IsPunctuation(c) || IsVowel(c) || c == ' ');
-}
-
-int NumWords(string s)
-{
-    int spaceCount = 0;
-    for(int i = 0; i < s.length(); i++)
-    {
-        if(s[i] == ' ')
-            spaceCount++;
-    }
-    return spaceCount + 1;
-}
-
-int NumSentences(string s)
-{
-    int terminatorCount = 0;
-    for(int i = 0; i < s.length(); i++)
-    {
-        if(IsTerminator(s[i]))
-            terminatorCount++;
-    }
-    return terminatorCount;
-}
-
-int NumVowels(string s)
-{
-    int vowelCount = 0;
-    for(int i = 0; i < s.length(); i++)
-    {
-        if(IsVowel(s[i]))
-            vowelCount++;
-    }
-    return vowelCount;
-}
-
-int NumConsonants(string s)
-{
-    int consonantCount = 0;
-    for(int i = 0; i < s.length(); i++)
-    {
-        if(isConsonant(s[i]))
-            consonantCount++;
-    }
-    return consonantCount;
-}
-
-double AverageWordLength(string s)
-{
-    return (NumVowels(s) + NumConsonants(s)) / (double)NumWords(s);
-}
-
-double AverageVowelsPerWord(string s)
-{
-    return NumVowels(s) / (double)NumWords(s);
-}
 
 //NOTE: I was going back and forth between having this assemble a string or print it. It it better
 //"Separation of Concern" to have it like this, creating the string? I was leaning yes but don't know.
