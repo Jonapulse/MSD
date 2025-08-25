@@ -5,7 +5,7 @@
 //  Created by Jonathan Pulsipher on 8/25/25.
 //
 
-#include "LetterHelper.h";
+#include "LetterHelper.h"
 
 bool IsTerminator(char c)
 {
