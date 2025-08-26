@@ -39,7 +39,7 @@ using std::vector;
  *   lookFor -- The item to look for
  *
  * Returns:
- *   Whether or not the item is contained in the vector
+ *      Whether or not the item is contained in the vector
  */
 bool Contains( vector<int> input, int lookFor );
 

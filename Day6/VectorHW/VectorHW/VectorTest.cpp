@@ -101,7 +101,7 @@ int main()
     {
         ErrorExit("FindMin() - test 3, " + std::to_string(testVar) + " != -10");
     }
-//    
+
     testVar = FindMin(vMinDuplicate);
     if(testVar != 3)
     {
