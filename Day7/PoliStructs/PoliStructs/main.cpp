@@ -56,6 +56,5 @@ int main(int argc, const char * argv[]) {
     for(int i = 0; i < filteredPols2.size(); i++)
         cout << "\t" << filteredPols2[i].name << '\n';
     
-    
     return 0;
 }

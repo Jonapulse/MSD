@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXCopyFilesBuildPhase section */
-		85B68FB82E5E20D400879DDB /* CopyFiles */ = {
+		72DFBD912E5E05AE00127DFC /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -19,11 +19,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		85B68FBA2E5E20D400879DDB /* Cards */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Cards; sourceTree = BUILT_PRODUCTS_DIR; };
+		72DFBD932E5E05AE00127DFC /* Cards */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Cards; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		85B68FBC2E5E20D400879DDB /* Cards */ = {
+		72DFBD952E5E05AE00127DFC /* Cards */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Cards;
 			sourceTree = "<group>";
@@ -31,7 +31,7 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		85B68FB72E5E20D400879DDB /* Frameworks */ = {
+		72DFBD902E5E05AE00127DFC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,18 +41,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		85B68FB12E5E20D400879DDB = {
+		72DFBD8A2E5E05AE00127DFC = {
 			isa = PBXGroup;
 			children = (
-				85B68FBC2E5E20D400879DDB /* Cards */,
-				85B68FBB2E5E20D400879DDB /* Products */,
+				72DFBD952E5E05AE00127DFC /* Cards */,
+				72DFBD942E5E05AE00127DFC /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		85B68FBB2E5E20D400879DDB /* Products */ = {
+		72DFBD942E5E05AE00127DFC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				85B68FBA2E5E20D400879DDB /* Cards */,
+				72DFBD932E5E05AE00127DFC /* Cards */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,63 +60,64 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		85B68FB92E5E20D400879DDB /* Cards */ = {
+		72DFBD922E5E05AE00127DFC /* Cards */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 85B68FC12E5E20D400879DDB /* Build configuration list for PBXNativeTarget "Cards" */;
+			buildConfigurationList = 72DFBD9A2E5E05AE00127DFC /* Build configuration list for PBXNativeTarget "Cards" */;
 			buildPhases = (
-				85B68FB62E5E20D400879DDB /* Sources */,
-				85B68FB72E5E20D400879DDB /* Frameworks */,
-				85B68FB82E5E20D400879DDB /* CopyFiles */,
+				72DFBD8F2E5E05AE00127DFC /* Sources */,
+				72DFBD902E5E05AE00127DFC /* Frameworks */,
+				72DFBD912E5E05AE00127DFC /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				85B68FBC2E5E20D400879DDB /* Cards */,
+				72DFBD952E5E05AE00127DFC /* Cards */,
 			);
 			name = Cards;
 			packageProductDependencies = (
 			);
 			productName = Cards;
-			productReference = 85B68FBA2E5E20D400879DDB /* Cards */;
+			productReference = 72DFBD932E5E05AE00127DFC /* Cards */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		85B68FB22E5E20D400879DDB /* Project object */ = {
+		72DFBD8B2E5E05AE00127DFC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1640;
 				TargetAttributes = {
-					85B68FB92E5E20D400879DDB = {
+					72DFBD922E5E05AE00127DFC = {
 						CreatedOnToolsVersion = 16.4;
+						LastSwiftMigration = 1640;
 					};
 				};
 			};
-			buildConfigurationList = 85B68FB52E5E20D400879DDB /* Build configuration list for PBXProject "Cards" */;
+			buildConfigurationList = 72DFBD8E2E5E05AE00127DFC /* Build configuration list for PBXProject "Cards" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 85B68FB12E5E20D400879DDB;
+			mainGroup = 72DFBD8A2E5E05AE00127DFC;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 85B68FBB2E5E20D400879DDB /* Products */;
+			productRefGroup = 72DFBD942E5E05AE00127DFC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				85B68FB92E5E20D400879DDB /* Cards */,
+				72DFBD922E5E05AE00127DFC /* Cards */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		85B68FB62E5E20D400879DDB /* Sources */ = {
+		72DFBD8F2E5E05AE00127DFC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -126,7 +127,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		85B68FBF2E5E20D400879DDB /* Debug */ = {
+		72DFBD982E5E05AE00127DFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -187,7 +188,7 @@
 			};
 			name = Debug;
 		};
-		85B68FC02E5E20D400879DDB /* Release */ = {
+		72DFBD992E5E05AE00127DFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -241,44 +242,49 @@
 			};
 			name = Release;
 		};
-		85B68FC22E5E20D400879DDB /* Debug */ = {
+		72DFBD9B2E5E05AE00127DFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
-		85B68FC32E5E20D400879DDB /* Release */ = {
+		72DFBD9C2E5E05AE00127DFC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		85B68FB52E5E20D400879DDB /* Build configuration list for PBXProject "Cards" */ = {
+		72DFBD8E2E5E05AE00127DFC /* Build configuration list for PBXProject "Cards" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				85B68FBF2E5E20D400879DDB /* Debug */,
-				85B68FC02E5E20D400879DDB /* Release */,
+				72DFBD982E5E05AE00127DFC /* Debug */,
+				72DFBD992E5E05AE00127DFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		85B68FC12E5E20D400879DDB /* Build configuration list for PBXNativeTarget "Cards" */ = {
+		72DFBD9A2E5E05AE00127DFC /* Build configuration list for PBXNativeTarget "Cards" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				85B68FC22E5E20D400879DDB /* Debug */,
-				85B68FC32E5E20D400879DDB /* Release */,
+				72DFBD9B2E5E05AE00127DFC /* Debug */,
+				72DFBD9C2E5E05AE00127DFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 85B68FB22E5E20D400879DDB /* Project object */;
+	rootObject = 72DFBD8B2E5E05AE00127DFC /* Project object */;
 }
