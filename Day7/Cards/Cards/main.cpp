@@ -10,39 +10,44 @@
 #include "deckFunction.h"
 
 int main(int argc, const char * argv[]) {
+    std::srand(std::time(0));
+    
     std::vector<Card> ourDeck = createDeckOfCards();
-    shuffle(ourDeck);
-    Hand hand = getHand(ourDeck);
-    sortHand(hand);
-    printHand(hand);
+//    shuffle(ourDeck);
+//    Hand hand = getHand(ourDeck);
+//    sortHand(hand);
+//    printHand(hand);
 
-// Testing: changed the values of each cards in accordance with which function needed testing
-//    Card c1 = {1, 'D'};
-//    Card c2 = {2, 'H'};
-//    Card c3 = {2, 'H'};
-//    Card c4 = {3, 'H'};
-//    Card c5 = {2, 'H'};
+ //Testing: changed the values of each cards in accordance with which function needed testing
+//    Card c1 = {10, 'S'};
+//    Card c2 = {10, 'D'};
+//    Card c3 = {10, 'C'};
+//    Card c4 = {10, 'D'};
+//    Card c5 = {11, 'S'};
 //
 //    std::vector<Card> deck = {c1, c2, c3, c4, c5};
-//    Hand hand = {deck};
-//    sortHand(hand);
-    
+//    Hand hand;
+//    hand.cards = deck;
+//    
 // Outputs
-    std::cout << "The hand is flush: " << isFlush(hand) << std::endl;
-    std::cout << "The hand is straight: "<< isStraight(hand) << std::endl;
-    std::cout << "The hand is a straight flush: "<< isStraightFlush(hand) << std::endl;
-    std::cout << "The hand is a royal flush: "<< isRoyalFlush(hand) << std::endl;
-    std::cout << "The hand is a full house: "<< isFullHouse(hand) << std::endl;
-    
+//    std::cout << "The hand is flush: " << isFlush(hand) << std::endl;
+//    std::cout << "The hand is straight: "<< isStraight(hand) << std::endl;
+//    std::cout << "The hand is a straight flush: "<< isStraightFlush(hand) << std::endl;
+//    std::cout << "The hand is a royal flush: "<< isRoyalFlush(hand) << std::endl;
+//    std::cout << "The hand is a full house: "<< isFullHouse(hand) << std::endl;
+//    
     float flushCount = 0;
     float straightCount = 0;
     float straightFlushCount = 0;
     float royalFlushCount = 0 ;
     float fullHouseCount = 0;
-    for(int i = 0; i < 1000; i++){
+    int runCount = 1000000;
+    for(int i = 0; i < runCount; i++){
         std::vector<Card> deck = createDeckOfCards();
         shuffle(deck);
         Hand hand = getHand(deck);
+//        for(Card card : hand.cards)
+//            std::cout<< "Rank: " << card.rank << " and Suit: " << card.suit;
         if(isFlush(hand))
             flushCount++;
         if(isStraight(hand))
@@ -55,9 +60,9 @@ int main(int argc, const char * argv[]) {
             fullHouseCount++;
     }
     
-    std::cout << "Of 1000 hands from 1000 randomly generated decks, we have: " << flushCount << " flushes, "
-        << straightCount << " straights, " << straightFlushCount << " straight flushes, "
-    << royalFlushCount << " royal flushes, " << fullHouseCount << " full houses" << '\n';
+    std::cout << "Of " << runCount << " hands from " << runCount << " randomly generated decks, we have: " << (flushCount / (double) runCount) << "% flushes, "
+        << (straightCount / (double) runCount) << "% straights, " << (straightFlushCount / (double) runCount) << "% straight flushes, "
+    << (royalFlushCount / (double) runCount) << "% royal flushes, and " << (fullHouseCount / (double) runCount) << "% full houses" << '\n';
     
 
     

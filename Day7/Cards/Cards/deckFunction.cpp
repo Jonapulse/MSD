@@ -5,6 +5,8 @@
 //  Created by Alexis Blood on 8/26/25.
 //
 #include "deckFunction.h"
+#include <cstdlib>
+#include <ctime>
 
 // Creates a deck of cards
 std::vector<Card> createDeckOfCards()
@@ -86,7 +88,6 @@ void printHand(Hand hand)
 // Shuffles the deck
 void shuffle(std::vector<Card>& deck)
 {
-
     for(int i = deck.size()-1; i >= 0; i--)
     {
         int random_in_range = (std::rand() % deck.size());
@@ -152,7 +153,8 @@ bool isStraight(Hand hand)
     sortHand(hand);
     for(int i = 1; i < hand.cards.size(); i++)
     {
-        if (hand.cards[i].rank < hand.cards[i-1].rank)
+        if (!(hand.cards[i].rank == 10 && hand.cards[i - 1].rank == 1) &&
+            hand.cards[i].rank != hand.cards[i-1].rank + 1)
             return false;
     }
     return true;
