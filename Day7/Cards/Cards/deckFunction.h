@@ -4,25 +4,33 @@
 //
 //  Created by Alexis Blood on 8/26/25.
 //
-
-#ifndef DECKFUNCTION_H
-#define DECKFUNCTION_H
-
 #include "structs.h"
-#include <vector>
 #include <iostream>
-#include <vector>
 #include <cstdlib>
 
-std::vector<Card> deckOfCards();
+// Creates a deck of cards and returns it as a vector of cards
+std::vector<Card> createDeckOfCards();
 
-void printDeck(std::vector<Card>);
+// Prints out all the cards in the deck
+void printDeck(std::vector<Card>& deck);
 
+// Prints out all the cards in the player's hand
+void printHand(Hand hand);
+
+// Shuffles the cards in the deck
 void shuffle(std::vector<Card>& deck);
 
+// Draws a card from the deck
 Card drawCard(std::vector<Card>& deck);
 
+// Gives the player a hand of five cards
 Hand getHand(std::vector<Card>& deck);
+
+// Sorts the hand into ascending order
+void sortHand(Hand& hand);
+
+
+// Returns if the hand is any of these types:
 
 bool isFlush(Hand hand);
 
@@ -33,5 +41,3 @@ bool isStraightFlush(Hand hand);
 bool isRoyalFlush(Hand hand);
 
 bool isFullHouse(Hand hand);
-
-#endif
