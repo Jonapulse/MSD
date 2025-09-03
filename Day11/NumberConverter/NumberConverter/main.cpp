@@ -39,7 +39,20 @@ int convertCharToDigit(char c)
     return -1; //Nonsense value to stop compiler from complaining. Is there a better way? It can't reach here.
 }
 
-// Convert binary and base to int
+// Returns values up to 15 as chars representing 15 as "F"
+//
+char convertDigitToChar(int d)
+{
+    if(d >= 0 && d <= 9)
+        return '0' + d;
+    else if(d <= 15)
+        return 'A' + (d - 10);
+    
+    ErrorExit("Invalid int sent to convertDigitToChar: " + std::to_string(d));
+    return -1; //Nonsense value to stop compiler from complaining. Is there a better way? It can't reach here.
+}
+
+// Convert binary base to int of specified base
 //
 int stringToInt(std::string binaryStr, int base, bool isSignedInt)
 {
@@ -61,8 +74,37 @@ int stringToInt(std::string binaryStr, int base, bool isSignedInt)
     return convertedIntSoFar;
 }
 
+//Convert int to string representation of specific base
+//
+std::string intToString(int num, int base, bool isSignedInt)
+{
+    //While num > 0, we attempt to subtract the largest power of the base that is smaller than num.
+    int smallestPowerOfBaseBeneathNum = 1;
+    while(smallestPowerOfBaseBeneathNum * base < num)
+        smallestPowerOfBaseBeneathNum *= base;
+    
+    std::string convertedStringSoFar = "";
+    while(smallestPowerOfBaseBeneathNum >= 1)
+    {
+        int digitsOfThisPower = 0;
+        while(smallestPowerOfBaseBeneathNum <= num){
+            digitsOfThisPower += 1;
+            num -= smallestPowerOfBaseBeneathNum;
+        }
+        convertedStringSoFar += convertDigitToChar(digitsOfThisPower);
+        
+        if(smallestPowerOfBaseBeneathNum > 1)
+            smallestPowerOfBaseBeneathNum /= base;
+        else break;
+    }
+    
+    return convertedStringSoFar;
+}
+
 void runConversionTests()
 {
+    // String to Int
+    //
     assert(stringToInt( "99" , 10, false ) == 99); // Converts "99" from a decimal number (in string form) to the integer value 99
 
     assert(stringToInt( "1100", 2, false) == 12); // Converts "1100" from a string of binary digits to the integer 12
@@ -71,8 +113,20 @@ void runConversionTests()
     
     assert(stringToInt("11111111", 2, false) == 255); //Converts unsigned "11111111" to 255
         
-    int val = stringToInt("11111111", 2, true);
     assert(stringToInt("11111111", 2, true) == -1);
+    
+    // Int to String
+    //
+    assert(intToString(99, 10, false) == "99");
+    
+    std::string val = intToString( 12, 2, false);
+    assert(intToString( 12, 2, false) == "1100");
+
+    assert(intToString( 255, 16, false ) == "FF");
+    
+    assert(intToString(255, 2, false) == "11111111");
+        
+    assert(intToString(-1, 2, true) == "11111111");
 }
 
 int main(int argc, const char * argv[]) {
