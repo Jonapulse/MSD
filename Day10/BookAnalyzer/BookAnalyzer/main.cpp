@@ -114,8 +114,8 @@ int main(int argc, const char * argv[]) {
 
     //string bookName = "./The Strange House.txt";
     string bookName = "./HeroicAirmenAndTheirExploits.txt";
-    //string keyword = "whom";
-    string keyword = "fish";//Note: lone among the words I've tested, this one finds nothing. Ah! I'm not recognizing words with attached punctuation. Further refinement would fix this issue as well as give more meaningful longest words (currently most are hyphenated or urls)
+    string keyword = "whom";
+    //string keyword = "fish";//Note: lone among the words I've tested, this one finds nothing. Ah! I'm not recognizing words with attached punctuation. Further refinement would fix this issue as well as give more meaningful longest words (currently most are hyphenated or urls)
     
     printBookInfo(getBookInfo(bookName, keyword));
     

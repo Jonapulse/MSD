@@ -10,9 +10,10 @@
 #include <cstdint>
 #include <cassert>
 #include <cmath>
+#include <string>
 using namespace std;
 
-void printCharFile(string fileName)
+void printCharFile(const string fileName)
 {
     std::ifstream charfile("./" + fileName);
     
@@ -75,7 +76,10 @@ int main(int argc, const char * argv[]) {
 //    assert(floatTest == 0.3f); //does equal with assignment written as is
 //    assert(approxEquals(0.1, 0.2f, 3) == true);
     
-    printCharFile("UTF-8-demo.txt");
+    string checkStr = "Helloblahblahblahblahblahblahblahblahblahblah";
+    cout << "Size of: " << sizeof(checkStr) << " and .size() " << checkStr.size();
+    
+    //printCharFile("UTF-8-demo.txt");
     
     cout << '\n';
     return 0;
