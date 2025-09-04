@@ -78,6 +78,11 @@ int stringToInt(std::string binaryStr, int base, bool isSignedInt)
 //
 std::string intToString(int num, int base, bool isSignedInt)
 {
+    //For this assignment, we're taking negative numbers, yoinking them at the start, and putting them back
+    bool negativeGrabbed = num < 0;
+    if(negativeGrabbed)
+        num *= -1;
+    
     //While num > 0, we attempt to subtract the largest power of the base that is smaller than num.
     int smallestPowerOfBaseBeneathNum = 1;
     while(smallestPowerOfBaseBeneathNum * base < num)
@@ -97,6 +102,10 @@ std::string intToString(int num, int base, bool isSignedInt)
             smallestPowerOfBaseBeneathNum /= base;
         else break;
     }
+    
+    //Stopgap solution for assignment which allows expressing non-base-10 preceded by '-' character for negative
+    if(negativeGrabbed)
+        convertedStringSoFar = "-" + convertedStringSoFar;
     
     return convertedStringSoFar;
 }
@@ -125,7 +134,7 @@ void runConversionTests()
     
     assert(intToString(255, 2, false) == "11111111");
         
-    assert(intToString(-1, 2, true) == "11111111");
+    assert(intToString(-255, 2, true) == "-11111111");
 }
 
 int main(int argc, const char * argv[]) {
