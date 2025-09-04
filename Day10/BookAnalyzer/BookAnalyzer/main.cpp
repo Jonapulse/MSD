@@ -36,26 +36,36 @@ BookInfo getBookInfo(string fileName, string keyword)
     
     while(myBook >> word)
     {
+        if(previousWord == "Title: " || readingTitle)
+        {
+            readingTitle = true;
+            if(bookStats.title == "unknown")
+                bookStats.title = word;
+            else
+                bookStats.title += " " + word;
+        } else if(previousWord == "Author: " || readingAuthor)
+        {
+            readingAuthor = true;
+            
+            if(bookStats.author == "unknown")
+                bookStats.author = word;
+            else
+                bookStats.author += " " + word;
+            
+        }
+        
         if(word == "Title:")
         {
             readingTitle = true;
         }
-        else if (word == "Author")
+        else if (word == "Author:")
         {
             readingTitle = false;
             readingAuthor = true;
         }
-        else if (word == "ReleasedDate")
+        else if (word == "ReleasedDate:")
         {
             readingAuthor = false;
-        }
-        
-        if(readingTitle)
-        {
-            bookStats.title += word;
-        } else if(readingAuthor)
-        {
-            bookStats.author += word;
         }
         
         if(bookStats.shortestWord == "" || word.size() < bookStats.shortestWord.size())

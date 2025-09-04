@@ -119,7 +119,6 @@ void runConversionTests()
     //
     assert(intToString(99, 10, false) == "99");
     
-    std::string val = intToString( 12, 2, false);
     assert(intToString( 12, 2, false) == "1100");
 
     assert(intToString( 255, 16, false ) == "FF");
