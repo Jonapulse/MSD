@@ -14,15 +14,15 @@ private:
     int* array;
     int capacity;
     int size;
+    void growVector();
+    void freeVector();
     
 public:
     Vector (int capacity);
-    void freeVector();
     void pushBack(int value);
     int popBack();
     int get(int index);
     void set(int index, int newValue);
-    void growVector();
     int GetSize();
     int GetCapacity();
     
