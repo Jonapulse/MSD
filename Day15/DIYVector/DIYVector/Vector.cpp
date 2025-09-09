@@ -7,50 +7,60 @@
 
 #include "Vector.h"
 
-Vector makeVector(int initialCapacity)
+Vector::Vector(int initialCapacity)
 {
-    Vector vec;
-    vec.array = new int[initialCapacity];
-    vec.capacity = initialCapacity;
-    vec.size = 0;
-    return vec;
+    array = new int[initialCapacity];
+    capacity = initialCapacity;
+    size = 0;
 }
 
-void freeVector(Vector vec){
-    delete [] vec.array;
+Vector::~Vector(){
+    freeVector();
 }
 
-void pushBack(Vector& vec, int value){
-    if(vec.size + 1 > vec.capacity)
-        growVector(vec);
-    *(vec.array + vec.size) = value;
-    vec.size++;
+void Vector::freeVector(){
+    delete [] array;
 }
 
-int popBack(Vector& vec){
-    if(vec.size == 0)
+void Vector::pushBack(int value){
+    if(size + 1 > capacity)
+        growVector();
+    *(array + size) = value;
+    size++;
+}
+
+int Vector::popBack(){
+    if(size == 0)
         //TODO: implement error code
         return -1;
-    int popVal = *(vec.array + vec.size - 1);
-    vec.size--;
+    int popVal = *(array + size - 1);
+    size--;
     return popVal;
 }
 
-int get(Vector vec, int index)
+int Vector::get(int index)
 {
-    return *(vec.array + index);
+    return *(array + index);
 }
 
-void set(Vector& myVec, int index, int newValue)
+void Vector::set(int index, int newValue)
 {
-    *(myVec.array + index) = newValue;
+    *(array + index) = newValue;
 }
 
-void growVector(Vector& vec){
-    vec.capacity *= 2;
-    int* newSpace = new int[vec.capacity];
-    for(int i = 0; i < vec.size; i++)
-        *(newSpace + i) = *(vec.array + i);
-    freeVector(vec);
-    vec.array = newSpace;
+void Vector::growVector(){
+    capacity *= 2;
+    int* newSpace = new int[capacity];
+    for(int i = 0; i < size; i++)
+        *(newSpace + i) = *(array + i);
+    freeVector();
+    array = newSpace;
+}
+
+int Vector::GetSize(){
+    return size;
+}
+int Vector::GetCapacity()
+{
+    return capacity;
 }
