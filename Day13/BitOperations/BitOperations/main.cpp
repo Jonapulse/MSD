@@ -41,7 +41,7 @@ using std::string;
  */
 bool GetBit( uint32_t input, int b )
 {
-    return ((input >> b & 1) == 1);
+    return ((input >> b) & 1) == 1;
 }
 
 
@@ -58,7 +58,7 @@ bool GetBit( uint32_t input, int b )
  */
 bool IsNegative( int input )
 {
-    return (GetBit(input, 31));
+    return GetBit(input, 31);
 }
 
 /*
@@ -104,7 +104,7 @@ int NumBitsSet( uint32_t input )
  */
 unsigned char GetByte( uint32_t input, int b )
 {
-    return (input >> b * 8);
+    return input >> b * 8;
 }
 
 
@@ -128,6 +128,12 @@ unsigned char GetByte( uint32_t input, int b )
  */
 uint32_t SetByte( uint32_t input, uint8_t value, int b )
 {
+    //Instead, we create our masks by shifting ffs and flipping them. Hardcore.
+    //
+    uint32_t mask = ~(0xff << b * 8);
+    return (input & mask) | (value << b * 8);
+    
+    /* Mine, before code review
     uint32_t returnBytes = 0;
     for(int i = 0; i < 4; i++)
     {
@@ -140,6 +146,8 @@ uint32_t SetByte( uint32_t input, uint8_t value, int b )
             
     }
     return returnBytes;
+    */
+    
 }
 
 /*
