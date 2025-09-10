@@ -21,14 +21,11 @@ public:
     Vector (int capacity);
     void pushBack(int value);
     int popBack();
-    int get(int index);
+    int get(int index) const;
     void set(int index, int newValue);
-    int GetSize();
-    int GetCapacity();
+    int GetSize() const;
+    int GetCapacity() const;
     
     ~Vector();
 };
-
-
-
 #endif

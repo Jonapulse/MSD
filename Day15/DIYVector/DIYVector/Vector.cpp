@@ -38,7 +38,7 @@ int Vector::popBack(){
     return popVal;
 }
 
-int Vector::get(int index)
+int Vector::get(int index) const
 {
     return *(array + index);
 }
@@ -48,7 +48,8 @@ void Vector::set(int index, int newValue)
     *(array + index) = newValue;
 }
 
-void Vector::growVector(){
+void Vector::growVector()
+{
     capacity *= 2;
     int* newSpace = new int[capacity];
     for(int i = 0; i < size; i++)
@@ -57,10 +58,11 @@ void Vector::growVector(){
     array = newSpace;
 }
 
-int Vector::GetSize(){
+int Vector::GetSize() const{
     return size;
 }
-int Vector::GetCapacity()
+
+int Vector::GetCapacity() const
 {
     return capacity;
 }
