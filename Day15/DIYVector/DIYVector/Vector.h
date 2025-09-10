@@ -14,6 +14,7 @@ private:
     int* array;
     int capacity;
     int size;
+    
     void growVector();
     void freeVector();
     

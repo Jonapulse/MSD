@@ -29,23 +29,76 @@ private:
     /*
      * Greatest Common Denominator
      */
-    long GCD();
+    long GCD(long a, long b);
     
 public:
+    //By the rule of three, these contructors be
     Fraction();
+    ~Fraction();
+    Fraction(Fraction & copy);
+    
     /*
      * Fractions are reduced. Negative values are, by convention, stored in numerator.
      */
     Fraction(long n, long d);
-    Fraction plus(Fraction rhs);
-    Fraction minus(Fraction rhs);
-    Fraction times(Fraction rhs);
-    Fraction dividedBy(Fraction rhs);
-    Fraction reciprocal();
-    string toString();
-    double toDouble();
-    ~Fraction();
     
+    /*
+     * Find the greatest common denominator of the two denominators, set them to that, then add the numerators.
+     */
+    Fraction plus(Fraction rhs);
+    
+    /*
+     * Find the greatest common denominator of the two denominators, set them to that, then subtract the numerators.
+     */
+    Fraction minus(Fraction rhs);
+    
+    /*
+     * Find the greatest common denominator of the two denominators, set them to that, then add the numerators.
+     */
+    Fraction times(Fraction rhs);
+    
+    /*
+     * Multiply by the rhs inverted
+     */
+    Fraction dividedBy(Fraction rhs);
+    
+    /*
+     * For x/y, returns the reciprocal: y/x
+     */
+    Fraction reciprocal();
+    
+    /*
+     * Returns string in format "<numerator>/<denominator>"
+     */
+    string toString();
+    
+    /*
+     * Returns double of fraction
+     */
+    double toDouble();
+    
+    /*
+     * Operator Overloads
+     */
+    Fraction operator +(Fraction& rhs);
+    void operator +=(Fraction& rhs);
+    Fraction operator -(Fraction& rhs);
+    void operator -=(Fraction& rhs);
+    Fraction operator *(Fraction& rhs);
+    void operator *=(Fraction& rhs);
+    Fraction operator /(Fraction& rhs);
+    void operator /=(Fraction& rhs);
+    bool operator ==(Fraction& rhs);
+    bool operator !=(Fraction& rhs);
+    bool operator <(Fraction& rhs);
+    bool operator >(Fraction& rhs);
+    bool operator <=(Fraction& rhs);
+    bool operator >=(Fraction& rhs);
+    
+    long getNumerator();
+
+    long getDenominator();
+
 };
 
 #endif
