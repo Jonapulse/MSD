@@ -164,6 +164,12 @@ void TestPlus()
   result = f3.toString();
   Test( "Addition of non-reduced", "17/12", result );
 
+//Addition of positive, negative
+    
+//Addition of max + 1
+    
+//Addition of zero
+
   //TODO: Add your own additional tests here
 }
 
@@ -209,18 +215,59 @@ double ComputePi()
   return sum.toDouble();
 }
 
+void TestMinus()
+{
+    //Grab plus's
+}
+
+void TestMultiply()
+{
+    //normal
+    
+    //0s (I should represent 0 as 0/1. I should update string to reflect that.)
+}
+
+void TestDivide()
+{
+    //Grab multiply's
+}
+
+void TestEqualsAndVariations()
+{
+    //Test normal equals
+    
+    //Test not equals
+    
+    //Test +=
+    
+    //Test -=
+    
+    //Test *=
+    
+    //Test /=
+    
+    //Test = = =
+    
+    //Test += += +=
+}
+
 int main()
 {
-  // Break up the tests into categories for better readability.
-  TestConstructors();
-  TestNegative();
-  TestReduced();
-  TestReciprocal();
-  TestToDouble();
-  TestPlus();
-
-  Test("Approximating pi", 3.141592, ComputePi());
-
-  // TODO: Add your own additional tests
-
+    // Break up the tests into categories for better readability.
+    TestConstructors();
+    TestNegative();
+    TestReduced();
+    TestReciprocal();
+    TestToDouble();
+    TestPlus();
+    
+    Test("Approximating pi", 3.141592, ComputePi());
+    
+    TestMinus();
+    TestMultiply();
+    TestDivide();
+    TestEqualsAndVariations();
+    
+    // TODO: Add your own additional tests
+    
 }

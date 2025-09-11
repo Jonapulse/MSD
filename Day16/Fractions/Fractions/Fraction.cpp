@@ -152,7 +152,7 @@ bool Fraction::operator !=(Fraction& rhs){
     return !((*this) == rhs);
 }
 bool Fraction::operator <(Fraction& rhs){
-    return toDouble() < rhs.toDouble();
+    return this->toDouble() < rhs.toDouble();
 }
 bool Fraction::operator >(Fraction& rhs){
     return toDouble() > rhs.toDouble();
