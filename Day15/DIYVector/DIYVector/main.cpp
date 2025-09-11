@@ -11,7 +11,7 @@
 
 int main(int argc, const char * argv[]) {
     
-    Vector testVec {2};
+    Vector<int> testVec {2};
     assert(testVec.GetCapacity() == 2);
     
     testVec.pushBack(1);
