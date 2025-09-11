@@ -11,7 +11,7 @@
 
 class Vector{
 private:
-    int* array;
+    int* arr;
     int capacity;
     int size;
     
