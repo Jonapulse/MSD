@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <string>
 #include "Vector.h"
 
 int main(int argc, const char * argv[]) {
@@ -30,7 +31,6 @@ int main(int argc, const char * argv[]) {
     //Check that it's grown
     assert(testVec.GetCapacity() == 4);
     
-    
     testVec.set(1, 20);
     
     assert(testVec.get(1) == 20);
@@ -43,5 +43,9 @@ int main(int argc, const char * argv[]) {
     assert(testVec.popBack() == 21);
     assert(testVec.popBack() == 20);
     assert(testVec.popBack() == 1);
+    
+    Vector<std::string> testVecString{10};
+    testVecString.pushBack("Hello");
+    std::cout << testVecString[0] << '\n';
     return 0;
 }

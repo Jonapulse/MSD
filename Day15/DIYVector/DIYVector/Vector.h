@@ -49,7 +49,7 @@ Vector<T>::Vector()
 template <typename T>
 Vector<T>::Vector(int initialCapacity)
 {
-    arr = new int[initialCapacity];
+    arr = new T[initialCapacity];
     capacity = initialCapacity;
     size = 0;
 }
