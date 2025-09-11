@@ -34,11 +34,14 @@ int main(int argc, const char * argv[]) {
     testVec.set(1, 20);
     
     assert(testVec.get(1) == 20);
+    
+    assert(testVec[1] == 20);
+    testVec[2] = 21;
+    assert(testVec[2] == 21);
         
     //std::cout << popBack(testVec) << '\n' << popBack(testVec) << '\n' << popBack(testVec) << '\n';
-    assert(testVec.popBack() == 3);
+    assert(testVec.popBack() == 21);
     assert(testVec.popBack() == 20);
     assert(testVec.popBack() == 1);
-        
     return 0;
 }

@@ -20,6 +20,7 @@ private:
     
 public:
     Vector (int capacity);
+    Vector (const Vector& vec);
     void pushBack(int value);
     int popBack();
     int get(int index) const;
@@ -27,6 +28,11 @@ public:
     int GetSize() const;
     int GetCapacity() const;
     
+    void operator=(const Vector& rhs);
+    int& operator[](const int index);
+    int operator[](const int index) const;
+    
     ~Vector();
 };
+
 #endif

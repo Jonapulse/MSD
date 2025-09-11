@@ -14,6 +14,15 @@ Vector::Vector(int initialCapacity)
     size = 0;
 }
 
+Vector::Vector(const Vector& myVec)
+{
+    this->capacity = myVec.capacity;
+    this->size = myVec.size;
+    int* newSpace = new int[myVec.capacity];
+    for(int i = 0; i < myVec.size; i++)
+        *(newSpace + i) = *(array + i);
+}
+
 Vector::~Vector(){
     freeVector();
 }
@@ -65,4 +74,19 @@ int Vector::GetSize() const{
 int Vector::GetCapacity() const
 {
     return capacity;
+}
+
+int& Vector::operator[](const int index) {
+    return *(array + index);
+}
+
+int Vector::operator[](const int index) const{
+    return get(index);
+}
+
+void Vector::operator=(const Vector& rhs)
+{
+    this->array = rhs.array;
+    this->capacity = rhs.capacity;
+    this->size = rhs.size;
 }
