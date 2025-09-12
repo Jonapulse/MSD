@@ -31,6 +31,7 @@ public:
     Vector();
     Vector (int capacity);
     Vector (const Vector& vec);
+    
     void pushBack(T value);
     /*
      * popBack tracks 'removed' values with the size marker. The information in the heap is not deleted but can be overwritten
@@ -41,7 +42,7 @@ public:
     int GetSize() const;
     int GetCapacity() const;
     
-    void operator=(const Vector& rhs);
+    T& operator=(Vector rhs);
     T& operator[](const int index);
     T operator[](const int index) const;
     
@@ -49,18 +50,17 @@ public:
      * Compares Vector<T> lexicographically, list member by list member.
      * Comparison ignores capacity, by convention.
      */
-    bool operator==(Vector<T>& rhs);
-    bool operator!=(Vector<T>& rhs);
-    bool operator<(Vector<T>& rhs);
-    bool operator<=(Vector<T>& rhs);
-    bool operator>(Vector<T>& rhs);
-    bool operator>=(Vector<T>& rhs);
+    bool operator==(const Vector<T>& rhs) const;
+    bool operator!=(const Vector<T>& rhs) const;
+    bool operator<(const Vector<T>& rhs) const;
+    bool operator<=(const Vector<T>& rhs) const;
+    bool operator>(const Vector<T>& rhs) const;
+    bool operator>=(const Vector<T>& rhs) const;
     
     ~Vector();
     
-    int* begin();
-
-    int* end();
+    int* begin() const;
+    int* end() const;
 };
 
 //Empty Vector defaults to 10
@@ -68,9 +68,9 @@ public:
 template <typename T>
 Vector<T>::Vector()
 {
-    arr = new T[1];
+    arr = new T[10];
     size = 0;
-    capacity = 1;
+    capacity = 10;
 }
 
 template <typename T>
@@ -88,7 +88,7 @@ Vector<T>::Vector(const Vector& myVec)
     this->size = myVec.size;
     T* newSpace = new T[myVec.capacity];
     for(int i = 0; i < myVec.size; i++)
-        *(newSpace + i) = *(arr + i);
+        newSpace[i] = arr[i];
 }
 
 template <typename T>
@@ -105,8 +105,7 @@ template <typename T>
 void Vector<T>::pushBack(T value){
     if(size + 1 > capacity)
         growVector();
-    *(arr + size) = value;
-    size++;
+    arr[size++] = value;
 }
 
 template <typename T>
@@ -114,7 +113,7 @@ T Vector<T>::popBack(){
     if(size == 0)
         //TODO: implement error code
         return -1;
-    T popVal = *(arr + size - 1);
+    T popVal = arr[size - 1];
     size--;
     return popVal;
 }
@@ -126,7 +125,7 @@ T Vector<T>::get(int index) const
     {
         //TODO: implement error code
     }
-    return *(arr + index);
+    return arr[index];
 }
 
 template <typename T>
@@ -135,7 +134,7 @@ void Vector<T>::set(int index, T newValue)
     if(index >= size){
         //TODO: implement error code
     }
-    *(arr + index) = newValue;
+    arr[index] = newValue;
 }
 
 /*
@@ -148,7 +147,7 @@ void Vector<T>::growVector()
     capacity *= 2;
     T* newSpace = new T[capacity];
     for(int i = 0; i < size; i++)
-        *(newSpace + i) = *(arr + i);
+        newSpace[i] = arr[i];
     freeVector();
     arr = newSpace;
 }
@@ -166,7 +165,7 @@ int Vector<T>::GetCapacity() const
 
 template <typename T>
 T& Vector<T>::operator[](const int index) {
-    return *(arr + index);
+    return arr[index];
 }
 
 template <typename T>
@@ -175,11 +174,12 @@ T Vector<T>::operator[](const int index) const{
 }
 
 template <typename T>
-void Vector<T>::operator=(const Vector<T>& rhs)
+T& Vector<T>::operator=(const Vector<T> rhs)
 {
-    this->arr = rhs.arr;
-    this->capacity = rhs.capacity;
-    this->size = rhs.size;
+    std::swap(this->size, rhs.size);
+    std::swap(this->arr, rhs.arr);
+    
+    return *this;
 }
 
 /*
@@ -187,7 +187,7 @@ void Vector<T>::operator=(const Vector<T>& rhs)
  * Comparison ignores capacity, by convention.
  */
 template <typename T>
-bool Vector<T>::operator==(Vector<T>& rhs){
+bool Vector<T>::operator==(const Vector<T>& rhs) const{
     if(this->size != rhs.size)
         return false;
     for(int i = 0; i < this->size; i++)
@@ -199,12 +199,12 @@ bool Vector<T>::operator==(Vector<T>& rhs){
 }
 
 template <typename T>
-bool Vector<T>::operator!=(Vector<T>& rhs){
+bool Vector<T>::operator!=(const Vector<T>& rhs) const{
     return !((*this) == rhs);
 }
 
 template <typename T>
-bool Vector<T>::operator<(Vector<T>& rhs){
+bool Vector<T>::operator<(const Vector<T>& rhs) const{
     for(int i = 0; i < this->size; i++)
     {
         if((*this)[i] != rhs[i])
@@ -214,27 +214,27 @@ bool Vector<T>::operator<(Vector<T>& rhs){
 }
 
 template <typename T>
-bool Vector<T>::operator<=(Vector<T>& rhs){
+bool Vector<T>::operator<=(const Vector<T>& rhs) const{
     return ((*this) == rhs || (*this) < rhs);
 }
 
 template <typename T>
-bool Vector<T>::operator>(Vector<T>& rhs){
+bool Vector<T>::operator>(const Vector<T>& rhs) const{
     return !((*this) <= rhs);
 }
 
 template <typename T>
-bool Vector<T>::operator>=(Vector<T>& rhs){
+bool Vector<T>::operator>=(const Vector<T>& rhs) const{
     return !((*this) < rhs);
 }
 
 template <typename T>
-int* Vector<T>::begin(){
+int* Vector<T>::begin() const{
     return arr;
 }
 
 template <typename T>
-int* Vector<T>::end() {
+int* Vector<T>::end() const{
     return arr + size;
 }
 
