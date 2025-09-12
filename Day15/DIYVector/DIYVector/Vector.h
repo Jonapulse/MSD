@@ -33,6 +33,12 @@ public:
     void operator=(const Vector& rhs);
     T& operator[](const int index);
     T operator[](const int index) const;
+    bool operator==(Vector<T>& rhs);
+    bool operator!=(Vector<T>& rhs);
+    bool operator<(Vector<T>& rhs);
+    bool operator<=(Vector<T>& rhs);
+    bool operator>(Vector<T>& rhs);
+    bool operator>=(Vector<T>& rhs);
     
     ~Vector();
 };
@@ -137,11 +143,56 @@ T Vector<T>::operator[](const int index) const{
 }
 
 template <typename T>
-void Vector<T>::operator=(const Vector& rhs)
+void Vector<T>::operator=(const Vector<T>& rhs)
 {
     this->arr = rhs.arr;
     this->capacity = rhs.capacity;
     this->size = rhs.size;
+}
+
+/*
+ * Compares Vector<T> lexicographically,
+ */
+template <typename T>
+bool Vector<T>::operator==(Vector<T>& rhs){
+    if(this->size != rhs.size)
+        return false;
+    for(int i = 0; i < this->size; i++)
+    {
+        if((*this)[i] != rhs[i])
+            return false;
+    }
+    return true;
+}
+
+template <typename T>
+bool Vector<T>::operator!=(Vector<T>& rhs){
+    return !((*this) == rhs);
+}
+
+template <typename T>
+bool Vector<T>::operator<(Vector<T>& rhs){
+    for(int i = 0; i < this->size; i++)
+    {
+        if((*this)[i] != rhs[i])
+            return (*this)[i] < rhs[i];
+    }
+    return false;
+}
+
+template <typename T>
+bool Vector<T>::operator<=(Vector<T>& rhs){
+    return ((*this) == rhs || (*this) < rhs);
+}
+
+template <typename T>
+bool Vector<T>::operator>(Vector<T>& rhs){
+    return !((*this) <= rhs);
+}
+
+template <typename T>
+bool Vector<T>::operator>=(Vector<T>& rhs){
+    return !((*this) < rhs);
 }
 
 #endif

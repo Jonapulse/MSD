@@ -47,5 +47,33 @@ int main(int argc, const char * argv[]) {
     Vector<std::string> testVecString{10};
     testVecString.pushBack("Hello");
     std::cout << testVecString[0] << '\n';
+    
+    Vector<int> compareIntA {4};
+    compareIntA.pushBack(9);
+    compareIntA.pushBack(9);
+    compareIntA.pushBack(4);
+    compareIntA.pushBack(15);
+    
+    Vector<int> compareIntB {4};
+    compareIntB.pushBack(9);
+    compareIntB.pushBack(9);
+    compareIntB.pushBack(10);
+    compareIntB.pushBack(12);
+
+    assert(compareIntA == compareIntA);
+    assert(compareIntA != compareIntB);
+    assert(compareIntA < compareIntB);
+    assert(compareIntA <= compareIntB);
+    assert(!(compareIntA == compareIntB));
+    assert(!(compareIntA > compareIntB));
+    assert(!(compareIntA >= compareIntB));
+    
+    compareIntB[2] = 4;
+    compareIntB[3] = 15;
+    
+    assert(compareIntA == compareIntB);
+    assert(!(compareIntA != compareIntB));
+    assert(!(compareIntA < compareIntB));
+    assert(compareIntA <= compareIntB);
     return 0;
 }
