@@ -57,6 +57,10 @@ public:
     bool operator>=(Vector<T>& rhs);
     
     ~Vector();
+    
+    int* begin();
+
+    int* end();
 };
 
 //Empty Vector defaults to 10
@@ -119,15 +123,18 @@ template <typename T>
 T Vector<T>::get(int index) const
 {
     if(index >= size)
+    {
         //TODO: implement error code
+    }
     return *(arr + index);
 }
 
 template <typename T>
 void Vector<T>::set(int index, T newValue)
 {
-    if(index >= size)
+    if(index >= size){
         //TODO: implement error code
+    }
     *(arr + index) = newValue;
 }
 
@@ -219,6 +226,16 @@ bool Vector<T>::operator>(Vector<T>& rhs){
 template <typename T>
 bool Vector<T>::operator>=(Vector<T>& rhs){
     return !((*this) < rhs);
+}
+
+template <typename T>
+int* Vector<T>::begin(){
+    return arr;
+}
+
+template <typename T>
+int* Vector<T>::end() {
+    return arr + size;
 }
 
 #endif

@@ -75,5 +75,8 @@ int main(int argc, const char * argv[]) {
     assert(!(compareIntA != compareIntB));
     assert(!(compareIntA < compareIntB));
     assert(compareIntA <= compareIntB);
+    
+    for(int n : compareIntA)
+        std::cout << n << '\n';
     return 0;
 }
