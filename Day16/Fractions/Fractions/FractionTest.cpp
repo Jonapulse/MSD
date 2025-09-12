@@ -51,6 +51,18 @@ void Test( const string & message, double expected, double result )
   }
 }
 
+/* Helper function for writing tests receive bools
+ */
+void Test( const string & message, bool result)
+{
+  cout << "Test: " << message << endl;
+  if(!result) {
+    cout << "\tFAILED, expected: true, got false" << endl;
+  }
+  else {
+    cout << "\tPASSED" << endl;
+  }
+}
 
 /*
  * Helper function
@@ -107,8 +119,6 @@ void TestNegative()
   result = f4.toString();
   Test( "Negative denominator and reduce", "-1/4", result );
 
-
-  //TODO: Add your own additional tests here
 }
 
 
@@ -117,12 +127,14 @@ void TestNegative()
  */
 void TestReduced()
 {
-  std::string result = "";
-  Fraction f1(2, 4);
-  result = f1.toString();
-  Test( "Reduce fraction (2/4)", "1/2", result );
-
-  //TODO: Add your own additional tests here
+    std::string result = "";
+    Fraction f1(2, 4);
+    result = f1.toString();
+    Test( "Reduce fraction (2/4)", "1/2", result );
+    
+    f1 = Fraction(-2, 4);
+    result = f1.toString();
+    Test( "Reduce fraction (-2/4)", "-1/2", result );
 }
 
 
@@ -131,23 +143,21 @@ void TestReduced()
  */
 void TestReciprocal()
 {
-  std::string result = "";
-  Fraction f1(1, 3);
-  f1 = f1.reciprocal();
-  result = f1.toString();
-  Test( "Reciprocal of simple", "3/1", result );
-
-  Fraction f2(-1, 2);
-  f2 = f2.reciprocal();
-  result = f2.toString();
-  Test( "Reciprocal of negative", "-2/1", result );
-
-  Fraction f3(6, 2);
-  f3 = f3.reciprocal();
-  result = f3.toString();
-  Test( "Reciprocal of non-reduced", "1/3", result );
-
-  //TODO: Add your own additional tests here
+    std::string result = "";
+    Fraction f1(1, 3);
+    f1 = f1.reciprocal();
+    result = f1.toString();
+    Test( "Reciprocal of simple", "3/1", result );
+    
+    Fraction f2(-1, 2);
+    f2 = f2.reciprocal();
+    result = f2.toString();
+    Test( "Reciprocal of negative", "-2/1", result );
+    
+    Fraction f3(6, 2);
+    f3 = f3.reciprocal();
+    result = f3.toString();
+    Test( "Reciprocal of non-reduced", "1/3", result );
 }
 
 /*
@@ -155,22 +165,32 @@ void TestReciprocal()
  */
 void TestPlus()
 {
-  std::string result = "";
-  Fraction f1(4, 6);
-  Fraction f2(3, 4);
-  
-  // Should result in 17/12
-  Fraction f3 = f1.plus(f2);
-  result = f3.toString();
-  Test( "Addition of non-reduced", "17/12", result );
-
-//Addition of positive, negative
+    std::string result = "";
+    Fraction f1(4, 6);
+    Fraction f2(3, 4);
     
-//Addition of max + 1
+    // Should result in 17/12
+    Fraction f3 = f1.plus(f2);
+    result = f3.toString();
+    Test( "Addition of non-reduced", "17/12", result );
     
-//Addition of zero
-
-  //TODO: Add your own additional tests here
+    //Addition of positive, negative
+    f1 = Fraction(3, 2); // 9/6
+    f2 = Fraction(-4, 3); // -8/6
+    result = (f1 + f2).toString();
+    Test("Addition of positive/negative", "1/6", result);
+    
+    //Addition of zero
+    f1 = Fraction(3, 2);
+    f2 = Fraction(0, 3);
+    result = (f1 + f2).toString();
+    Test("Addition of zero", "3/2", result);
+    
+    //Addition results in zero
+    f1 = Fraction(3, 2);
+    f2 = Fraction(-6, 4);
+    result = (f1 + f2).toString();
+    Test("Addition results in zero", "0", result);    
 }
 
 void TestToDouble()
@@ -189,66 +209,156 @@ void TestToDouble()
  */
 double ComputePi()
 {
-  Fraction sum;
-
-  // We will only compute the first 4 terms
-  // Note that even with long (64-bit) numbers,
-  // the intermediate numbers required for fraction addition
-  // become too large to represent if we go above k=4.
-  for( long k = 0; k < 4; k++ )
-  {
-    Fraction multiplier( 1, pow(16, k) );
-    Fraction firstTerm(  4, 8*k + 1 );
-    Fraction secondTerm( 2, 8*k + 4 );
-    Fraction thirdTerm(  1, 8*k + 5 );
-    Fraction fourthTerm( 1, 8*k + 6 );
-
-    Fraction temp = firstTerm.minus( secondTerm );
-    temp = temp.minus( thirdTerm );
-    temp = temp.minus( fourthTerm );
- 
-    Fraction product = multiplier.times( temp );
-
-    sum = sum.plus( product );
-  }
-  
-  return sum.toDouble();
+    Fraction sum;
+    
+    // We will only compute the first 4 terms
+    // Note that even with long (64-bit) numbers,
+    // the intermediate numbers required for fraction addition
+    // become too large to represent if we go above k=4.
+    for( long k = 0; k < 4; k++ )
+    {
+        Fraction multiplier( 1, pow(16, k) );
+        Fraction firstTerm(  4, 8*k + 1 );
+        Fraction secondTerm( 2, 8*k + 4 );
+        Fraction thirdTerm(  1, 8*k + 5 );
+        Fraction fourthTerm( 1, 8*k + 6 );
+        
+        Fraction temp = firstTerm.minus( secondTerm );
+        temp = temp.minus( thirdTerm );
+        temp = temp.minus( fourthTerm );
+        
+        Fraction product = multiplier.times( temp );
+        
+        sum = sum.plus( product );
+    }
+    
+    return sum.toDouble();
 }
 
 void TestMinus()
 {
-    //Grab plus's
+    std::string result = "";
+    Fraction f1(4, 6);
+    Fraction f2(3, 4);
+    
+    // Should result in -1/12
+    Fraction f3 = f1.minus(f2);
+    result = f3.toString();
+    Test( "Subtraction of non-reduced", "-1/12", result );
+    
+    //Subtraction of positive, negative
+    f1 = Fraction(3, 2); // 9/6
+    f2 = Fraction(-4, 3); // -8/6
+    result = (f1 - f2).toString();
+    Test("Subtraction of positive/negative", "17/6", result);
+    
+    //Subtraction of zero
+    f1 = Fraction(3, 2);
+    f2 = Fraction(0, 3);
+    result = (f1 - f2).toString();
+    Test("Subtraction of zero", "3/2", result);
+    
+    //Subtraction results in zero
+    f1 = Fraction(3, 2);
+    f2 = Fraction(6, 4);
+    result = (f1 - f2).toString();
+    Test("Subtraction results in zero", "0", result);
 }
 
 void TestMultiply()
 {
-    //normal
+    std::string result = "";
+    Fraction f1(4, 6);
+    Fraction f2(3, 4);
     
-    //0s (I should represent 0 as 0/1. I should update string to reflect that.)
+    // Should result in 1/2
+    Fraction f3 = f1.times(f2);
+    result = f3.toString();
+    Test( "Multiplication of non-reduced", "1/2", result );
+    
+    //multiplication of zero    f1 = Fraction(3, 2);
+    f1 = Fraction(3, 2);
+    f2 = Fraction(0, 4);
+    result = (f1 * f2).toString();
+    Test( "Multiplication of zero", "0", result);
+    
+    //multiplication of negative
+    f1 = Fraction(4, 6);
+    f2 = Fraction(-3, 4);
+    result = (f1*f2).toString();
+    Test( "Multiplication of zero", "-1/2", result);
+    
+    
 }
 
 void TestDivide()
 {
-    //Grab multiply's
+    std::string result = "";
+    Fraction f1(4, 6);
+    Fraction f2(3, 4);
+    
+    // Should result in 16/18 -> 8/9
+    Fraction f3 = f1.dividedBy(f2);
+    result = f3.toString();
+    Test( "Division of non-reduced", "8/9", result );
+    
+    //dividsion of negative
+    f1 = Fraction(4, 6);
+    f2 = Fraction(-3, 4);
+    result = (f1/f2).toString();
+    Test( "Multiplication of zero", "-8/9", result);
 }
 
 void TestEqualsAndVariations()
 {
     //Test normal equals
+    std::string result = "";
+    Fraction f1(4, 6);
+    Fraction f2(4, 6);
+    Test("Normal equality", f1 == f2);
     
-    //Test not equals
+    f2 = Fraction(5, 6);
+    Test("Normal non-equality", f1 != f2);
     
     //Test +=
+    f1 = Fraction (0,2);
+    f2 = Fraction (1, 2);
+    Fraction resultFrac = Fraction(1,2);
+    f1 += f2;
+    Test("+=", f1 == resultFrac);
     
     //Test -=
+    f1 -= f2;
+    resultFrac = Fraction(0,1);
+    Test("-=", f1 == resultFrac);
     
     //Test *=
+    f1 += f2;
+    f1 *= f2;
+    resultFrac = Fraction(1, 4);
+    Test("*=", f1 == resultFrac);
     
     //Test /=
+    f1 /= f2;
+    resultFrac = Fraction(1, 2);
+    Test("/=", f1 == resultFrac);
     
     //Test = = =
+    f1 = Fraction(3, 4);
+    resultFrac = Fraction(3,4);
+    Fraction f3 = Fraction(99, 99);
+    f3 = f2 = f1;
+    Test("a = b = c", f1 == resultFrac && f2 == resultFrac && f3 == resultFrac);
     
-    //Test += += +=
+    //Test += += += TODO: Get feedback on hwo to get this working
+//    f1 = Fraction(1, 2);
+//    f2 = Fraction(1, 2);
+//    f3 = Fraction(1, 2);
+//    f1 += f2 += f3;
+//    resultFrac = Fraction(3,4);
+//    Fraction f3 = Fraction(99, 99);
+//    f3 = f2 = f1;
+//    Test("a += b += c", f1 == resultFrac && f2 == resultFrac && f3 == resultFrac);
 }
 
 int main()

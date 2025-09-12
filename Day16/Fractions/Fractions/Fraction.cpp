@@ -88,7 +88,7 @@ Fraction Fraction::times(Fraction rhs){
 }
 
 Fraction Fraction::dividedBy(Fraction rhs){
-    return reciprocal().times(rhs);
+    return (*this).times(rhs.reciprocal());
 }
 
 Fraction Fraction::reciprocal(){
@@ -98,7 +98,10 @@ Fraction Fraction::reciprocal(){
 }
 
 string Fraction::toString(){
-    return std::to_string(n) + "/" + std::to_string(d);
+    if(n == 0)
+        return "0";
+    else
+        return std::to_string(n) + "/" + std::to_string(d);
 }
 
 double Fraction::toDouble(){
