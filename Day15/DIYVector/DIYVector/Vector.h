@@ -13,9 +13,17 @@ template <typename T>
 class Vector{
 private:
     T* arr;
+    /*
+     * 'capacity' is reserved heap-space
+     * 'size' is utilized space
+     */
     int capacity;
     int size;
     
+    /*
+     * By convention, growVector will double the capacity
+     * GrowVector is called when pushBack would exceed capacity
+     */
     void growVector();
     void freeVector();
     
@@ -24,6 +32,9 @@ public:
     Vector (int capacity);
     Vector (const Vector& vec);
     void pushBack(T value);
+    /*
+     * popBack tracks 'removed' values with the size marker. The information in the heap is not deleted but can be overwritten
+     */
     T popBack();
     T get(int index) const;
     void set(int index, T newValue);
@@ -33,6 +44,11 @@ public:
     void operator=(const Vector& rhs);
     T& operator[](const int index);
     T operator[](const int index) const;
+    
+    /*
+     * Compares Vector<T> lexicographically, list member by list member.
+     * Comparison ignores capacity, by convention.
+     */
     bool operator==(Vector<T>& rhs);
     bool operator!=(Vector<T>& rhs);
     bool operator<(Vector<T>& rhs);
@@ -44,6 +60,7 @@ public:
 };
 
 //Empty Vector defaults to 10
+//
 template <typename T>
 Vector<T>::Vector()
 {
@@ -101,15 +118,23 @@ T Vector<T>::popBack(){
 template <typename T>
 T Vector<T>::get(int index) const
 {
+    if(index >= size)
+        //TODO: implement error code
     return *(arr + index);
 }
 
 template <typename T>
 void Vector<T>::set(int index, T newValue)
 {
+    if(index >= size)
+        //TODO: implement error code
     *(arr + index) = newValue;
 }
 
+/*
+ * By convenction, growVector will double the capacity
+ * GrowVector is called when pushBack would exceed capacity
+ */
 template <typename T>
 void Vector<T>::growVector()
 {
@@ -151,7 +176,8 @@ void Vector<T>::operator=(const Vector<T>& rhs)
 }
 
 /*
- * Compares Vector<T> lexicographically,
+ * Compares Vector<T> lexicographically, list member by list member.
+ * Comparison ignores capacity, by convention.
  */
 template <typename T>
 bool Vector<T>::operator==(Vector<T>& rhs){
