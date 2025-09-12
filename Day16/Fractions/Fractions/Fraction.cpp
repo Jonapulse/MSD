@@ -40,6 +40,18 @@ void Fraction::reduce()
 }
 
 /*
+ *If denominator is negative, move it to the numerator (or make both positive) NOTE: You could combine the below code into a 'normalize' function;
+ */
+void Fraction::normalize()
+{
+    if(this->d < 0)
+    {
+        this->d *= -1;
+        this->n *= -1;
+    }
+}
+
+/*
  * Greatest Common Denominator
  */
 long Fraction::GCD(long a, long b)
@@ -60,59 +72,55 @@ Fraction::Fraction(long n, long d)
     this->d = d;
     
     reduce();
-    
-    //If denominator is negative, move it to the numerator (or make both positive)
-    if(this->d < 0)
-    {
-        this->d *= -1;
-        this->n *= -1;
-    }
+    normalize();
 }
 
-Fraction Fraction::plus(Fraction rhs){
+Fraction Fraction::plus(Fraction rhs) const{
     long denominatorProduct = this->d * rhs.d;
     long new_n = this->n * rhs.d + rhs.n * this->d;
     long new_d = denominatorProduct;
     return Fraction{new_n, new_d};
 }
 
-Fraction Fraction::minus(Fraction rhs){
+Fraction Fraction::minus(Fraction rhs) const{
     long denominatorProduct = this->d * rhs.d;
     long new_n = this->n * rhs.d - rhs.n * this->d;
     long new_d = denominatorProduct;
     return Fraction{new_n, new_d};
 }
 
-Fraction Fraction::times(Fraction rhs){
+Fraction Fraction::times(Fraction rhs) const{
     return Fraction{this->n * rhs.n, this->d * rhs.d};
 }
 
-Fraction Fraction::dividedBy(Fraction rhs){
+Fraction Fraction::dividedBy(Fraction rhs) const{
     return (*this).times(rhs.reciprocal());
 }
 
-Fraction Fraction::reciprocal(){
+Fraction Fraction::reciprocal() const{
     long recN = this->d;
     long recD = this->n;
     return Fraction{recN, recD};
 }
 
-string Fraction::toString(){
-    if(n == 0)
+string Fraction::toString() const{
+    if(n == 0) //For zero
         return "0";
+    else if( d == 1) //For whole numbers
+        return std::to_string(n);
     else
         return std::to_string(n) + "/" + std::to_string(d);
 }
 
-double Fraction::toDouble(){
+double Fraction::toDouble() const{
     return n/(double)d;
 }
 
-long Fraction::getNumerator(){
+long Fraction::getNumerator() const{
     return n;
 }
 
-long Fraction::getDenominator(){
+long Fraction::getDenominator() const{
     return d;
 }
 
@@ -147,7 +155,7 @@ Fraction& Fraction::operator *=(Fraction& rhs){
 Fraction Fraction::operator /(Fraction& rhs){
     return dividedBy(rhs);
 }
-Fraction& Fraction::operator /=(Fraction& rhs){
+Fraction& Fraction::operator /=(Fraction& rhs) {
     Fraction newFrac = (*this) / rhs;
     (*this) = newFrac;
     return *this;
