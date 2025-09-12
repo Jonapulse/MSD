@@ -81,13 +81,13 @@ public:
      * Operator Overloads
      */
     Fraction operator +(Fraction& rhs);
-    void operator +=(Fraction& rhs);
+    Fraction& operator +=(Fraction& rhs);
     Fraction operator -(Fraction& rhs);
-    void operator -=(Fraction& rhs);
+    Fraction& operator -=(Fraction& rhs);
     Fraction operator *(Fraction& rhs);
-    void operator *=(Fraction& rhs);
+    Fraction& operator *=(Fraction& rhs);
     Fraction operator /(Fraction& rhs);
-    void operator /=(Fraction& rhs);
+    Fraction& operator /=(Fraction& rhs);
     bool operator ==(Fraction& rhs);
     bool operator !=(Fraction& rhs);
     bool operator <(Fraction& rhs);

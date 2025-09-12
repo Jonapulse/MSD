@@ -122,31 +122,35 @@ long Fraction::getDenominator(){
 Fraction Fraction::operator +(Fraction& rhs){
     return plus(rhs);
 }
-void Fraction::operator +=(Fraction& rhs)
+Fraction& Fraction::operator +=(Fraction& rhs)
 {
     Fraction newFrac = (*this) + rhs;
     (*this) = newFrac;
+    return *this;
 }
 Fraction Fraction::operator -(Fraction& rhs){
     return minus(rhs);
 }
-void Fraction::operator -=(Fraction& rhs){
+Fraction& Fraction::operator -=(Fraction& rhs){
     Fraction newFrac = (*this) - rhs;
     (*this) = newFrac;
+    return *this;
 }
 Fraction Fraction::operator *(Fraction& rhs){
     return times(rhs);
 }
-void Fraction::operator *=(Fraction& rhs){
+Fraction& Fraction::operator *=(Fraction& rhs){
     Fraction newFrac = (*this) * rhs;
     (*this) = newFrac;
+    return *this;
 }
 Fraction Fraction::operator /(Fraction& rhs){
     return dividedBy(rhs);
 }
-void Fraction::operator /=(Fraction& rhs){
+Fraction& Fraction::operator /=(Fraction& rhs){
     Fraction newFrac = (*this) / rhs;
     (*this) = newFrac;
+    return *this;
 }
 bool Fraction::operator ==(Fraction& rhs){
     return (this->n == rhs.n && this->d == rhs.d);

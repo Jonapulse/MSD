@@ -351,14 +351,14 @@ void TestEqualsAndVariations()
     Test("a = b = c", f1 == resultFrac && f2 == resultFrac && f3 == resultFrac);
     
     //Test += += += TODO: Get feedback on hwo to get this working
-//    f1 = Fraction(1, 2);
-//    f2 = Fraction(1, 2);
-//    f3 = Fraction(1, 2);
-//    f1 += f2 += f3;
-//    resultFrac = Fraction(3,4);
-//    Fraction f3 = Fraction(99, 99);
-//    f3 = f2 = f1;
-//    Test("a += b += c", f1 == resultFrac && f2 == resultFrac && f3 == resultFrac);
+    f1 = Fraction(1, 2);
+    f2 = Fraction(1, 2);
+    f3 = Fraction(1, 2);
+    f1 += f2 += f3;
+    resultFrac = Fraction(3,2);
+    Fraction resultFrac2 = Fraction(2, 2);
+    Fraction resultFract3 = Fraction(1, 2);
+    Test("a += b += c", f1 == resultFrac && f2 == resultFrac2 && f3 == resultFract3);
 }
 
 int main()
