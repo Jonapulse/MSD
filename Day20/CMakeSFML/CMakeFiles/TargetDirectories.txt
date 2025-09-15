@@ -1,0 +1,3 @@
+/Users/jonapulse/MSD/Day20/CMakeSFML/CMakeFiles/MyFirstSFMLGame.dir
+/Users/jonapulse/MSD/Day20/CMakeSFML/CMakeFiles/ALL_BUILD.dir
+/Users/jonapulse/MSD/Day20/CMakeSFML/CMakeFiles/ZERO_CHECK.dir
