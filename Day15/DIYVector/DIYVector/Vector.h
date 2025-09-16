@@ -59,8 +59,8 @@ public:
     
     ~Vector();
     
-    int* begin() const;
-    int* end() const;
+    T* begin() const;
+    T* end() const;
 };
 
 //Empty Vector defaults to 10
@@ -229,12 +229,12 @@ bool Vector<T>::operator>=(const Vector<T>& rhs) const{
 }
 
 template <typename T>
-int* Vector<T>::begin() const{
+T* Vector<T>::begin() const{
     return arr;
 }
 
 template <typename T>
-int* Vector<T>::end() const{
+T* Vector<T>::end() const{
     return arr + size;
 }
 
