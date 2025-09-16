@@ -8,7 +8,14 @@
 #include <iostream>
 #include <cassert>
 #include <string>
+#include <algorithm>
+#include <numeric>
 #include "Vector.h"
+
+bool is_even(int num)
+{
+    return num % 2 == 0;
+}
 
 int main(int argc, const char * argv[]) {
     
@@ -78,5 +85,16 @@ int main(int argc, const char * argv[]) {
     
     for(int n : compareIntA)
         std::cout << n << '\n';
+    
+    std::sort(compareIntA.begin(),compareIntA.end());
+    for(int n : compareIntA)
+        std::cout << n << '\n';
+    
+    int min_element = *std::min_element(compareIntA.begin(), compareIntA.end());
+    int sum = std::accumulate(compareIntA.begin(), compareIntA.end(), 0);
+    int evenCount = std::count_if(compareIntA.begin(), compareIntA.end(), is_even);
+    std::cout << "Min int is: " << min_element << '\n';
+    std::cout << "Sum is: " << sum << '\n';
+    std::cout << "Even count is: " << evenCount << '\n';
     return 0;
 }

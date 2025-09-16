@@ -61,6 +61,8 @@ public:
     
     T* begin() const;
     T* end() const;
+    T* begin();
+    T* end();
 };
 
 //Empty Vector defaults to 10
@@ -235,6 +237,16 @@ T* Vector<T>::begin() const{
 
 template <typename T>
 T* Vector<T>::end() const{
+    return arr + size;
+}
+
+template <typename T>
+T* Vector<T>::begin(){
+    return arr;
+}
+
+template <typename T>
+T* Vector<T>::end(){
     return arr + size;
 }
 
