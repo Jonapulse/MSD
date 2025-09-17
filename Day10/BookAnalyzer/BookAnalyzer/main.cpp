@@ -135,6 +135,7 @@ int main(int argc, const char * argv[]) {
     fileName = "./" + std::string(argv[1]);
     
     BookInfo bookInf = getBookInfo(fileName, "fish");
+    
     cout << "Book: " << fileName << " contains " << bookInf.uniqueWords.size() << " unique words.\n";
     int count = 0;
     for(const auto& wordInfo : bookInf.wordOccurences)
