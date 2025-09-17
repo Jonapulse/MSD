@@ -9,8 +9,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <set>
-#include <map>
 using namespace std;
 
 struct BookInfo
@@ -24,9 +22,6 @@ struct BookInfo
     std::string keyword = "";
     vector<string> keywordContext;
     vector<float> keywordPercent;
-    
-    std::set<string> uniqueWords;
-    std::map<string, int> wordOccurences;
 };
 
 BookInfo getBookInfo(string fileName, string keyword)
@@ -42,13 +37,6 @@ BookInfo getBookInfo(string fileName, string keyword)
     
     while(myBook >> word)
     {
-        //Set and Map updates
-        bookStats.uniqueWords.insert(word);
-        if(bookStats.wordOccurences.contains(word))
-            bookStats.wordOccurences[word]++;
-        else
-            bookStats.wordOccurences[word] = 1;
-        
         // Capture title and author
         //
         if(previousWord == "Title:" || readingTitle)
@@ -124,25 +112,14 @@ void printBookInfo(BookInfo bookStats)
 
 int main(int argc, const char * argv[]) {
 
-    
-    
     //string bookName = "./The Strange House.txt";
-   // string bookName = "./HeroicAirmenAndTheirExploits.txt";
-   // string keyword = "whom";
+    string bookName = "./HeroicAirmenAndTheirExploits.txt";
+    string keyword = "whom";
     //string keyword = "fish";//Note: lone among the words I've tested, this one finds nothing. Ah! I'm not recognizing words with attached punctuation. Further refinement would fix this issue as well as give more meaningful longest words (currently most are hyphenated or urls)
     
-    string fileName;
-    fileName = "./" + std::string(argv[1]);
+    printBookInfo(getBookInfo(bookName, keyword));
     
-    BookInfo bookInf = getBookInfo(fileName, "fish");
-    cout << "Book: " << fileName << " contains " << bookInf.uniqueWords.size() << " unique words.\n";
-    int count = 0;
-    for(const auto& wordInfo : bookInf.wordOccurences)
-    {
-        cout << "\tThe word " << wordInfo.first << " occurs " << wordInfo.second << " times.\n";
-        if(count++ > 50)
-            break;
-    }
+    
     
     return 0;
 }
