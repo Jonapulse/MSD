@@ -1,18 +1,21 @@
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-public class Server{
+import java.util.Scanner;
+
+public class Server {
 
     static ServerSocket ss;
 
-    //Below is pseudo code for the beginnings of a basic webserver.
-    public static void main(String[] args) : throws IOException{
+    public static void main(String[] args) throws IOException {
 
+        ss = new ServerSocket(8080);
 
-        while(true){
+        //Set up listening to and accepting a server.
+        //
+        while (true) {
             Socket client = null;
             try {
                 client = ss.accept();
@@ -20,7 +23,8 @@ public class Server{
                 throw new RuntimeException(e);
             }
 
-            //read 1st line of request: "GET filename http1.1"
+            //Put input stream into Scanner
+            //
             InputStream is = null;
             try {
                 is = client.getInputStream();
@@ -29,38 +33,57 @@ public class Server{
             }
             Scanner s = new Scanner(is);
 
-            String line = s.nextLine(); // Get / http1.1
-            String filename; // split line[1] -> line.get(1) in java.
-
-            //Then grab the rest of the lines until you hit a blankline
-            while(!line.equals("\r\n"){
-                //store key/value pairs. Optional for this assignment but do it.
+            //Harvest Filepath and HTTP Headers
+            //
+            String filePath = s.nextLine().split(" ")[1];
+            Map<String, String> httpHeaders = new HashMap<>();
+            while(true){
+                System.out.println();
+                String line = s.nextLine();
+                if(line.equals("\r\n") || line.equals(""))
+                    break;
+                else {
+                    String[] split = line.split(" ");
+                    String headerKey = split[0].substring(0, split[0].length() - 1); //Drop trailing ":"
+                    httpHeaders.put(headerKey, split[1]);
+                }
             }
-            //open filename
-            OutputStream out = socketToClient.getOutputStream();
-            PrintWriter writer = new PrintWriter(out);
 
-            // send response header
-            writer.print("HTTP1.1 200 OK");
-            //print size
-            //print type "Content-Type: text/html; charset=UTF-8" //This will change if you're returning .css. We'll hardcode it the first time and then get more sophisticated.
-            //print new line "\r\n";
+            if(filePath.equals("/"));
+                filePath = "/index.html";
+            boolean fileFound = true;
+
+            //TODO: implement alt path for malformed header? I'm not seeing it in the assignment
+
+            FileInputStream webPage;
+            try {
+                webPage = new FileInputStream(filePath);
+            } catch (FileNotFoundException e) {
+                webPage = new FileInputStream("404.html");
+                fileFound = false;
+            }
+
+            OutputStream out = client.getOutputStream();
+            webPage.transferTo(out);
+
+            PrintWriter printWriter = new PrintWriter(out);
+            if(fileFound)
+            {
+                printWriter.println("HTTP/1.1 200 OK");
+                //Add HTTPHeaders
+                for(Map.Entry<String, String> header : httpHeaders.entrySet())
+                    printWriter.println(header.getKey() + ": " + header.getValue());
+                //Add Other required values
+                printWriter.println("\r\n");
+            }
 
             //What else goes into the Response header? We need to send them Content-
             //Type. Some browsers care about this and some don't. The Content-Length
             //is pretty important. Some browsers don't care about some do. Then you
             //do need the empty line.
 
-            //read file
-            //write to socket
-
-            //InputStream.transferTo();
-		/* But instead of doing this use transferTo();
-		    while(file not done being read ){
-                writer.print(/*/*1st line of index.html);
-            }
-            */
-            //Don't close the socket yet. Do that as the last thing.
-           // client.close();
+            out.flush();
+            client.close();
         }
     }
+}

@@ -1,0 +1,20 @@
+Wireshark Lab for Wednesday, Sept. 24 - 
+
+//What data is being sent to the other computer?
+98 bytes of data, organized by Wireshark into 15 bytes It labels “Ethernet II, Src…”, 20 bytes it labels “Internet Protocol Version 4, Src…”, and 63 bits it labels “Internet Control Message Protocol”. 
+
+//Internet Protocol Version 4…
+//What is the source address, the destination address?
+Source address: 45.13.235.88
+Destination address: 192.163.86.30 (Odd. My ping was to 45.13.235.88. Perhaps because I did this with two computers at home, one on VPN to a distant computer, there was some interference. I tested that by turning off the VPN, and then it gave me a destination address matching the ping, but the source address became a 192.* “gateway” address. Some mysteries we’ll never solve…)
+
+//How do the integer values compare with the ASCII values that display in the terminal? Does it match anything we have seen before?
+Some of these numbers are represented in hexadecimal? Sorry, I don’t even know what this question is referring to when it says “integer values”. That’s why we should do labs in class…
+
+//How long does it take a ping packet to travel to your classmate’s machine and back?
+33ms
+
+//For google.com? For louvre.fr? What do these numbers tell you?
+Google: 16ms, and Louvre: 128ms. These numbers are the time it took for the communication to occur, which makes sense given how close Google ensures its servers are to people and how far away the Louvre is (France). 
+
+//Did you see more than you expected in the output? Can you figure out what other data was sent/received?

@@ -4,22 +4,32 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class RainData{
-    private ArrayList<String> month = new ArrayList<>();
-    private ArrayList<Integer> year = new ArrayList<>();
-    private ArrayList<Float> rain = new ArrayList<>();
+    private HashMap<String, ArrayList<Double>> monthlyRainfall;
+    private static String cityName;
 
     void ReadFileData(String fileName) throws FileNotFoundException {
         Scanner fileReader = new Scanner(new FileInputStream(fileName));
-        String state = fileReader.nextLine();
+        cityName = fileReader.nextLine();
+        monthlyRainfall = new HashMap<>();
         while(fileReader.hasNext())
         {
-            month.add(fileReader.next());
-            year.add(fileReader.nextInt());
-            rain.add(fileReader.nextFloat());
+            String month = fileReader.next();
+            fileReader.nextInt(); //Discard monthData
+            double rainFallInches = fileReader.nextFloat();
+            if(monthlyRainfall.containsKey(month))
+                monthlyRainfall.get(month).add(rainFallInches);
+            else {
+                ArrayList oneMonthRainfall = new ArrayList();
+                oneMonthRainfall.add(rainFallInches);
+                monthlyRainfall.put(month, oneMonthRainfall);
+            }
         }
         fileReader.close();
     }
@@ -32,16 +42,32 @@ public class RainData{
         };
     }
 
-    public ArrayList<String> calculateMonthlyAverageRainfall(){
-        //String mpnthlyRainfall = String.format("%.2f", sumRainfall);
-        return null;
+    public String GetPrintRainData()
+    {
+        String printStr = "";
+        for(Map.Entry<String, ArrayList<Double>> entry : monthlyRainfall.entrySet())
+        {
+            String monthName = entry.getKey();
+            ArrayList<Double> rainfallInchesForMonth = entry.getValue();
+            double sum = 0;
+            for(Double rainfallInches : rainfallInchesForMonth)
+                sum += rainfallInches;
+            double averageRainfall = sum  /rainfallInchesForMonth.size();
+
+            String formattedRainfall = String.format("%.2f", averageRainfall);
+            printStr += monthName + " " + formattedRainfall + "\n";
+        }
+        return printStr;
     }
 
-    void main(String[] args) {
-        try{
-            PrintWriter pw = new PrintWriter("src/rainfall_data.txt");
 
-            //Should we employ some data cleaning? Like if it was misspelled or something was missed
+    public static void main() {
+        RainData rd = new RainData("src/Macon.txt");
+
+        try{
+            PrintWriter pw = new PrintWriter("src/rainfall_results.txt");
+            pw.write(rd.GetPrintRainData());
+            pw.close();
         } catch (FileNotFoundException e)
         {
             throw new RuntimeException(e);
