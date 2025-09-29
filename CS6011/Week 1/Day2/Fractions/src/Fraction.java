@@ -1,4 +1,4 @@
-public class Fraction {
+public class Fraction implements Comparable<Fraction> {
 
     private long n, d;
 
@@ -106,5 +106,14 @@ public class Fraction {
 
     void main() {
         testFractions();
+    }
+
+    @Override
+    public int compareTo(Fraction o) throws NullPointerException {
+        if(o == null)
+            throw new NullPointerException();
+        double convFrac = o.toDouble();
+        if(convFrac == this.toDouble()) return 0;
+        else return convFrac < this.toDouble() ? -1 : 1;
     }
 }

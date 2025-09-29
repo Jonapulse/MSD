@@ -13,7 +13,7 @@ class FractionTest {
     @Test
     public void testNegative1()
     {
-
+        
     }
 
     @Test
