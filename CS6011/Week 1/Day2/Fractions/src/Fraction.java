@@ -95,8 +95,6 @@ public class Fraction implements Comparable<Fraction> {
 
     void testFractions()
     {
-
-
         try{
             Fraction f = new Fraction(10, 0);
         } catch(ArithmeticException e) {

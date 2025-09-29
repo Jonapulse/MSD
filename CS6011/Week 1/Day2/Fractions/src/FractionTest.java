@@ -13,7 +13,7 @@ class FractionTest {
     @Test
     public void testNegative1()
     {
-        
+
     }
 
     @Test
@@ -26,5 +26,15 @@ class FractionTest {
         Assertions.assertEquals(f3.toString(), "1/6");
     }
 
+    @Test
+    public void testCompare()
+    {
+        Fraction f1 = new Fraction(1, 2);
+        Fraction f2 = new Fraction(1, 3);
+        Fraction f3 = new Fraction(1, 2);
 
+        Assertions.assertEquals(-1, f1.compareTo(f2));
+        Assertions.assertEquals(0, f1.compareTo(f3));
+        Assertions.assertEquals(1, f2.compareTo(f1));
+    }
 }
