@@ -49,39 +49,33 @@ public class Server {
                 }
             }
 
-            if(filePath.equals("/"));
+            if(filePath.equals("/"))
                 filePath = "/index.html";
             boolean fileFound = true;
 
             //TODO: implement alt path for malformed header? I'm not seeing it in the assignment
 
-            FileInputStream webPage;
+            byte[] webPageBytes = null;
             try {
-                webPage = new FileInputStream(filePath);
+                webPageBytes = new FileInputStream("src" + filePath).readAllBytes();
             } catch (FileNotFoundException e) {
-                webPage = new FileInputStream("404.html");
+                webPageBytes = new FileInputStream("src/404.html").readAllBytes();
                 fileFound = false;
             }
 
             OutputStream out = client.getOutputStream();
-            webPage.transferTo(out);
+            PrintWriter printWriter = new PrintWriter(out, false);
 
-            PrintWriter printWriter = new PrintWriter(out);
             if(fileFound)
-            {
                 printWriter.println("HTTP/1.1 200 OK");
-                //Add HTTPHeaders
-                for(Map.Entry<String, String> header : httpHeaders.entrySet())
-                    printWriter.println(header.getKey() + ": " + header.getValue());
-                //Add Other required values
-                printWriter.println("\r\n");
-            }
-
-            //What else goes into the Response header? We need to send them Content-
-            //Type. Some browsers care about this and some don't. The Content-Length
-            //is pretty important. Some browsers don't care about some do. Then you
-            //do need the empty line.
-
+            else
+                printWriter.println("HTTP/1.1 404 Not Found");
+            //TODO: Check the type because I've got html and txt
+            printWriter.println("Content-Type: text/html");
+            printWriter.println("Content-Length: " + webPageBytes.length);
+            printWriter.println();
+            printWriter.flush();
+            out.write(webPageBytes);
             out.flush();
             client.close();
         }
