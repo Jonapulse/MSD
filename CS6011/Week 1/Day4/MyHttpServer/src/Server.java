@@ -8,14 +8,24 @@ import java.util.Scanner;
 public class Server {
 
     static ServerSocket ss;
+    boolean stopServer = false;
 
-    public static void main(String[] args) throws IOException {
+    public void stop()
+    {
+        stopServer = true;
+    }
+
+    //Runs the server
+    //NOTES: I took the loop out of main so theoretically and external program could use Server
+    //
+    public void run() throws IOException {
 
         ss = new ServerSocket(8080);
 
         //Set up listening to and accepting a server.
+        //NOTES: Do we ever want this to exit without stopping compilation? I added the 'stop()' functionality for that
         //
-        while (true) {
+        while (stopServer == false) {
             Socket client = null;
             try {
                 client = ss.accept();
@@ -23,61 +33,60 @@ public class Server {
                 throw new RuntimeException(e);
             }
 
-            //Put input stream into Scanner
-            //
-            InputStream is = null;
-            try {
-                is = client.getInputStream();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Scanner s = new Scanner(is);
+            String filePath = parseFileRequest(client);
 
-            //Harvest Filepath and HTTP Headers
-            //
-            String filePath = s.nextLine().split(" ")[1];
-            Map<String, String> httpHeaders = new HashMap<>();
-            while(true){
-                System.out.println();
-                String line = s.nextLine();
-                if(line.equals("\r\n") || line.equals(""))
-                    break;
-                else {
-                    String[] split = line.split(" ");
-                    String headerKey = split[0].substring(0, split[0].length() - 1); //Drop trailing ":"
-                    httpHeaders.put(headerKey, split[1]);
-                }
-            }
-
-            if(filePath.equals("/"))
-                filePath = "/index.html";
+            //NOTES: I wanted to refactor this into a method, but I needed fileFound and returnPageBytes and didn't
+            //think of a clean way to get both of those back.
             boolean fileFound = true;
-
-            //TODO: implement alt path for malformed header? I'm not seeing it in the assignment
-
-            byte[] webPageBytes = null;
+            byte[] returnPageBytes = null;
             try {
-                webPageBytes = new FileInputStream("src" + filePath).readAllBytes();
+                returnPageBytes = new FileInputStream("src" + filePath).readAllBytes();
             } catch (FileNotFoundException e) {
-                webPageBytes = new FileInputStream("src/404.html").readAllBytes();
+                returnPageBytes = new FileInputStream("src/404.html").readAllBytes();
                 fileFound = false;
             }
 
-            OutputStream out = client.getOutputStream();
-            PrintWriter printWriter = new PrintWriter(out, false);
+            writeResponse(client, returnPageBytes, fileFound);
 
-            if(fileFound)
-                printWriter.println("HTTP/1.1 200 OK");
-            else
-                printWriter.println("HTTP/1.1 404 Not Found");
-            //TODO: Check the type because I've got html and txt
-            printWriter.println("Content-Type: text/html");
-            printWriter.println("Content-Length: " + webPageBytes.length);
-            printWriter.println();
-            printWriter.flush();
-            out.write(webPageBytes);
-            out.flush();
             client.close();
         }
+    }
+
+    private void writeResponse(Socket client, byte[] returnPageBytes, boolean fileFound) throws IOException {
+        OutputStream out = client.getOutputStream();
+        PrintWriter printWriter = new PrintWriter(out, false);
+
+        if (fileFound)
+            printWriter.println("HTTP/1.1 200 OK");
+        else
+            printWriter.println("HTTP/1.1 404 Not Found");
+        printWriter.println("Content-Type: text/html");
+        printWriter.println("Content-Length: " + returnPageBytes.length);
+        printWriter.println();
+        printWriter.flush();
+        out.write(returnPageBytes);
+        out.flush();
+    }
+
+    private String parseFileRequest(Socket client) {
+        InputStream is = null;
+        try {
+            is = client.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //Harvest Filepath
+        String filePath = new Scanner(is).nextLine().split(" ")[1];
+
+        if (filePath.equals("/"))
+            filePath = "/index.html";
+
+        return filePath;
+    }
+
+    public static void main(String[] args) throws IOException {
+        Server s = new Server();
+        s.run();
     }
 }
