@@ -11,29 +11,22 @@ public class AudioClip {
     }
 
     static int convertBytesToInteger(byte leftByte, byte rightByte) {
-        int signBytes = (((int)leftByte) << 3 * 8);
-        //For -, fill with zeroes up to the 15th bit
-        if(signBytes < 0)
-            signBytes = signBytes & 0xffff7000;
-
-        //Trim the sign, then shift into the leftByte space
-        int leftInt = ((int)leftByte & 0x0000007f) << 8;
-
-        //Return or of all
-        return signBytes | leftInt | (int)rightByte;
+        int signByteAsInt = (leftByte >> 7 & 1) == 1 ? 0xffff8000 : 0x0; //Check left-most bit for negative
+        int leftByteAsInt = (leftByte & 0x7f) << 8;
+        return signByteAsInt | leftByteAsInt | Byte.toUnsignedInt(rightByte);
     }
 
-    //Returns (as an int) a little endian signed short bytes stored at index + 1 and index
+    //Returns (as an int) the little endian signed short formed by bytes[index + 1], bytes[index]
     //
     public int getSample(int index)
     {
         return(convertBytesToInteger(clipRawBytes_[index * 2 + 1], clipRawBytes_[index * 2]));
     }
 
-    public int setSample(int index, int value)
+    public void setSample(int index, int value)
     {
-
-        return -1;//DUMMY
+        clipRawBytes_[index * 2] = (byte)value; //Set right short byte
+        clipRawBytes_[index * 2 + 1] = (byte)(value >> 8); //Set left short byte
     }
 
     public byte[] getData()

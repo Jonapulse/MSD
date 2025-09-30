@@ -40,4 +40,20 @@ class AudioClipTest {
         Assertions.assertEquals(1000,AudioClip.convertBytesToInteger(leftByte, rightByte));
     }
 
+    @Test
+    void testByteToIntMaxMins() {
+        Assertions.assertEquals(-1,AudioClip.convertBytesToInteger((byte)0xff, (byte)0xff));
+        Assertions.assertEquals(32767,AudioClip.convertBytesToInteger((byte)0x7f, (byte)0xff));
+        Assertions.assertEquals(-32768,AudioClip.convertBytesToInteger((byte)0x80, (byte)0x00));
+    }
+
+    @Test
+    void testGetSetSamples(){
+        AudioClip test = new AudioClip();
+        test.setSample(0, 1000);
+        Assertions.assertEquals(1000, test.getSample(0));
+
+        test.setSample(1, -1000);
+        Assertions.assertEquals(-1000, test.getSample(1));
+    }
 }
