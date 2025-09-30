@@ -43,7 +43,7 @@ public class Fraction implements Comparable<Fraction> {
 
     public Fraction dividedBy(Fraction rhs)
     {
-        return this.reciprocal().times(rhs).reciprocal();
+        return this.times(rhs.reciprocal());
     }
 
     public Fraction reciprocal()
