@@ -1,7 +1,9 @@
-import Server;
+import java.io.IOException;
+
 public class Main {
 
-    static void main() {
-
+    public static void main(String[] args) throws IOException {
+        Server s = new Server();
+        s.run();
     }
 }

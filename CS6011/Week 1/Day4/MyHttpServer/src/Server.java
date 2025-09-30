@@ -92,9 +92,4 @@ public class Server {
         out.write(returnPageBytes);
         out.flush();
     }
-
-    public static void main(String[] args) throws IOException {
-        Server s = new Server();
-        s.run();
-    }
 }
