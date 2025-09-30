@@ -1,3 +1,6 @@
+//Created by Jon Pulsipher
+//CS 6011
+//u0294347
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +19,7 @@ public class Server {
     }
 
     //Runs the server
-    //NOTES: I took the loop out of main so theoretically and external program could use Server
+    //NOTES: I took the loop out of main so theoretically an external program could use Server
     //
     public void run() throws IOException {
 
@@ -30,10 +33,16 @@ public class Server {
             try {
                 client = ss.accept();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                continue;
             }
 
-            String filePath = parseFileRequest(client);
+            String filePath = "/index.html";
+            try {
+                filePath = parseFileRequest(client);
+            } catch (IOException e) {
+                client.close();
+                continue;
+            }
 
             //NOTES: I wanted to refactor this into a method, but I needed fileFound and returnPageBytes and didn't
             //think of a clean way to get both of those back.
@@ -46,14 +55,30 @@ public class Server {
                 fileFound = false;
             }
 
-            writeResponse(client, returnPageBytes, fileFound);
+            writeResponse(client.getOutputStream(), returnPageBytes, fileFound);
 
             client.close();
         }
     }
 
-    private void writeResponse(Socket client, byte[] returnPageBytes, boolean fileFound) throws IOException {
-        OutputStream out = client.getOutputStream();
+    private String parseFileRequest(Socket client) throws IOException{
+        InputStream is = null;
+        try {
+            is = client.getInputStream();
+        } catch (IOException e) {
+            throw e;
+        }
+
+        //Harvest Filepath
+        String filePath = new Scanner(is).nextLine().split(" ")[1];
+
+        if (filePath.equals("/"))
+            filePath = "/index.html";
+
+        return filePath;
+    }
+
+    private void writeResponse(OutputStream out, byte[] returnPageBytes, boolean fileFound) throws IOException {
         PrintWriter printWriter = new PrintWriter(out, false);
 
         if (fileFound)
@@ -66,23 +91,6 @@ public class Server {
         printWriter.flush();
         out.write(returnPageBytes);
         out.flush();
-    }
-
-    private String parseFileRequest(Socket client) {
-        InputStream is = null;
-        try {
-            is = client.getInputStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        //Harvest Filepath
-        String filePath = new Scanner(is).nextLine().split(" ")[1];
-
-        if (filePath.equals("/"))
-            filePath = "/index.html";
-
-        return filePath;
     }
 
     public static void main(String[] args) throws IOException {
