@@ -14,7 +14,11 @@ public class Main {
         AudioFormat format16 = new AudioFormat( 44100, 16, 1, true, false );
 
         AudioComponent gen = new SineWave(440); // Your code
-        AudioClip clip = gen.getClip();         // Your code
+
+        AudioComponent volAdjust = new VolumeAdjuster(0.1f);
+        volAdjust.connectInput(gen);
+        AudioClip clip = volAdjust.getClip();         // Your code
+
 
         c.open( format16, clip.getData(), 0, clip.getData().length ); // Reads data from our byte array to play it.
 
