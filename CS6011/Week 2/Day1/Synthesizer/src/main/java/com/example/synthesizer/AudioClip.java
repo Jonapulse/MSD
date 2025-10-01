@@ -3,11 +3,12 @@ package com.example.synthesizer;
 public class AudioClip {
     public static final float DURATION = 2.0f;
     public static final int SAMPLE_RATE = 44100;
+    public static final int TOTAL_SAMPLES = (int)(SAMPLE_RATE * DURATION);
 
     private byte[] clipRawBytes_;
 
     public AudioClip() {
-        clipRawBytes_ = new byte[(int)(SAMPLE_RATE * DURATION) * 2];
+        clipRawBytes_ = new byte[TOTAL_SAMPLES * 2];
     }
 
     static int convertBytesToInteger(byte leftByte, byte rightByte) {
@@ -31,8 +32,7 @@ public class AudioClip {
 
     public byte[] getData()
     {
-
-        return null;//DUMMY
+        return clipRawBytes_;
     }
 
 
