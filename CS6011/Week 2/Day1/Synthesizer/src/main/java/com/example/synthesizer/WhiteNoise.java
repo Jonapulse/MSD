@@ -32,7 +32,6 @@ public class WhiteNoise implements AudioComponent {
             double mult = rand.nextDouble();
             if(rand.nextDouble() < 0.5)
                 mult *= -1;
-            System.out.println(mult * DEFAULT_VOLUME);
             clip_.setSample(i, (int)(mult * DEFAULT_VOLUME));
         }
     }

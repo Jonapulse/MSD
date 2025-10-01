@@ -18,3 +18,13 @@ Some of these numbers are represented in hexadecimal? Sorry, I don’t even know
 Google: 16ms, and Louvre: 128ms. These numbers are the time it took for the communication to occur, which makes sense given how close Google ensures its servers are to people and how far away the Louvre is (France). 
 
 //Did you see more than you expected in the output? Can you figure out what other data was sent/received?
+There were multiple sends. Yes, I can figure out what other data was send or received.
+
+//What is the purpose of the curl program?
+It allows access to internet info from the terminal.
+
+//How are your results different / similar?
+The highlighting is blue and red rather than green and gray. 
+
+//Can you understand the output from Wireshark? Why can you only read the first couple of messages?
+No. I don't know, but GitHub is doing a lot with my private login information when I access it, and it would not surprise me if that information was hidden from snooping programs like Wireshark.
