@@ -7,7 +7,7 @@ public class AudioClip {
     private byte[] clipRawBytes_;
 
     public AudioClip() {
-        clipRawBytes_ = new byte[(int)(SAMPLE_RATE * DURATION)];
+        clipRawBytes_ = new byte[(int)(SAMPLE_RATE * DURATION) * 2];
     }
 
     static int convertBytesToInteger(byte leftByte, byte rightByte) {
