@@ -19,7 +19,7 @@ public class SineWave implements AudioComponent {
         assert(false); //This Component does not accept input
     }
 
-    // SineWave proper
+    // SineWave
     // NOTES: Are there conventions for how to organize implementations?
     //
     private AudioClip clip_;
