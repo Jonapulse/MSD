@@ -26,11 +26,11 @@ public class VolumeAdjuster implements AudioComponent{
         input_ = input;
     }
 
+    // VolumeAdjuster
+    //
     private AudioComponent input_;
     private float scale_;
 
-    // VolumeAdjuster
-    //
     public VolumeAdjuster(float volume) {
         scale_ = volume;
     }
