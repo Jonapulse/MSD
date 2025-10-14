@@ -1,5 +1,8 @@
 package com.example.synthesizer;
 
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
+
 public class SineWave implements AudioComponent {
 
     // AudioComponent Implementations

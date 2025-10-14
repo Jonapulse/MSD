@@ -23,8 +23,8 @@ public class SynthesizeApplication extends Application {
         VBox menu = new VBox(10);
         menu.setStyle("-fx-background-color: #f0f0f0;");
         Button swBtn = new Button("Create Sine Wave");
-        Button vcBtn = new Button("Create Volume Control");
-        menu.getChildren().addAll(swBtn, vcBtn);
+        //Button vcBtn = new Button("Create Volume Control");
+        menu.getChildren().addAll(swBtn/*, vcBtn*/);
 
         swBtn.setOnAction(e -> makeSineWave(ap));
 
@@ -46,6 +46,15 @@ public class SynthesizeApplication extends Application {
         ap.getChildren().add(swBtn);
         swBox.setLayoutX(200 + swcNumber++ * 100);
         swBox.setLayoutY(200);
+
+        swBtn.setOnAction(e -> playSineWave(swBtn));
         //How do we get it to show up on the screen?
+    }
+
+    private void playSineWave(Button swBtn) {
+        // SINE WAVE TEST
+        AudioComponent genSine = new SineWave(440); // Your code
+        AudioClip genClip = genSine.getClip();
+        SoundHandler.playSound(genSine.getClip());
     }
 }
