@@ -3,6 +3,7 @@ package com.example.synthesizer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -38,22 +39,30 @@ public class SynthesizeApplication extends Application {
 
     private int swcNumber = 0;
     private void makeSineWave(AnchorPane ap) {
-        HBox swBox = new HBox(10);
-        Text name = new Text("Sine Wave");
-        swBox.getChildren().add(name);
-        Button swBtn = new Button("Sine Wave");
-        swBox.getChildren().add(swBtn);
-        ap.getChildren().add(swBtn);
+        HBox swBox = new HBox();
+        swBox.setPrefWidth(100);
+
+        VBox leftPanel = new VBox(10);
+        Text title = new Text("Sine Wave");
+        leftPanel.getChildren().add(title);
+        Slider frequencySlider = new Slider(28,4185, 440); //Min/Max Freq Piano
+        leftPanel.getChildren().add(frequencySlider);
+        swBox.getChildren().add(leftPanel);
+
+        VBox rightPanel = new VBox(10);
+        Button playBtn = new Button("Play");
+        rightPanel.getChildren().add(playBtn);
+        swBox.getChildren().add(rightPanel);
+        ap.getChildren().add(swBox);
         swBox.setLayoutX(200 + swcNumber++ * 100);
         swBox.setLayoutY(200);
 
-        swBtn.setOnAction(e -> playSineWave(swBtn));
-        //How do we get it to show up on the screen?
+        playBtn.setOnAction(e -> playSineWave(frequencySlider));
     }
 
-    private void playSineWave(Button swBtn) {
+    private void playSineWave(Slider frequencySlider) {
         // SINE WAVE TEST
-        AudioComponent genSine = new SineWave(440); // Your code
+        AudioComponent genSine = new SineWave((int)frequencySlider.getValue()); // Your code
         AudioClip genClip = genSine.getClip();
         SoundHandler.playSound(genSine.getClip());
     }
