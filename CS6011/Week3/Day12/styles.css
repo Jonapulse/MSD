@@ -6,3 +6,11 @@ div{
 h1{
     color:red;
 }
+
+.multData:hover{
+    text-decoration: underline;
+}
+
+.focused{
+    background: gray;
+}
