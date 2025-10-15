@@ -31,7 +31,7 @@ public class SynthesizeApplication extends Application {
 
         ap.getChildren().add(menu);
 
-        Scene scene = new Scene(ap, 320, 240);
+        Scene scene = new Scene(ap,320, 240);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
@@ -39,25 +39,29 @@ public class SynthesizeApplication extends Application {
 
     private int swcNumber = 0;
     private void makeSineWave(AnchorPane ap) {
-        HBox swBox = new HBox();
-        swBox.setPrefWidth(100);
+        SineWaveWidget swWidge = new SineWaveWidget(100, 100, ap);
+        ap.getChildren().add(swWidge);
 
-        VBox leftPanel = new VBox(10);
-        Text title = new Text("Sine Wave");
-        leftPanel.getChildren().add(title);
-        Slider frequencySlider = new Slider(28,4185, 440); //Min/Max Freq Piano
-        leftPanel.getChildren().add(frequencySlider);
-        swBox.getChildren().add(leftPanel);
+//        HBox swBox = new HBox();
+//        swBox.setPrefWidth(100);
+//
+//        VBox leftPanel = new VBox(10);
+//        Text title = new Text("Sine Wave");
+//        leftPanel.getChildren().add(title);
+//        Slider frequencySlider = new Slider(28,4185, 440); //Min/Max Freq Piano
+//        leftPanel.getChildren().add(frequencySlider);
+//        swBox.getChildren().add(leftPanel);
+//
+//        VBox rightPanel = new VBox(10);
+//        Button playBtn = new Button("Play");
+//        rightPanel.getChildren().add(playBtn);
+//        swBox.getChildren().add(rightPanel);
+//        ap.getChildren().add(swBox);
+//        swBox.setLayoutX(200 + swcNumber++ * 100);
+//        swBox.setLayoutY(200);
+//
+//        playBtn.setOnAction(e -> playSineWave(frequencySlider));
 
-        VBox rightPanel = new VBox(10);
-        Button playBtn = new Button("Play");
-        rightPanel.getChildren().add(playBtn);
-        swBox.getChildren().add(rightPanel);
-        ap.getChildren().add(swBox);
-        swBox.setLayoutX(200 + swcNumber++ * 100);
-        swBox.setLayoutY(200);
-
-        playBtn.setOnAction(e -> playSineWave(frequencySlider));
     }
 
     private void playSineWave(Slider frequencySlider) {
