@@ -4,9 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import javafx.scene.text.Text;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -15,9 +13,6 @@ import java.io.IOException;
 public class SynthesizeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-
-        //todo: All these warnings - if they're causing problems might be the 25 version thing
-
         //In class stuff
         AnchorPane ap = new AnchorPane();
 
@@ -39,8 +34,8 @@ public class SynthesizeApplication extends Application {
 
     private int swcNumber = 0;
     private void makeSineWave(AnchorPane ap) {
-        SineWaveWidget swWidge = new SineWaveWidget(100, 100, ap);
-        ap.getChildren().add(swWidge);
+        SineWaveWidget sineWidge = new SineWaveWidget(100, 100, ap);
+        ap.getChildren().add(sineWidge);
 
 //        HBox swBox = new HBox();
 //        swBox.setPrefWidth(100);

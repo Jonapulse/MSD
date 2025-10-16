@@ -44,10 +44,16 @@ public class AudioComponentWidgetBase extends VBox {
         //TODO: Implement whatever you want cabling to be.
 //        Pane cable = new Pane();
 //        interactPanel.getChildren().add(cable);
-        //PLACEHOLDER: This will be a play button
-        Button playBtn = new Button("P");
-        playBtn.setOnAction(e -> SoundHandler.playSound(getAudioClip()));
-        interactPanel.getChildren().add(playBtn);
+        Button cableButton = new Button("C");
+        interactPanel.getChildren().add(cableButton);
+        cableButton.setOnAction((e) -> {
+            Cable c = new Cable(this, audioComponent_);
+        });
+
+//        //PLACEHOLDER: Temp play button (to be subsumed by Speaker)
+//        Button playBtn = new Button("P");
+//        playBtn.setOnAction(e -> SoundHandler.playSound(getAudioClip()));
+//        interactPanel.getChildren().add(playBtn);
 
         this.setLayoutX(x);
         this.setLayoutY(y);
