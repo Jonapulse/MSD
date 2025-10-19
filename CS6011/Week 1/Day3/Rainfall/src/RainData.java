@@ -22,6 +22,7 @@ public class RainData{
         {
             String month = fileReader.next();
             fileReader.nextInt(); //Discard monthData
+            fileReader.next
             double rainFallInches = fileReader.nextFloat();
             if(monthlyRainfall.containsKey(month))
                 monthlyRainfall.get(month).add(rainFallInches);
