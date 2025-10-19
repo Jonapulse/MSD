@@ -3,7 +3,13 @@ let canvas;
 let ctx;
 let bee;
 let mousePos = {pos:{x: 0, y: 0}};
-let SPEED = 2;
+let mouseCaught = false;
+
+let SPEED = 3;
+let TOP_SPEED = 10;
+let ACC = 0.2;
+let WIDTH = 500;
+let HEIGHT = 500;
 
 function notTheBees(){
 
@@ -12,7 +18,7 @@ function notTheBees(){
     ctx = canvas.getContext('2d');
     //Make an image
     //Draw image on canvas
-    bee = {pos:{x:100, y:100}, vel:{x_v:0, y_v:0}};
+    bee = {pos:{x:100, y:100}, vel:{x:0, y:0}};
     bee.img = new Image();
     bee.img.src = "Images/bee1.png";
 
@@ -23,8 +29,6 @@ function notTheBees(){
     document.addEventListener("mousemove", updateMousePosition);
     
     //TODO: 
-    // Get Bees following you...
-    // Arrest the game on 'contact'
     // then the cute way...
     // then add bouncing... 
     // then bee animation (w/ random offset)
@@ -38,43 +42,83 @@ function update()
 {
     move(bee);
     draw(bee);
-}
-
-function move(thisBee)
-{
-    let towardsMouse = getNormalVec(thisBee, mousePos);
-    if(!isNaN(towardsMouse.x))
-    {
-      thisBee.pos.x += towardsMouse.x * SPEED;
-      thisBee.pos.y += towardsMouse.y * SPEED;
+    if(!mouseCaught){
+        window.requestAnimationFrame(update);
     }
     else
     {
-        thisBee.pos.x += 1;
-       // console.log(towardsMouse);
+        ctx.font = "30px serif";
+        ctx.textAlign = "center";
+        ctx.strokeText("The Bees! You have been stung.", WIDTH/2, HEIGHT/2);
     }
 }
 
-function getNormalVec(from, to)
+function move(myBee)
 {
-    console.log("To");
-    console.log(to);
-    console.log("From");
-    console.log(from);
+    // Update Velocity
+    //
+    let towardsMouse = getDisplacement(myBee, mousePos);
+    if(!isNaN(towardsMouse.magnitude)){
+        //Check if bee will 'catch' cursor this update
+        if(towardsMouse.magnitude < SPEED)
+        {
+            mouseCaught = true;
+            return;
+        }
+        else
+        {
+            myBee.vel.x += towardsMouse.direction.x * ACC;
+            myBee.vel.y += towardsMouse.direction.y * ACC;
+        }
+    }
+    //Check bounce
+    if(myBee.pos.x < 0 || myBee.pos.x > WIDTH)
+    {
+        myBee.vel.x *= -1;
+        myBee.pos.x += myBee.vel.x; //Nudge so it doesn't get stuck
+    }
+    if(myBee.pos.y < 0 || myBee.pos.y > HEIGHT)
+    {
+        myBee.vel.y *= -1;
+        myBee.vel.y += myBee.vel.y; //Nudge so it doesn't get stuck
+    }
+
+    let speed = getMagnitude(myBee.vel);
+    if(speed > TOP_SPEED)
+    {
+        myBee.vel.x = (myBee.vel.x * TOP_SPEED) / speed;
+        myBee.vel.y = (myBee.vel.y * TOP_SPEED) / speed;
+    }
+
+    // Move Bees
+    //
+    if (!mouseCaught)
+    {
+       // console.log(thisBee);
+        myBee.pos.x += myBee.vel.x;
+        myBee.pos.y += myBee.vel.y;
+    }
+}
+
+// Returns direction and magnitude of vector from 'from' to 'to
+//
+function getDisplacement(from, to)
+{
     let dirVec = {x: to.pos.x - from.pos.x, y: to.pos.y - from.pos.y};
-    console.log("Dir vec");
-    console.log(dirVec);
-    let magnitude = Math.sqrt(dirVec.x * dirVec.x + dirVec.y * dirVec.y);
+    let magnitude = getMagnitude(dirVec);
     dirVec.x = dirVec.x / magnitude;
     dirVec.y = dirVec.y / magnitude;
-    return dirVec;
+    return {direction: dirVec, magnitude: magnitude};
+}
+
+function getMagnitude(vec){
+    return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
 function draw(thisBee)
 {
     ctx.clearRect(0, 0, 500, 500);
     ctx.drawImage(thisBee.img, thisBee.pos.x, thisBee.pos.y);
-    window.requestAnimationFrame(update);
 }
 
 function updateMousePosition(me){
