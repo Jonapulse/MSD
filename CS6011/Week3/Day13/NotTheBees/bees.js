@@ -1,47 +1,61 @@
 
 let canvas;
 let ctx;
-let bee;
+let theBees = [];
+let beeAnim;
 let mousePos = {pos:{x: 0, y: 0}};
 let mouseCaught = false;
 
-let SPEED = 3;
 let TOP_SPEED = 10;
 let ACC = 0.2;
+let BEE_NUM = 10;
 let WIDTH = 500;
 let HEIGHT = 500;
+let HALF_IMAGE_WIDTH = 51;
+let START_SPEED_VARIANCE = 3;
+let ANIM_FRAMES = 5;
 
 function notTheBees(){
 
-    //TESTING FIRST
     canvas = document.querySelector("canvas");
     ctx = canvas.getContext('2d');
-    //Make an image
-    //Draw image on canvas
-    bee = {pos:{x:100, y:100}, vel:{x:0, y:0}};
-    bee.img = new Image();
-    bee.img.src = "Images/bee1.png";
-
-    bee.img.onload = () =>{
-        update();
-    }
     
     document.addEventListener("mousemove", updateMousePosition);
     
+    beeAnim = [new Image(), new Image(), new Image(), new Image(), new Image()];
+    beeAnim[0].src = "Images/bee1.png";
+    beeAnim[1].src = "Images/bee2.png";
+    beeAnim[2].src = "Images/bee3.png";
+    beeAnim[3].src = "Images/bee4.png";
+    beeAnim[4].src = "Images/bee5.png";
+
+    for(let i = 0; i < BEE_NUM; i++)
+    {
+        let aBee = {pos:{x: Math.random() * WIDTH, y: Math.random() * HEIGHT}, 
+            vel:{x: Math.random() * START_SPEED_VARIANCE + 1, y: Math.random() * START_SPEED_VARIANCE + 1},  
+            animFrame: Math.floor(Math.random() * ANIM_FRAMES)};
+        theBees.push(aBee);
+    }
+
+    beeAnim[4].onload = () =>{
+        update();
+    }
+
     //TODO: 
-    // then the cute way...
-    // then add bouncing... 
-    // then bee animation (w/ random offset)
-    // then recognizing the mouse off-screen...
     // then starting w/ random position and velocity
-    
-    //then start with like 10 bees. 
+    // then bee animation (w/ random offset)
+    // then fix centering
 }
 
 function update()
 {
-    move(bee);
-    draw(bee);
+    ctx.clearRect(0, 0, 500, 500);
+    for(let i = 0; i < BEE_NUM; i++)
+    {
+        move(theBees[i]);  
+        draw(theBees[i]);
+    }
+
     if(!mouseCaught){
         window.requestAnimationFrame(update);
     }
@@ -50,6 +64,8 @@ function update()
         ctx.font = "30px serif";
         ctx.textAlign = "center";
         ctx.strokeText("The Bees! You have been stung.", WIDTH/2, HEIGHT/2);
+
+        document.querySelector("#cageslament").play();
     }
 }
 
@@ -58,9 +74,11 @@ function move(myBee)
     // Update Velocity
     //
     let towardsMouse = getDisplacement(myBee, mousePos);
+    let speed = getMagnitude(myBee.vel);
+
     if(!isNaN(towardsMouse.magnitude)){
         //Check if bee will 'catch' cursor this update
-        if(towardsMouse.magnitude < SPEED)
+        if(towardsMouse.magnitude < speed)
         {
             mouseCaught = true;
             return;
@@ -83,7 +101,6 @@ function move(myBee)
         myBee.vel.y += myBee.vel.y; //Nudge so it doesn't get stuck
     }
 
-    let speed = getMagnitude(myBee.vel);
     if(speed > TOP_SPEED)
     {
         myBee.vel.x = (myBee.vel.x * TOP_SPEED) / speed;
@@ -94,7 +111,6 @@ function move(myBee)
     //
     if (!mouseCaught)
     {
-       // console.log(thisBee);
         myBee.pos.x += myBee.vel.x;
         myBee.pos.y += myBee.vel.y;
     }
@@ -115,10 +131,10 @@ function getMagnitude(vec){
     return Math.sqrt(vec.x * vec.x + vec.y * vec.y);
 }
 
-function draw(thisBee)
+function draw(myBee)
 {
-    ctx.clearRect(0, 0, 500, 500);
-    ctx.drawImage(thisBee.img, thisBee.pos.x, thisBee.pos.y);
+    myBee.animFrame = (myBee.animFrame + 1) % ANIM_FRAMES;
+    ctx.drawImage(beeAnim[myBee.animFrame], myBee.pos.x, myBee.pos.y);
 }
 
 function updateMousePosition(me){
