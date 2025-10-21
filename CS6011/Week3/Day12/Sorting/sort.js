@@ -5,27 +5,29 @@ function main(){
 document.onload = main;
 
 let data = [7, 3, 25, -9, 25, 11];
+let data2 = ["Fish", "fish", "george", "apple", "Baby", 5];
+let dataNames = [{firstName: "Jon", lastName: "Pulsipher"},{firstName: "Zoe", lastName: "Applebaum"},{firstName: "Jerry", lastName: "Flinstone"},{firstName: "Sarah", lastName: "Sandberg"}]
 
 //You can use this function in the findIndexOfSmallest
 function compare( a, b) {
     return a < b;
 }
 
-function findMinLocation(arr, start)
+function findMinLocation(arr, start, compareTo)
 {
     let minInd = start;
     for(let pos = start + 1; pos < arr.length; pos++){
-        if(arr[pos] < arr[minInd]){
+        if(compareTo(arr[pos], arr[minInd]) < 0){
             minInd = pos;
         }
     }
     return minInd;
 }
 
-function selectionSort(arr){
+function selectionSort(arr, compare){
     for(let i = 0; i < arr.length - 1; i++)
     {
-        let minIndex = findMinLocation(arr, i);
+        let minIndex = findMinLocation(arr, i, compare);
         let temp = arr[i];
         arr[i] = arr[minIndex];
         arr[minIndex] = temp;
@@ -33,5 +35,41 @@ function selectionSort(arr){
     return arr;
 }
 
-let result = selectionSort(data);
+function sortDefault(a, b)
+{
+    if(a === b){
+        return 0;
+    }
+    else{
+        return a < b ? -1 : 1;
+    }
+}
+
+function sortByLastName(nameA, nameB)
+{
+    if(nameA.lastName === nameB.lastName){
+        return 0;
+    }
+    else{
+        return nameA.lastName < nameB.lastName ? -1 : 1;
+    }
+}
+
+function sortByFirstName(nameA, nameB)
+{
+    if(nameA.firstName === nameB.firstName){
+        return 0;
+    }
+    else{
+        return nameA.firstName < nameB.firstName ? -1 : 1;
+    }
+}
+
+let result = selectionSort(data, sortDefault);
 console.log(result);
+let result2 = selectionSort(data2, sortDefault);
+console.log(result2);
+let resultLastNames = selectionSort(dataNames, sortByFirstName);
+console.log(resultLastNames);
+resultLastNames = selectionSort(dataNames, sortByLastName);
+console.log(resultLastNames);
