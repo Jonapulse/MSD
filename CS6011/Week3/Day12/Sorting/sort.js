@@ -11,16 +11,27 @@ function compare( a, b) {
     return a < b;
 }
 
-function findSmallestIndex(array)
+function findMinLocation(arr, start)
 {
-    let minInd = 0;
-    for(let pos = 1; pos < array.length; pos++){
-        if(array[pos] < array[minInd]){
+    let minInd = start;
+    for(let pos = start + 1; pos < arr.length; pos++){
+        if(arr[pos] < arr[minInd]){
             minInd = pos;
         }
     }
     return minInd;
 }
 
-let result = findSmallestIndex(data);
-console.log("smallest: " + result);
+function selectionSort(arr){
+    for(let i = 0; i < arr.length - 1; i++)
+    {
+        let minIndex = findMinLocation(arr, i);
+        let temp = arr[i];
+        arr[i] = arr[minIndex];
+        arr[minIndex] = temp;
+    }
+    return arr;
+}
+
+let result = selectionSort(data);
+console.log(result);
