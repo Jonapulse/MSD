@@ -10,13 +10,10 @@ yInput.addEventListener('keypress', handleKeyPress);
 ///////////////////////
 // create web socket connection
 let ws = new WebSocket("ws://localhost:8000");
-function handleWsOpen(){
-    console.log("ws connected");
-}
+ws.onmessage = handleWsMessage;
 
 function handleWsMessage(msg){
     wsResultInput.value = msg.data;
-    console.log("We are called");
 }
 
 function handleKeyPress(ke){
