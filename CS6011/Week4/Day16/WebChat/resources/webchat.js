@@ -3,7 +3,8 @@ let roomnameInput;
 let chatInput;
 let roomLoginWindow;
 let roomTitle;
-let chatWindow;
+let chatRoomWindow;
+let chatLogContainer;
 let ws = new WebSocket("ws://localhost:8080");
 ws.onmessage = handleWsMessage;
 
@@ -13,7 +14,8 @@ function setupServer()
     roomnameInput = document.querySelector("#room_name_entry");
     chatInput = document.querySelector("#chat_input");
     roomLoginWindow = document.querySelector("#room_login");
-    chatWindow = document.querySelector("#room_chat");
+    chatRoomWindow = document.querySelector("#room_chat");
+    chatLogContainer = document.querySelector("#chat_window")
     roomTitle = document.querySelector("#room_title");
     
     //Set up Join room
@@ -21,6 +23,8 @@ function setupServer()
     joinButton.addEventListener("click", joinRoom);
     let leaveButton = document.querySelector("#room_leave_button");
     leaveButton.addEventListener("click", leaveRoom);
+    let chatButton = document.querySelector("#chat_send_button");
+    chatButton.addEventListener("click", sendMessage);
 
     //Set up Chat send
 }
@@ -34,15 +38,13 @@ function joinRoom()
 
 function leaveRoom()
 {
-    console.log("We try to leave");
     ws.send("leave");
-    ws.send("message how are you");
+    leaveRoomClient();
 }
 
 function handleWsMessage(msg)
 {
     let msgObj = JSON.parse(msg.data);
-    console.log(msgObj);
     switch(msgObj.type)
     {
         case("join"):
@@ -50,6 +52,12 @@ function handleWsMessage(msg)
             break;
         case("leave"):
             leaveRoomClient();
+            break;
+        case("message"):
+            let chatMessage = document.createElement("p");
+            chatMessage.textContent = msgObj.user + ": " + msgObj.message;
+            chatLogContainer.appendChild(chatMessage);
+            //TODO: Do we need to check for it being the right room?
             break;
         default:
             console.log("No appropriate type for msg...");
@@ -62,14 +70,23 @@ function joinRoomClient(msgObj)
 {
     roomTitle.textContent = msgObj.room;
     roomLoginWindow.style = "display: none";
-    chatWindow.style = "display: block";
+    chatRoomWindow.style = "display: block";
 
 }
 
+//This is separate from leaveRoom() in prep for if server
+//updates allow us to get a message from the server confirming 
+//we have left the room
+//
 function leaveRoomClient()
 {
-    console.log("We reach client leave");
     roomLoginWindow.style = "display: block";
-    chatWindow.style = "display: none";
-    
+    chatRoomWindow.style = "display: none";
+    chatLogContainer.replaceChildren(); //clear children
+}
+
+function sendMessage()
+{
+    ws.send("message " + chatInput.value);
+    chatInput.value = "";
 }
