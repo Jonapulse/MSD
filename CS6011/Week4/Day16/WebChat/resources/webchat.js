@@ -20,7 +20,7 @@ function setupServer()
     let joinButton = document.querySelector("#join_room_button");
     joinButton.addEventListener("click", joinRoom);
     let leaveButton = document.querySelector("#room_leave_button");
-    leaveButton.addEventListener("click", ()=>{ws.send("leave")});
+    leaveButton.addEventListener("click", leaveRoom);
 
     //Set up Chat send
 }
@@ -30,6 +30,13 @@ function joinRoom()
 {
     //TODO: Validate input
     ws.send("join " + usernameInput.value + " " + roomnameInput.value);
+}
+
+function leaveRoom()
+{
+    console.log("We try to leave");
+    ws.send("leave");
+    ws.send("message how are you");
 }
 
 function handleWsMessage(msg)
@@ -61,6 +68,8 @@ function joinRoomClient(msgObj)
 
 function leaveRoomClient()
 {
+    console.log("We reach client leave");
     roomLoginWindow.style = "display: block";
     chatWindow.style = "display: none";
+    
 }
