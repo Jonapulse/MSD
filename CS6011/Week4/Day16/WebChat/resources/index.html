@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script src="webchat.js" defer></script>
+    </head>
+    <body>
+        <div id="room_login">
+            <div>
+                User Name: <input id="user_name_entry"/>
+            </div>
+            <div>
+                Room Name: <input id="room_name_entry"/>
+            </div>
+            <div>
+                <button id="join_room_button">Join Room</button>
+            </div>
+        </div>
+        <div id="room_chat" style="display: none">
+            <div id="room_top">
+                <div id="room_title"></div>
+                <button id="room_leave_button">Leave Room</button>
+            </div>
+            <div id="room_mid">
+                <div id="users_in_room_list"></div>
+                <div id="chat_window"></div>
+            </div>
+            <div id="room_bot">
+                <input id="chat_input"/>
+                <button id="chat_send_button">Send</button>
+            </div>
+        </div>
+    </body>
+</html>

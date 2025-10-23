@@ -1,4 +1,7 @@
 
+let data = [1, 10, -3, 27, 45];
+let data2 = ["Blob", "blob", "candy", "art"];
+let dataNames = [{firstName: "Jon", lastName: "Pulsipher"}, {firstName: "Danny", lastName: "Zephyr"}, {firstName: "Tiny", lastName: "Apples"}];
 
 function main(){
     let result = selectionSort(data, sortDefault);
@@ -10,7 +13,7 @@ function main(){
     resultLastNames = selectionSort(dataNames, sortByLastName);
     console.log(resultLastNames);
 }
-document.onload = main;
+window.onload = main;
 
 
 //You can use this function in the findIndexOfSmallest
@@ -69,4 +72,3 @@ function sortByFirstName(nameA, nameB)
         return nameA.firstName < nameB.firstName ? -1 : 1;
     }
 }
-
