@@ -1,0 +1,21 @@
+
+div{
+    color:blue;
+    text-align: center;
+}
+
+h1{
+    color:red;
+}
+
+.multData:hover{
+    text-decoration: underline;
+}
+
+.focused{
+    background: gray;
+}
+
+#myHighlightedElement{
+    background: lightblue;
+}
