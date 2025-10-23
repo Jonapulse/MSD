@@ -1,12 +1,17 @@
 
 
 function main(){
+    let result = selectionSort(data, sortDefault);
+    console.log(result);
+    let result2 = selectionSort(data2, sortDefault);
+    console.log(result2);
+    let resultLastNames = selectionSort(dataNames, sortByFirstName);
+    console.log(resultLastNames);
+    resultLastNames = selectionSort(dataNames, sortByLastName);
+    console.log(resultLastNames);
 }
 document.onload = main;
 
-let data = [7, 3, 25, -9, 25, 11];
-let data2 = ["Fish", "fish", "george", "apple", "Baby", 5];
-let dataNames = [{firstName: "Jon", lastName: "Pulsipher"},{firstName: "Zoe", lastName: "Applebaum"},{firstName: "Jerry", lastName: "Flinstone"},{firstName: "Sarah", lastName: "Sandberg"}]
 
 //You can use this function in the findIndexOfSmallest
 function compare( a, b) {
@@ -65,11 +70,3 @@ function sortByFirstName(nameA, nameB)
     }
 }
 
-let result = selectionSort(data, sortDefault);
-console.log(result);
-let result2 = selectionSort(data2, sortDefault);
-console.log(result2);
-let resultLastNames = selectionSort(dataNames, sortByFirstName);
-console.log(resultLastNames);
-resultLastNames = selectionSort(dataNames, sortByLastName);
-console.log(resultLastNames);

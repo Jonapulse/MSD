@@ -6,14 +6,14 @@ let beeAnim;
 let mousePos = {pos:{x: 0, y: 0}};
 let mouseCaught = false;
 
-let TOP_SPEED = 10;
-let ACC = 0.2;
-let BEE_NUM = 10;
-let WIDTH = 500;
-let HEIGHT = 500;
-let HALF_IMAGE_WIDTH = 51;
-let START_SPEED_VARIANCE = 3;
-let ANIM_FRAMES = 5;
+const TOP_SPEED = 10;
+const ACC = 0.2;
+const BEE_NUM = 10;
+const WIDTH = 500;
+const HEIGHT = 500;
+const HALF_IMAGE_WIDTH = 51;
+const START_SPEED_VARIANCE = 3;
+const ANIM_FRAMES = 5;
 
 function notTheBees(){
 
@@ -40,11 +40,6 @@ function notTheBees(){
     beeAnim[4].onload = () =>{
         update();
     }
-
-    //TODO: 
-    // then starting w/ random position and velocity
-    // then bee animation (w/ random offset)
-    // then fix centering
 }
 
 function update()
