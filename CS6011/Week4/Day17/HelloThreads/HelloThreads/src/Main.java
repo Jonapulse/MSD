@@ -35,7 +35,7 @@ public class Main{
         }
     }
     public static void main(String[] args) {
-//        sayHello();
+        sayHello();
 
         //Lab Discussion:
         //Prior to adding join, the printing thread switches without a clear pattern
