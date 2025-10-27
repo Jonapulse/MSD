@@ -9,31 +9,30 @@ public class CableManager {
     *  - handles Cable creation, connection, and removal
      */
 
+    //Cable Candidate
+
     ArrayList<Cable> cables;
 
     CableManager(){
         cables = new ArrayList<>();
     }
 
-    //Clicking a Cable button when no Cable exists will Create one
-    //then attempt a connection.
-     //
-    public void CreateCable()
-    {
-        AttemptCableConnection();
-    }
-
     //Cable Connection can be attempted from a new cable or reusing an
     // previously created one.
      //
-    public void AttemptCableConnection()
+    public void StartCableConnection(AudioComponentWidgetBase startAWidget)
     {
-        //Set up a mouse click listener.
+        //Set it up there
 
-        //How should we do this? I want to know that a
-        //valid object has been clicked. But I also
-        //want to know if a click has gone off in the void,
-        //in which cae we straight up abort.
+        //While we're here, set up a listener to draw to the end of the mouse. Fun!
+        System.out.println("Starting CableConnection");
+    }
+
+    public void CompleteCableConnection(AudioComponentWidgetBase endAWidget)
+    {
+        //If there's a candidate up, make that connection
+        //
+        System.out.println("Completing CableConnection");
     }
 
 }
