@@ -7,7 +7,7 @@ export default function InputArea({add}){
     function addTaskAndClear()
     {
         add(inputRef.current.value);
-        //inputRef.current.value = "";
+        inputRef.current.value = "";
     }
 
     return(
