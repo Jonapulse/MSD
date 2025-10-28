@@ -13,12 +13,7 @@ function App() {
 
   let addItem = (taskStr) =>
   {
-    //let tempList = list;
-    //tempList.push(taskStr);
-   // console.log(taskStr);
     setList([...list,taskStr]);
-   // console.log("After adding: " + list);
-    
   }
 
   let deleteItem =  (removeIndex) =>

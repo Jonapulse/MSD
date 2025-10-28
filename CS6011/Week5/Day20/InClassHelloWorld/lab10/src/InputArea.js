@@ -11,7 +11,7 @@ export default function InputArea({add}){
     }
 
     return(
-            <div>
+        <div>
             <textarea ref={inputRef}></textarea>
             <button onClick={()=>addTaskAndClear()}>Add Task</button>
         </div>
