@@ -45,8 +45,6 @@ public class ConnectHandler implements Runnable {
         client_ = client;
     }
 
-
-
     private String parseFileRequest(Socket client, MyHTTPResponse response) throws IOException{
         InputStream is = null;
         try {
@@ -76,7 +74,7 @@ public class ConnectHandler implements Runnable {
         return filePath;
     }
 
-    private void writeResponse(OutputStream out, MyHTTPResponse response/*byte[] returnPageBytes, boolean fileFound*/) throws IOException {
+    private void writeResponse(OutputStream out, MyHTTPResponse response) throws IOException {
         PrintWriter printWriter = new PrintWriter(out, false);
 
         printWriter.println(response.getHTTPResponseMessage());
@@ -88,8 +86,18 @@ public class ConnectHandler implements Runnable {
         }
         printWriter.println();
         printWriter.flush();
-        out.write(response.httpResponsePayload);
 
-        out.flush();
+        // Standard file write to out
+        //
+        // out.write(response.httpResponsePayload);
+        //out.flush();
+
+        //Artificially slowed down write to out
+        //
+        for(int i = 0 ; i < response.httpResponsePayload.length; i++){
+            out.write(response.httpResponsePayload[i]);
+            out.flush();
+            //Thread.sleep(10); //to add if imgs loading too quickly
+        }
     }
 }
