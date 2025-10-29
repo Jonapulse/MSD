@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import InputWidget from "./InputWidget";
 
 function LoginPage({joinRoom}){
     let userInput = useRef();
@@ -12,8 +13,8 @@ function LoginPage({joinRoom}){
 
     return(
         <div>
-            <div>Username: <input ref={userInput}></input></div>
-            <div>Room Name: <input ref={roomInput}></input></div>
+            <InputWidget label="Username" valueRef={userInput}></InputWidget>
+            <InputWidget label="Room Name" valueRef={roomInput}></InputWidget>
             <button onClick={attemptJoinRoom}>Join Room</button>
         </div>
     );
