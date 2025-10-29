@@ -1,7 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
-import { useRef} from 'react';
 import ToDoList from './ToDoList';
 import InputArea from './InputArea';
 
