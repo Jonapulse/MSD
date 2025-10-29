@@ -32,7 +32,6 @@ window.onload = setupServer;
 
 function joinRoom()
 {
-    //TODO: Validate input
     ws.send("join " + usernameInput.value + " " + roomnameInput.value);
 }
 

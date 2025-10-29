@@ -89,15 +89,15 @@ public class ConnectHandler implements Runnable {
 
         // Standard file write to out
         //
-        // out.write(response.httpResponsePayload);
-        //out.flush();
+        out.write(response.httpResponsePayload);
+        out.flush();
 
         //Artificially slowed down write to out
         //
-        for(int i = 0 ; i < response.httpResponsePayload.length; i++){
-            out.write(response.httpResponsePayload[i]);
-            out.flush();
-            //Thread.sleep(10); //to add if imgs loading too quickly
-        }
+//        for(int i = 0 ; i < response.httpResponsePayload.length; i++){
+//            out.write(response.httpResponsePayload[i]);
+//            out.flush();
+//            //Thread.sleep(10); //to add if imgs loading too quickly
+//        }
     }
 }
