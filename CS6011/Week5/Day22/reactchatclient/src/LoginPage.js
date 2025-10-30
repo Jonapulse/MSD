@@ -7,14 +7,30 @@ function LoginPage({joinRoom}){
 
     function attemptJoinRoom()
     {
-        //todo: validate input.
-        joinRoom(userInput.current.value, roomInput.current.value);
+        let userName = userInput.current.value;
+        let roomName = roomInput.current.value;
+        if(userName === "")
+        {
+            alert("Please enter a username");
+            userInput.current.select();
+            return;
+        }
+        if(roomName === "")
+        {
+            alert("Please enter a room name");
+            roomInput.current.select();
+            return;
+        }
+
+        //Swap out spaces with '_' to sanitize input for websocket command
+        //
+        joinRoom(userName.replaceAll(' ', '_'), roomName.replaceAll(' ', '_'));
     }
 
     return(
         <div>
-            <InputWidget label="Username" valueRef={userInput}></InputWidget>
-            <InputWidget label="Room Name" valueRef={roomInput}></InputWidget>
+            <InputWidget label="Username" valueRef={userInput} defaultText="Enter a name"></InputWidget>
+            <InputWidget label="Room Name" valueRef={roomInput} defaultText="Enter a room name"></InputWidget>
             <button onClick={attemptJoinRoom}>Join Room</button>
         </div>
     );

@@ -1,7 +1,7 @@
-function InputWidget({label, valueRef}){
+function InputWidget({label, valueRef, defaultText}){
     return(
-        <div>
-            {label}: <input ref={valueRef}></input>
+        <div className="inputWidget">
+            {label}{(label !== "") && ":"} <textarea ref={valueRef} placeholder={defaultText}></textarea>
         </div>
     );
 }
