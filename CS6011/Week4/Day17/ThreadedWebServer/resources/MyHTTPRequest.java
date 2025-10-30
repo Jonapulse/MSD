@@ -11,7 +11,6 @@ public class MyHTTPRequest {
     String url_;
     public HashMap<String, String> headers;
 
-
     public MyHTTPRequest(Socket client) throws IOException {
         InputStream is = null;
         try {
@@ -43,5 +42,8 @@ public class MyHTTPRequest {
         }
     }
 
+    public boolean isWebSocket(){
+        return headers.containsKey("Upgrade") && headers.get("Upgrade").equals("websocket");
+    }
     public String getURL() { return url_; }
 }

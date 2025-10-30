@@ -15,33 +15,61 @@ public class ConnectHandler implements Runnable {
         try {
             httpRequest = new MyHTTPRequest(client_);
             if(!httpRequest.method_.equals("GET")){
-                httpResponse.responseCode = 405; //Method not allowed
+                httpResponse.responseCode_ = 405; //Method not allowed
             }
         } catch (IOException e) {
-            httpResponse.responseCode = 500; //Server issue
+            httpResponse.responseCode_ = 500; //Server issue
         }
 
-        byte[] returnPageBytes = null;
-        try {
-            httpResponse.httpResponsePayload = new FileInputStream("resources" + httpRequest.getURL()).readAllBytes();
-        }
-        catch (FileNotFoundException e) {
-            httpResponse.responseCode = 404;
-        }
-        catch (IOException e) {
-            httpResponse.responseCode = 500;
-        }
+        //PSEUDOCODE
+        //Check if this is a websocket
+        //If it is, make this into a new WebSocketHandler that will
+        //send and recieve messages. When they receive messages, they
+        //will speak to a static ChatRoomHandler class that will maintain
+        //a list of rooms, users in those rooms, and message logs
+        //will
+        //Else do the rest of this and end by closing the connection
+        //Or, for our websocket do we... questions
+            //Should WebsocketHandler be in a new class?
+            //Should I be maintaining this with a while(true) or something
+                //...event driven?
+            //How do I know when the client has new information? Need to ask.
+        if(httpRequest.isWebSocket()){
+            // WebSocket path
+             //
+            httpResponse.responseCode_ = 101;
+            try {
+                writeResponse(client_.getOutputStream(), httpResponse, httpRequest);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            // Look up the file
+             //
+            byte[] returnPageBytes = null;
+            try {
+                httpResponse.httpResponsePayload = new FileInputStream("resources" + httpRequest.getURL()).readAllBytes();
+            }
+            catch (FileNotFoundException e) {
+                httpResponse.responseCode_ = 404;
+            }
+            catch (IOException e) {
+                httpResponse.responseCode_ = 500;
+            }
 
-        try {
-            writeResponse(client_.getOutputStream(), httpResponse);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            // Write
+             //
+            try {
+                writeResponse(client_.getOutputStream(), httpResponse, httpRequest);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-        try {
-            client_.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            try {
+                client_.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -62,11 +90,11 @@ public class ConnectHandler implements Runnable {
         String [] requestStrings = new Scanner(is).nextLine().split(" ");
         if(requestStrings.length == 0 || !requestStrings[0].equals("GET"))
         {
-            response.responseCode = 405; //Method not allowed
+            response.responseCode_ = 405; //Method not allowed
             return "";
         } else if (requestStrings.length <= 1)
         {
-            response.responseCode = 400; //Bad Request
+            response.responseCode_ = 400; //Bad Request
             return "";
         } else {
             filePath =  requestStrings[1];
@@ -78,15 +106,13 @@ public class ConnectHandler implements Runnable {
         return filePath;
     }
 
-    private void writeResponse(OutputStream out, MyHTTPResponse response) throws IOException {
+    private void writeResponse(OutputStream out, MyHTTPResponse response, MyHTTPRequest request) throws IOException {
         PrintWriter printWriter = new PrintWriter(out, false);
 
         printWriter.println(response.getHTTPResponseMessage());
-        System.out.println(response.getHTTPResponseMessage());
-        String[] headers = response.getHTTPResponseHeaders();
+        String[] headers = response.getHTTPResponseHeaders(request);
         for (String header : headers) {
             printWriter.println(header);
-            System.out.println(header);
         }
         printWriter.println();
         printWriter.flush();
