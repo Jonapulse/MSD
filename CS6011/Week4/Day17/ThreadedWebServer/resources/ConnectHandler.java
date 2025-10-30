@@ -9,17 +9,21 @@ public class ConnectHandler implements Runnable {
     @Override
     public void run() {
 
+        MyHTTPRequest httpRequest = null;
         MyHTTPResponse httpResponse = new MyHTTPResponse();
-        String filePath = "";
+        String fileName = "";
         try {
-            filePath = parseFileRequest(client_, httpResponse);
+            httpRequest = new MyHTTPRequest(client_);
+            if(!httpRequest.method_.equals("GET")){
+                httpResponse.responseCode = 405; //Method not allowed
+            }
         } catch (IOException e) {
             httpResponse.responseCode = 500; //Server issue
         }
 
         byte[] returnPageBytes = null;
         try {
-            httpResponse.httpResponsePayload = new FileInputStream("resources" + filePath).readAllBytes();
+            httpResponse.httpResponsePayload = new FileInputStream("resources" + httpRequest.getURL()).readAllBytes();
         }
         catch (FileNotFoundException e) {
             httpResponse.responseCode = 404;
