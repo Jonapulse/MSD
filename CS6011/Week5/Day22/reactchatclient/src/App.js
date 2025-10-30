@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     ws.current = new WebSocket("ws://localhost:8080");
     ws.current.onmessage = handleWsMessage;
-  });
+  },[]);
 
   function leaveRoom()
   {
@@ -40,7 +40,6 @@ function App() {
 
   function sendMessage(message)
   {
-    console.log("We's is sending: " + message);
     ws.current.send("message " + message);
   }
   
@@ -50,13 +49,11 @@ function App() {
     switch(msgObj.type)
     {
       case("join"):
-        console.log("We're joining", msgObj);
         joinRoomClient(msgObj);
         break;
       case("message"):
-        console.log("Here's a message: ", msgObj);
-        let newMessage =  msgObj.user + ": " + msgObj.message;
-        setChatLog([...chatlog, newMessage]);
+        const newMessage = '${msgObj.user}: ${msgObj.message}';
+        setChatLog(prev => [...prev, newMessage]);
         break;
       default:
         console.log("No appropriate type for msg...");

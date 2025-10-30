@@ -60,10 +60,8 @@ function App() {
         joinRoomClient(msgObj);
         break;
       case("message"):
-        console.log("Here's a message: ", msgObj);
-        let newMessage =  msgObj.user + ": " + msgObj.message;
-        setChatLog([...chatlog, newMessage]);
-        console.log("What is chat log? ", chatlog);
+        const newMessage =  msgObj.user + ": " + msgObj.message;
+        setChatLog(prev => [...prev, newMessage]);
         break;
       default:
         console.log("No appropriate type for msg...");
