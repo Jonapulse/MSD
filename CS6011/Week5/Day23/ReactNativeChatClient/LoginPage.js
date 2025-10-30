@@ -1,26 +1,23 @@
 import { useRef } from "react";
 import { View, Button } from 'react-native';
 import InputWidget from "./InputWidget";
+import { useState } from "react";
 
 function LoginPage({joinRoom}){
     let userInput = useRef();
     let roomInput = useRef();
+    const [userName, setUserName] = useState("");
+    const [roomName, setRoomName] = useState("");
 
     function attemptJoinRoom()
     {
-        let username = "";
-        let roomName = "";
-        userName = userInput.current.value;
-        roomName = roomInput.current.value;
-        console.log("TEST username: " , userName);
-        console.log("TEST roomName: ", roomName);
-        if(userName === "")
+        if(userName.trim() === "")
         {
             alert("Please enter a username");
             userInput.current.select();
             return;
         }
-        if(roomName === "")
+        if(roomName.trim() === "")
         {
             alert("Please enter a room name");
             roomInput.current.select();
@@ -34,8 +31,8 @@ function LoginPage({joinRoom}){
 
     return(
         <View>
-            <InputWidget label="Username" valueRef={userInput} defaultText="Enter a name"></InputWidget>
-            <InputWidget label="Room Name" valueRef={roomInput} defaultText="Enter a room name"></InputWidget>
+            <InputWidget label="Username" valueRef={userInput} onChangeText={setUserName} defaultText="Enter a name"></InputWidget>
+            <InputWidget label="Room Name" valueRef={roomInput} onChangeText={setRoomName} defaultText="Enter a room name"></InputWidget>
             <Button onPress={attemptJoinRoom} title="Join Room"></Button>
         </View>
     );

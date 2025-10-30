@@ -9,13 +9,15 @@ function App() {
 
   let ws = useRef(null);
   const [joinedRoom, setJoinedRoom] = useState(false);
+  //React-native requires we save these values separate from TextInput
   const [roomName, setRoomName] = useState("");
+  const [userName, setUserName] = useState("");
   const [chatlog, setChatLog] = useState([]);
 
   useEffect(() => {
     ws.current = new WebSocket("ws://10.0.2.2:8080");
     ws.current.onmessage = handleWsMessage;
-  });
+  },[]);
 
   function leaveRoom()
   {
@@ -53,12 +55,15 @@ function App() {
     {
       case("join"):
         console.log("We're joining", msgObj);
+        setUserName(msgObj.user);
+        setRoomName(msgObj.room);
         joinRoomClient(msgObj);
         break;
       case("message"):
         console.log("Here's a message: ", msgObj);
         let newMessage =  msgObj.user + ": " + msgObj.message;
         setChatLog([...chatlog, newMessage]);
+        console.log("What is chat log? ", chatlog);
         break;
       default:
         console.log("No appropriate type for msg...");
