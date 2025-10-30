@@ -52,7 +52,7 @@ function App() {
         joinRoomClient(msgObj);
         break;
       case("message"):
-        const newMessage = '${msgObj.user}: ${msgObj.message}';
+        const newMessage = msgObj.user + ": " + msgObj.message;
         setChatLog(prev => [...prev, newMessage]);
         break;
       default:
