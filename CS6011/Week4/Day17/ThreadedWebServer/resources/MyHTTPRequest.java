@@ -43,7 +43,7 @@ public class MyHTTPRequest {
     }
 
     public boolean isWebSocket(){
-        return headers.containsKey("Upgrade") && headers.get("Upgrade").equals("websocket");
+        return headers.containsKey("Sec-Websocket-Key");
     }
     public String getURL() { return url_; }
 }

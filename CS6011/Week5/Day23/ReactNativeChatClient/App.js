@@ -15,21 +15,10 @@ function App() {
   const [chatlog, setChatLog] = useState([]);
 
   useEffect(() => {
+    //TODO: Could check for bad connection. 'ReadyState' could be referenced in joinRoom.
     ws.current = new WebSocket("ws://10.0.2.2:8080");
     ws.current.onmessage = handleWsMessage;
   },[]);
-
-  function leaveRoom()
-  {
-    ws.current.send("leave");
-    leaveRoomClient();
-  }
-
-  function leaveRoomClient()
-  {
-    setJoinedRoom(false);
-    setChatLog([]);
-  }
 
   function joinRoom(userName, roomName)
   {
@@ -44,7 +33,6 @@ function App() {
 
   function sendMessage(message)
   {
-    console.log("We's is sending: " + message);
     ws.current.send("message " + message);
   }
   
@@ -68,6 +56,18 @@ function App() {
         console.log(msgObj);
         break;
     }
+  }
+
+  function leaveRoom()
+  {
+    ws.current.send("leave");
+    leaveRoomClient();
+  }
+
+  function leaveRoomClient()
+  {
+    setJoinedRoom(false);
+    setChatLog([]);
   }
 
   return (

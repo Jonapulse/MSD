@@ -1,0 +1,15 @@
+1) Which two binarySearch tests are failing?
+
+2) What are the values of arr and goal passed in to binary search?
+
+3) For each of the two cases of binarySearch that are failing, which return statements are they executing in error (is it returning true when it should be returning false, or the other way around)?
+
+4) What is the bug in binarySearch? How do you fix it?
+
+5) Which loops appear to be inifinite?
+
+6) For the loops that you found to be infinite, briefly explain why they are never progressing.
+
+7) What does the call to password.split(" ") appear to do? Hint: examine the input value of "password", then examine the items in the "tokens" array returned by the call.
+
+8) What is the correct password?

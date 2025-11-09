@@ -34,6 +34,7 @@ public class ConnectHandler implements Runnable {
             //Should I be maintaining this with a while(true) or something
                 //...event driven?
             //How do I know when the client has new information? Need to ask.
+        //From Owen - when do I know I've received a new message?
         if(httpRequest.isWebSocket()){
             // WebSocket path
              //

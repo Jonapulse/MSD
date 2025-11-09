@@ -1,3 +1,6 @@
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.HashMap;
 
 public class MyHTTPResponse {
@@ -27,14 +30,19 @@ public class MyHTTPResponse {
         }
     }
 
-    public String[] getHTTPResponseHeaders(MyHTTPRequest request) {
+    public String[] getHTTPResponseHeaders(MyHTTPRequest request) throws Exception{
         String[] headers = null;
         if(request.isWebSocket()){
             headers = new String[3];
             headers[0] = "Upgrade: websocket";
             headers[1] = "Connection: Upgrade";
-            //todo: Encode the key?
-            headers[2] = "Sec-Websocket-Accept: " + request.headers.get("Sec-WebSocket-Key");
+            String magicString =
+                    Base64.getEncoder()
+                            .encodeToString(
+                                    MessageDigest.getInstance("SHA-1")
+                                            .digest(request.headers.get("Sec-WebSocket-Key" + "258EAFA5-E914-47DA-95CA-C5AB0DC85811")
+                                                    .getBytes(StandardCharsets.UTF_8)));
+            headers[2] = "Sec-Websocket-Accept: " + magicString;
         }
         else
         {
