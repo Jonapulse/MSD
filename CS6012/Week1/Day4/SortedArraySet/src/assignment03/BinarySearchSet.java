@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.Consumer;
 
 public class BinarySearchSet<E> implements SortedSet<E>{
 
@@ -82,6 +83,11 @@ public class BinarySearchSet<E> implements SortedSet<E>{
         // TODO: than... that enough?
     }
 
+    //Code Review - considering optimization to look up all insertions and do one big swap
+     //store all insertion points in ordered list of {insertIndex, element}
+     //resize array if necessary
+     //step through, copying array or filling from ordered list
+     //(removeAll same deal)
     /**
      * @param elements
      * @return true if data changed, else false
@@ -93,13 +99,10 @@ public class BinarySearchSet<E> implements SortedSet<E>{
             if(add(element))
                 atLeastOneChange = true;
         return atLeastOneChange;
-        //TODO: "fancy" algorithm to reduce shifts
-        //store all insertion points in an ordered list of {insertPoint, element}
-        //check array for resize
-        //step through copying array, copying ordered list in place
     }
 
     /**
+     * Removes element from data if present
      *
      * @param element
      * @return true if element removed, false if not found
@@ -121,6 +124,10 @@ public class BinarySearchSet<E> implements SortedSet<E>{
             return false;
     }
 
+    /**
+     * @param elements
+     * @return true if data changed, else false
+     */
     @Override
     public boolean removeAll(Collection<? extends E> elements) {
         boolean atLeastOneChange = false;
@@ -206,8 +213,8 @@ public class BinarySearchSet<E> implements SortedSet<E>{
      * @param shift
      */
     void shiftData(int start, int shift){
-        int loopStart = shift > 0 ? size_ - 1: start - 1;
-        int loopEnd = shift > 0 ? start - 1: size_ - 1;
+        int loopStart = shift > 0 ? size_ - 1: start + 1;
+        int loopEnd = shift > 0 ? start - 1: size_;
         int increment = shift > 0 ? -1 : 1;
         for(int i = loopStart; i != loopEnd; i += increment ){
             data_[i + shift] = data_[i];
@@ -250,6 +257,53 @@ public class BinarySearchSet<E> implements SortedSet<E>{
         //Check your class notes. Should be straight-forward, but
         //I should probably hold on this until the rest of the stuff.
         return null;
+    }
+
+    /**
+     *
+     */
+    class BinarySearchIterator implements Iterator<E> {
+        private int nextIndex = 0;
+        private boolean canRemove = false;
+
+        /**
+         * @return true if nextIndex within size
+         */
+        @Override
+        public boolean hasNext() throws NoSuchElementException {
+            return nextIndex < size_;
+        }
+
+        /**
+         * @return next element if present, else throws exception
+         */
+        @Override
+        public E next() {
+            if(!hasNext())
+                throw new NoSuchElementException();
+            canRemove = true;
+            return data_[nextIndex++];
+        }
+
+        /**
+         * Removes element at nextIndex if next has been called for that element,
+         * else throws IllegalStateException
+         */
+        @Override
+        public void remove() {
+            if(!canRemove)
+                throw new IllegalStateException();
+            BinarySearchSet.this.remove(data_[nextIndex]);
+            canRemove = false;
+        }
+
+        /**
+         * not implementing
+         */
+        @Override
+        public void forEachRemaining(Consumer<? super E> action) {
+            Iterator.super.forEachRemaining(action);
+        }
     }
 
     /**

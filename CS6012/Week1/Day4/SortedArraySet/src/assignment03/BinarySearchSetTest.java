@@ -86,27 +86,36 @@ class BinarySearchSetTest {
         {
             set.add(i);
         }
-        set.remove(5);
+        set.remove(5); //removes 3 instead of 5, shift starts 1 down from where it should
         set.remove(0);
-        set.remove(10);
+        set.remove(9);
         Assertions.assertFalse(set.contains(5));
         Assertions.assertFalse(set.contains(0));
         Assertions.assertFalse(set.contains(10));
         Assertions.assertFalse(set.first() == 0);
         Assertions.assertTrue(set.first() == 1);
-        Assertions.assertFalse(set.last() == 10);
+        Assertions.assertFalse(set.last() == 9);
         Assertions.assertTrue(set.last() == 8);
         Assertions.assertTrue(set.size() == 7);
     }
 
     @org.junit.jupiter.api.Test
-    void removeStart(){
-
-    }
-
-    @org.junit.jupiter.api.Test
-    void removeEnd(){
-
+    void remove10000()
+    {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10000; i++)
+        {
+            set.add(i);
+        }
+        int laggingCheck = 1234;
+        for(int i = 0; i < 10000; i++){
+            if(i != laggingCheck)
+                set.remove(i);
+        }
+        Assertions.assertEquals(set.size(), 1);
+        Assertions.assertTrue(set.contains(laggingCheck));
+        set.remove(laggingCheck);
+        Assertions.assertTrue(set.size() == 0);
     }
 
     @org.junit.jupiter.api.Test
