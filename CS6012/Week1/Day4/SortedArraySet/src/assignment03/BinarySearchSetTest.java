@@ -2,6 +2,8 @@ package assignment03;
 
 import org.junit.jupiter.api.Assertions;
 
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BinarySearchSetTest {
@@ -45,6 +47,11 @@ class BinarySearchSetTest {
     }
 
     @org.junit.jupiter.api.Test
+    void addOutOfOrderStandardReverseComparator() {
+        //TODO: test this out
+    }
+
+    @org.junit.jupiter.api.Test
     void addRejectDuplicates(){
         BinarySearchSet<Integer> set = new BinarySearchSet<>();
         for(int i = 0; i < 10; i++)
@@ -58,7 +65,7 @@ class BinarySearchSetTest {
     }
 
     @org.junit.jupiter.api.Test
-    void addGrowALot()
+    void addGrow10000()
     {
         BinarySearchSet<Integer> set = new BinarySearchSet<>();
         for(int i = 0; i < 10000; i++)
@@ -73,16 +80,70 @@ class BinarySearchSetTest {
     }
 
     @org.junit.jupiter.api.Test
-    void clear() {
+    void removeStandard(){
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++)
+        {
+            set.add(i);
+        }
+        set.remove(5);
+        set.remove(0);
+        set.remove(10);
+        Assertions.assertFalse(set.contains(5));
+        Assertions.assertFalse(set.contains(0));
+        Assertions.assertFalse(set.contains(10));
+        Assertions.assertFalse(set.first() == 0);
+        Assertions.assertTrue(set.first() == 1);
+        Assertions.assertFalse(set.last() == 10);
+        Assertions.assertTrue(set.last() == 8);
+        Assertions.assertTrue(set.size() == 7);
     }
 
     @org.junit.jupiter.api.Test
-    void contains() {
+    void removeStart(){
+
+    }
+
+    @org.junit.jupiter.api.Test
+    void removeEnd(){
+
+    }
+
+    @org.junit.jupiter.api.Test
+    void containsStandard() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        int[] testData = {1,9,4,3,100,-30,25};
+        for(int i = 0; i < testData.length; i++) {
+            set.add(Integer.valueOf(testData[i]));
+        }
+        Assertions.assertTrue(set.contains(9)); //any
+        Assertions.assertTrue(set.contains(-30)); //start
+        Assertions.assertTrue(set.contains(100)); //end
+        Assertions.assertTrue(!set.contains(999)); //not
+
+    }
+
+    @org.junit.jupiter.api.Test
+    void containsHuge() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        Random rand = new Random();
+        int insertions = 10000;
+        int range = 10000000;
+        for(int i = 0; i < insertions; i++){
+            set.add(Integer.valueOf(rand.nextInt(range)));
+        }
+        set.add(123456); //Test target
+        Assertions.assertTrue(set.contains(123456));
     }
 
     @org.junit.jupiter.api.Test
     void containsAll() {
     }
+
+    @org.junit.jupiter.api.Test
+    void clear() {
+    }
+
 
     @org.junit.jupiter.api.Test
     void isEmpty() {

@@ -22,8 +22,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
-     * @return
+     * @return user-provided comparator, or null if defaulting to E.compareTo()
      */
     @Override
     public Comparator<? super E> comparator() {
@@ -31,8 +30,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
-     * @return
+     * @return first element of data
      * @throws NoSuchElementException
      */
     @Override
@@ -45,8 +43,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
-     * @return
+     * @return final element of data
      * @throws NoSuchElementException
      */
     @Override
@@ -66,16 +63,15 @@ public class BinarySearchSet<E> implements SortedSet<E>{
      */
     @Override
     public boolean add(E element) {
-        int insertPoint = locateInsertIndex(element);
-
         //Insert if start/end of data or within data and no duplicate exists.
         //
-        if(insertPoint >= size_ || compare(data_[insertPoint], element) != 0) {
+        int insertIndex = locateInsertIndex(element);
+        if(insertIndex >= size_ || compare(data_[insertIndex], element) != 0) {
             if(size_ + 1 == capacity_)
                 growCapacity();
-            if(size_ > 0 && insertPoint < size_)
-                shiftData(insertPoint, 1);
-            data_[insertPoint] = element;
+            if(size_ > 0 && insertIndex < size_)
+                shiftData(insertIndex, 1);
+            data_[insertIndex] = element;
             size_++;
             return true;
         }
@@ -87,16 +83,76 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
      * @param elements
-     * @return
+     * @return true if data changed, else false
      */
     @Override
     public boolean addAll(Collection<? extends E> elements) {
-        //TODO:
-        // think of a 'clever boy' algorithm here. Can it work? Would it be better? Would it be worth it? Can you make it play nice with add? They should share helper functions
+        boolean atLeastOneChange = false;
+        for(E element : elements)
+            if(add(element))
+                atLeastOneChange = true;
+        return atLeastOneChange;
+        //TODO: "fancy" algorithm to reduce shifts
+        //store all insertion points in an ordered list of {insertPoint, element}
+        //check array for resize
+        //step through copying array, copying ordered list in place
+    }
 
-        return false;
+    /**
+     *
+     * @param element
+     * @return true if element removed, false if not found
+     */
+    @Override
+    public boolean remove(E element) {
+        if(size_ == 0)
+            return false;
+
+        //If the requested data is at insert index, remove it
+        //
+        int insertIndex = locateInsertIndex(element);
+        if(compare(data_[insertIndex], element) == 0) {
+            shiftData(insertIndex, -1);
+            size_--;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    @Override
+    public boolean removeAll(Collection<? extends E> elements) {
+        boolean atLeastOneChange = false;
+        for(E element : elements)
+            if(remove(element))
+                atLeastOneChange = true;
+        return atLeastOneChange;
+    }
+
+
+    /**
+     * @param element
+     * @return true if element present in set
+     */
+    @Override
+    public boolean contains(E element) {
+        int insertIndex = locateInsertIndex(element);
+        if(insertIndex >= size_)
+            return false;
+        return compare(data_[insertIndex], element) == 0;
+    }
+
+    /**
+     * @param elements
+     * @return true if all elements present in set
+     */
+    @Override
+    public boolean containsAll(Collection<? extends E> elements) {
+        for(E element : elements)
+            if(!contains(element))
+                return false;
+        return true;
     }
 
     //Code Review: "compareBranching"? Or just call it "compare"? I switched to compare because of a primal feeling in my stomach.
@@ -114,7 +170,6 @@ public class BinarySearchSet<E> implements SortedSet<E>{
             return ((Comparable<E>)e1).compareTo(e2);
         }
     }
-
 
     //Code Review: Best way to do this? I also considered returning a 2-variable storage class, but yuck.
     //also made an attempt to test this independently as a static function. Horror!
@@ -180,31 +235,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
-     * @param element
-     * @return
-     */
-    @Override
-    public boolean contains(E element) {
-        //TODO:
-        //Shared: binary search from add
-        return false;
-    }
-
-    /**
-     *
-     * @param elements
-     * @return
-     */
-    @Override
-    public boolean containsAll(Collection<? extends E> elements) {
-        //TODO: trivial. contains, return false early on any failure.
-        return false;
-    }
-
-    /**
-     *
-     * @return
+     * @return true if empty
      */
     @Override
     public boolean isEmpty() {
@@ -212,7 +243,6 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -223,34 +253,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
-     * @param element
-     * @return
-     */
-    @Override
-    public boolean remove(E element) {
-        //TODO:
-        //same path as add
-        //size-- (unless not found)
-        return false;
-    }
-
-    /**
-     *
-     * @param elements
-     * @return
-     */
-    @Override
-    public boolean removeAll(Collection<? extends E> elements) {
-        //TODO:
-        //same path as add
-        //size-- (unless not found)
-        return false;
-    }
-
-    /**
-     *
-     * @return
+     * @return number of elements in the array
      */
     @Override
     public int size() {
@@ -258,11 +261,14 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
-     * @return
+     * Array of data containing E as objects
+     * @return the data
      */
     @Override
     public Object[] toArray() {
-        return data_;
+        Object[] array = new Object[size_];
+        for(int i = 0; i < size_; i++)
+            array[i] = (Object)data_[i];
+        return array;
     }
 }
