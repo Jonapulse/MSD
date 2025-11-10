@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
-public class BinarySearchSet<E> implements SortedSet<E>{
+public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E>{
 
     private final int DEFAULT_CAPACITY = 10;
 
@@ -135,6 +135,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
 
+
     /**
      * @param element
      * @return true if element present in set
@@ -247,16 +248,18 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     * @return
+     * @return Iterator
      */
     @Override
     public Iterator<E> iterator() {
-       return new BinarySearchIterator<E>();
+       return new BinarySearchIterator();
     }
 
-    class BinarySearchIterator<E> implements Iterator<E> {
+    public class BinarySearchIterator implements Iterator {
         private int nextIndex = 0;
         private boolean canRemove = false;
+
+        public BinarySearchIterator() {}
 
         /**
          * @return true if nextIndex within size
@@ -286,17 +289,17 @@ public class BinarySearchSet<E> implements SortedSet<E>{
         public void remove() {
             if(!canRemove)
                 throw new IllegalStateException();
-            BinarySearchSet.this.remove(data_[nextIndex]);
+            BinarySearchSet.this.remove(data_[--nextIndex]);
             canRemove = false;
         }
 
         /**
          * not implementing
          */
-        @Override
-        public void forEachRemaining(Consumer<? super E> action) {
-            Iterator.super.forEachRemaining(action);
-        }
+//        @Override
+//        public void forEachRemaining(Consumer<? super E> action) {
+//            Iterator.super.forEachRemaining(action);
+//        }
     }
 
     /**

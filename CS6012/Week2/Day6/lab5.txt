@@ -1,0 +1,35 @@
+Lab 5 with Jon Pulsipher and Badr Almadhi - 
+
+1. What activities did you do as the driver? What activities did you do as the navigator?
+I started as the navigator, directing Badr to implement the first function signatures (which we ultimately discarded, realizing our first 
+read of the lab was incorrect). We switched, but we were having trouble understanding how to complete the tasks the lab requested so Badr
+didn't feel comfortable giving me navigation. At that point, it wasn't really possible to continue while formally following the navigator/
+driver paradigm of pair programming, so we went forward, talking and writing in a muddle away. Ultimately, we both did all the activities 
+and I don't remember who wrote what in the final program.
+
+2. What are the advantages and disadvantages of serving in each role?
+I feel strange answering this because I'm confident we did it wrong. But I will answer it. From a psychological perspective, the driver's
+role is reacting to things, writing as the navigator directs and pointing out things the navigator may overlook, which is also a reactive 
+thing to do. For some engineers, this may be a more relaxing role. The navigator gets the benefit of choosing what goes into the program 
+and how it goes in, which can be very satisfying, if more demanding. Is 'how this makes them feel' the right lens with which to evaluate 
+Pair Programming? I dunno. It's forefront in my mind. Pair Programming is stressful for me, and when I first heard about it I considered 
+finding a different field (my current stance on it is more moderate - still stressful though). 
+
+3. How often did you and your partner switch roles? Did you switch often enough?
+I think we switched roles 5 or 6 times. Felt like the right amount. If we had understood the lab better, we would have gone faster and 
+switched maybe once.
+
+4. Which is your preferred role and why?
+I don't have enough experience to give a good answer, but I'll say navigation, because we were having trouble figuring out what to do and 
+when I was designated as navigator I felt more comfortable taking the lead in that. 
+
+5. Explain why this is a BAD test case for your method: assertEquals("bird", MedianSolver.median(new String[]{"bird", "cat", "dog", "ant"}))
+"bird" and "cat" would be equally valid returns according to project instructions. If you wanted to still test with that data set you could 
+assert "bird" or "cat" matched (using proper syntax, of course).
+
+6. Explain how you could change the test to make it "valid" and explain how you could change the specification so that this is considered a "good" test
+Changing test:
+String medianTest = MedianSolver.median(new String[]{"bird", "cat", "dog", "ant"});
+Assertions.AssertTrue(medianTest.equals("bird") || mediantTest.equals("cat"));
+Changing spec:
+for even arrays, return the lower-in-sort-order element of the two middle elements.

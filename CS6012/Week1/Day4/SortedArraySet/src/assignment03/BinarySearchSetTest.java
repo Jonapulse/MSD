@@ -14,12 +14,20 @@ class BinarySearchSetTest {
 
     @org.junit.jupiter.api.Test
     void first() {
-        //TODO: Test NoSuchElement Exception
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++) {
+            set.add(i);
+        }
+        Assertions.assertEquals(0, set.first());
     }
 
     @org.junit.jupiter.api.Test
     void last() {
-        //TODO: Test NoSuchElement Exception
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++) {
+            set.add(i);
+        }
+        Assertions.assertEquals(9, set.last());
     }
 
     @org.junit.jupiter.api.Test
@@ -58,6 +66,8 @@ class BinarySearchSetTest {
         {
             set.add(i);
         }
+        (a, b) -> Integer.compare(a, b)
+
         set.add(3); //Any
         set.add(0); //First
         set.add(9); //Last
