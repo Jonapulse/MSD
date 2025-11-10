@@ -1,5 +1,7 @@
 package assignment03;
 
+import org.junit.jupiter.api.Assertions;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BinarySearchSetTest {
@@ -19,7 +21,51 @@ class BinarySearchSetTest {
     }
 
     @org.junit.jupiter.api.Test
-    void add() {
+    void addInOrderStandard() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++)
+        {
+            set.add(i);
+        }
+
+        Assertions.assertEquals(set.first(), 0);
+        Assertions.assertEquals(set.last(), 9);
+        Assertions.assertEquals(set.size(), 10);
+    }
+
+    @org.junit.jupiter.api.Test
+    void addOutOfOrderStandard() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        int[] testData = {1,9,4,3,100,-30,25};
+        for(int i = 0; i < testData.length; i++) {
+            set.add(Integer.valueOf(testData[i]));
+        }
+        Assertions.assertEquals(set.first(), -30);
+        Assertions.assertEquals(set.last(), 100);
+    }
+
+    @org.junit.jupiter.api.Test
+    void addRejectDuplicates(){
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++)
+        {
+            set.add(i);
+        }
+        set.add(3); //Any
+        set.add(0); //First
+        set.add(9); //Last
+        Assertions.assertEquals(set.size(), 10);
+    }
+
+    @org.junit.jupiter.api.Test
+    void addGrowALot()
+    {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10000; i++)
+        {
+            set.add(i);
+        }
+        Assertions.assertEquals(set.size(), 10000);
     }
 
     @org.junit.jupiter.api.Test

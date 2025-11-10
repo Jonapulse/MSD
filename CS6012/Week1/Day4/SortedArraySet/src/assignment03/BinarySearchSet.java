@@ -8,8 +8,7 @@ import java.util.NoSuchElementException;
 public class BinarySearchSet<E> implements SortedSet<E>{
 
     private final int DEFAULT_CAPACITY = 10;
-    private final int GROW_FACTOR = 2; //NOTE: I considered a 'more sophisticated' growth factor that grew larger arrays less,
-    //but optimizing without a clear target (and doing more work...) felt wrong
+
     private E[] data_ = (E[]) new Object[DEFAULT_CAPACITY];
     private int size_ = 0;
     private int capacity_ = DEFAULT_CAPACITY; //
@@ -21,12 +20,6 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     public BinarySearchSet(Comparator<? super E> comparator) {
         comparator_ = comparator;
     }
-
-    //TODO: decide on helper functions
-    //shared findMemberOrInsertPoint?
-    //shared copyArray (for grow/shrink). Share function with addRemAll? That stuff is stretch
-        //share functionality with insert's add? Or maybe it just takes new array size and a list of lists to add
-        //NOTE: make sure this isn't something better accomplished with basic functions. Might not need to share.
 
     /**
      *
@@ -65,45 +58,32 @@ public class BinarySearchSet<E> implements SortedSet<E>{
         }
     }
 
-    //Code Review: Best way to do this? I also considered returning a 2-variable storage class, but yuck.
-    //also made an attempt to test this independently as a static function. Horror!
     /**
-     * Binary search returns index of element OR where it SHOULD be inserted.
-     * Assumes sorted set, which BinarySearchSet requires
-     * @param element - search target
-     * @return object - {boolean elemFound, int index}
-     */
-    int locateWhereDataShouldBe(E element, E[] data, int size, Comparator<? super E> comparatorMe){
-        int start = 0;
-        int end = size - 1;
-        int mid = 0;
-        while(start <= end){
-            mid = start + (end - start)/2;
-            int compare = (comparatorMe != null) ? comparator().compare(element, data[mid]) :
-                    ((Comparable<E>)element).compareTo(element);
-            if(compare == 0)
-                return mid;
-            else if(compare < 0)
-                end = mid - 1;
-            else
-                start = mid + 1;
-        }
-        return mid;
-    }
-
-    /**
+     * Adds element to ordered data if not duplicate
      *
      * @param element
-     * @return
+     * @return true if set is modified, false if not
      */
     @Override
     public boolean add(E element) {
-        //TODO:
-        // binary search for where to add it.
-        // did you find it? Don't add.
-        // otherwise, get the index of insertion where search ended (where you would otherwise return -1
-        // when you add, shift every element forward
-        return false;
+        int insertPoint = locateInsertIndex(element);
+
+        //Insert if start/end of data or within data and no duplicate exists.
+        //
+        if(insertPoint >= size_ || compare(data_[insertPoint], element) != 0) {
+            if(size_ + 1 == capacity_)
+                growCapacity();
+            if(size_ > 0 && insertPoint < size_)
+                shiftData(insertPoint, 1);
+            data_[insertPoint] = element;
+            size_++;
+            return true;
+        }
+        else
+            return false;
+        // TODO: Test shiftData.
+        // TODO: Test grow (and check that implementation)
+        // TODO: than... that enough?
     }
 
     /**
@@ -115,9 +95,78 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     public boolean addAll(Collection<? extends E> elements) {
         //TODO:
         // think of a 'clever boy' algorithm here. Can it work? Would it be better? Would it be worth it? Can you make it play nice with add? They should share helper functions
-        // Shared: find where to insert (or no insert)
-        // Shared: do the insert with the moves, but in a way that could accept multiple inserts? An ordered list of index/value
+
         return false;
+    }
+
+    //Code Review: "compareBranching"? Or just call it "compare"? I switched to compare because of a primal feeling in my stomach.
+    /**
+     * Branches between comparing with provided comparator or, if null, element Comparables.
+     * @param e1, elements to compare
+     * @param e2, ...
+     * @return -1 if e1 < e2, 0 if e1 == e2, 1 if e1 > e2
+     */
+    int compare(E e1, E e2) {
+        if(comparator_ != null) {
+            return comparator_.compare(e1, e2);
+        }
+        else{
+            return ((Comparable<E>)e1).compareTo(e2);
+        }
+    }
+
+
+    //Code Review: Best way to do this? I also considered returning a 2-variable storage class, but yuck.
+    //also made an attempt to test this independently as a static function. Horror!
+    /**
+     * Binary search returns index of element OR where it SHOULD be inserted.
+     * Assumes sorted set, which BinarySearchSet requires
+     *
+     * @param element - search target
+     * @return object - {boolean elemFound, int index}
+     */
+    int locateInsertIndex(E element){
+        int start = 0;
+        int end = size_ - 1;
+        int mid = 0;
+        int compare = 0;
+        while(start <= end){
+            mid = start + (end - start)/2;
+            compare = compare(element, data_[mid]);
+            if(compare == 0)
+                return mid;
+            else if(compare < 0)
+                end = mid - 1;
+            else
+                start = mid + 1;
+        }
+        //Return last index searched if element goes before there,
+        // or + 1 if element should be after
+        return mid + (compare > 0 ? 1 : 0);
+    }
+
+    /**
+     * Moves data_ from "start" index to end of set "shift" spaces
+     * @param start
+     * @param shift
+     */
+    void shiftData(int start, int shift){
+        int loopStart = shift > 0 ? size_ - 1: start - 1;
+        int loopEnd = shift > 0 ? start - 1: size_ - 1;
+        int increment = shift > 0 ? -1 : 1;
+        for(int i = loopStart; i != loopEnd; i += increment ){
+            data_[i + shift] = data_[i];
+        }
+    }
+
+    /**
+     * double data capacity and copies data over
+     */
+    void growCapacity() {
+        capacity_ = capacity_ * 2;
+        E[] new_data = (E[]) new Object[capacity_];
+        System.arraycopy(data_, 0, new_data, 0, size_);
+        data_ = new_data;
     }
 
     /**
