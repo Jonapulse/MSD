@@ -78,9 +78,6 @@ public class BinarySearchSet<E> implements SortedSet<E>{
         }
         else
             return false;
-        // TODO: Test shiftData.
-        // TODO: Test grow (and check that implementation)
-        // TODO: than... that enough?
     }
 
     //Code Review - considering optimization to look up all insertions and do one big swap
@@ -232,7 +229,7 @@ public class BinarySearchSet<E> implements SortedSet<E>{
     }
 
     /**
-     *
+     * empties set, resetting to default
      */
     @Override
     public void clear() {
@@ -254,15 +251,10 @@ public class BinarySearchSet<E> implements SortedSet<E>{
      */
     @Override
     public Iterator<E> iterator() {
-        //Check your class notes. Should be straight-forward, but
-        //I should probably hold on this until the rest of the stuff.
-        return null;
+       return new BinarySearchIterator<E>();
     }
 
-    /**
-     *
-     */
-    class BinarySearchIterator implements Iterator<E> {
+    class BinarySearchIterator<E> implements Iterator<E> {
         private int nextIndex = 0;
         private boolean canRemove = false;
 
@@ -275,19 +267,20 @@ public class BinarySearchSet<E> implements SortedSet<E>{
         }
 
         /**
-         * @return next element if present, else throws exception
+         * @return next element if present
+         * @throws NoSuchElementException
          */
         @Override
         public E next() {
             if(!hasNext())
                 throw new NoSuchElementException();
             canRemove = true;
-            return data_[nextIndex++];
+            return (E) data_[nextIndex++];
         }
 
         /**
          * Removes element at nextIndex if next has been called for that element,
-         * else throws IllegalStateException
+         * @throws IllegalStateException
          */
         @Override
         public void remove() {

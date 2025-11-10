@@ -153,21 +153,23 @@ class BinarySearchSetTest {
     void clear() {
     }
 
-
     @org.junit.jupiter.api.Test
     void isEmpty() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        Assertions.assertTrue(set.isEmpty());
     }
 
     @org.junit.jupiter.api.Test
     void iterator() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void remove() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void removeAll() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++){
+            set.add(i);
+        }
+        int iCompare = 0;
+        for(Integer i : set){
+            Assertions.assertEquals(Integer.valueOf(iCompare), i);
+            iCompare++;
+        }
     }
 
     @org.junit.jupiter.api.Test
@@ -176,9 +178,5 @@ class BinarySearchSetTest {
 
     @org.junit.jupiter.api.Test
     void toArray() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void forEach() {
     }
 }
