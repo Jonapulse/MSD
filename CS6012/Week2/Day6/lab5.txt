@@ -1,4 +1,5 @@
 Lab 5 with Jon Pulsipher and Badr Almadhi - 
+Code at: https://github.com/BadrAlmadhi/MSD-repo/blob/main/CS6012/week2/day6/lab5/src/Median.java
 
 1. What activities did you do as the driver? What activities did you do as the navigator?
 I started as the navigator, directing Badr to implement the first function signatures (which we ultimately discarded, realizing our first 

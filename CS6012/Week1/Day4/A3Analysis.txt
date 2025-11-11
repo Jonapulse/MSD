@@ -19,3 +19,5 @@ element? Create a plot of running times. Pay close attention to the problem size
 N items, the size of the sorted set is always changing. A good strategy is to fill a sorted set with N items and time how long it takes to add one additional 
 item. To do this repeatedly (i.e., iteration count), remove the item and add it again, being careful not to include the time required to call remove() in your 
 total. In the worst-case, how much time does it take to locate the position to add an element (give your answer using Big-oh)?
+
+Huh, but I use the same method. 

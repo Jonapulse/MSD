@@ -2,6 +2,8 @@ package assignment03;
 
 import org.junit.jupiter.api.Assertions;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +12,7 @@ class BinarySearchSetTest {
 
     @org.junit.jupiter.api.Test
     void comparator() {
+        //TODO:
     }
 
     @org.junit.jupiter.api.Test
@@ -66,7 +69,6 @@ class BinarySearchSetTest {
         {
             set.add(i);
         }
-        (a, b) -> Integer.compare(a, b)
 
         set.add(3); //Any
         set.add(0); //First
@@ -87,6 +89,8 @@ class BinarySearchSetTest {
 
     @org.junit.jupiter.api.Test
     void addAll() {
+        //TODO:
+        //Comparator<Integer> reverseOrder = (a, b) -> b -a; Sophia's comprator
     }
 
     @org.junit.jupiter.api.Test
@@ -129,6 +133,22 @@ class BinarySearchSetTest {
     }
 
     @org.junit.jupiter.api.Test
+    void removeStandardReverseComparator()
+    {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        ArrayList testData = new ArrayList();
+        for(int i = 0; i < 10; i++)
+        {
+            set.add(i);
+            if(i < 9)
+                testData.add(i);
+        }
+        set.removeAll(testData);
+        Assertions.assertEquals(set.size(), 1);
+        Assertions.assertTrue(set.contains(9));
+    }
+
+    @org.junit.jupiter.api.Test
     void containsStandard() {
         BinarySearchSet<Integer> set = new BinarySearchSet<>();
         int[] testData = {1,9,4,3,100,-30,25};
@@ -157,10 +177,27 @@ class BinarySearchSetTest {
 
     @org.junit.jupiter.api.Test
     void containsAll() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        int[] testData = {1,9,4,3,100,-30,25};
+        ArrayList<Integer> testList = new ArrayList<>();
+        for(int i = 0; i < testData.length; i++) {
+            set.add(Integer.valueOf(testData[i]));
+            testList.add(testData[i]);
+        }
+        Assertions.assertTrue(set.containsAll(testList));
+        testList.add(999);
+        Assertions.assertFalse(set.containsAll(testList)); //not
     }
 
     @org.junit.jupiter.api.Test
     void clear() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++)
+        {
+            set.add(i);
+        }
+        set.clear();
+        Assertions.assertTrue(set.size() == 0);
     }
 
     @org.junit.jupiter.api.Test
@@ -184,9 +221,47 @@ class BinarySearchSetTest {
 
     @org.junit.jupiter.api.Test
     void size() {
+        BinarySearchSet<Integer> set = new BinarySearchSet<>();
+        for(int i = 0; i < 10; i++){
+            set.add(i);
+        }
+        Assertions.assertEquals(set.size(), 10);
     }
 
     @org.junit.jupiter.api.Test
-    void toArray() {
+    void timingContains() {
+        long startTime, midpointTime, stopTime;
+
+        // First, spin computing stuff until one second has gone by.
+        // This allows this thread to stabilize.
+
+        startTime = System.nanoTime();
+        while (System.nanoTime() - startTime < 1000000000) { // empty block
+        }
+
+        // Now, run the test.
+
+        long timesToLoop = 10000;
+
+        startTime = System.nanoTime();
+
+        for (long i = 0; i < timesToLoop; i++)
+            for (double d = 1; d <= 10; d++)
+                Math.sqrt(d);
+
+        midpointTime = System.nanoTime();
+
+        //Control
+        for (long i = 0; i < timesToLoop; i++) { // empty block
+        }
+
+        stopTime = System.nanoTime();
+        double averageTime = ((midpointTime - startTime) - (stopTime - midpointTime)) / timesToLoop;
+
+        System.out.println(
+                "It takes exactly " + averageTime + " nanoseconds to compute the square roots of the " + " numbers 1..10.");
+
     }
+
+    //TODO: 
 }

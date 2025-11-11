@@ -15,7 +15,6 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E>{
     private int capacity_ = DEFAULT_CAPACITY; //
     private Comparator<? super E> comparator_ = null;
 
-
     public BinarySearchSet() {}
 
     public BinarySearchSet(Comparator<? super E> comparator) {
