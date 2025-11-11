@@ -1,16 +1,28 @@
 CS6012, Lab 1, Jon Pulsipher
 
 1) Where is the assertEquals method defined? What does it do? Can we use assertEquals for more than just int types? (Hint: Consult the API for JUnit)
+assertEquals is defined in org.junit.jupiter.api.Assertions. AssertEquals takes in ~100 different combinations of arguments with different types.
 
 2) Briefly describe what each of the three tests is checking.
+arr1: verifies an empty array returns -1, a flag value for 'no difference found'.
+arr2: checks duplicates, verifying the difference is 0.
+arr3: checks a bunch of random values, verifying this functions for at least one normal use case.
 
 3) Why is our unimplemented findSmallestDiff method passing one of the tests?
+The unimplemented function returns a default of zero, which happens to match the expected value for one of the tests.
 
 4) Why are we failing the third test? How should our method be modified to correct this?
+-8 is "smaller" than 4, but it's absolute value is not. Our difference calculation needs to be enclosed in an absolute value function.
 
 5) What is the appropriate call to assertEquals for your new test (test 4)?
+I didn't see any specific instructions for test 4 - I chose to make a test of closeby numbers with one big negative because I didn't see absolute value being used in the algorithm and I expected that would cause a failure (it did).
+assertEquals(1, DiffUtil.findSmallestDiff(arrBigNegative));
 
 6) Provide one more test (test 5) for the findSmallestDiff method. Briefly describe your test and write the call to assertEquals here.
+Tests array with start pair at minimum distance and following pairs the same 
+assertEquals(1, DiffUtil.findSmallestDiff(arrStart));
 
 7) Briefly describe your unit tests for Assignment 1.
-
+Test 6: tests array with end pair at minimum distance and following pairs the same
+Test 7: "control" test to compare with 5 and 6, similar array but smallest diff in the middle
+Test 8: testing BigNegative with order reversed to see if that makes a difference. It does not.
