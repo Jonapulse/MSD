@@ -1,4 +1,4 @@
-package lab02;
+package assignment03;
 
 
 /**
@@ -42,7 +42,6 @@ abstract public class TimerTemplate {
      * @param n problem size being timed
      */
     protected abstract void compensationIteration(int n);
-
 
     /**
      * Store the problem size + runtime together in 1 object

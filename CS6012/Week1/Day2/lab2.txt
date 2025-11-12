@@ -1,6 +1,6 @@
 1) On your computer, how many times per second does the millisecond timer update?
 1 second - Approximately 1000.0 times per second //WAIT I NEED TO CLOSE EVERYTHING ON MY COMPUTER
-10 seconds - 999.5, then 1000.0. Also negatively loops (int overflow? Yeah, long gives a reasonable number about 1.5x INT MAX)
+10 seconds - 999.5, then 1000.0. Also negatively loops (int overflow? Yeah, long gives a reasonable number about 1.5x INT_MAX)
 
 2) Is it possible to determine how many times per second the nanosecond timer updates? If so, how many? If not, why not?
 
