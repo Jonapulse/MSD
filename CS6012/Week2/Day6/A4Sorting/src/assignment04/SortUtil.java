@@ -125,11 +125,20 @@ public class SortUtil {
      * @param comparator
      */
     static <T> void quicksortRecurse(ArrayList<T> list, int b, int e, Comparator<? super T> comparator){
-        int part = partition(list,)
-        //quicksort left
-        //quicksort right
+        //TODO: better pivot, occasional random
 
+        int length = e - b + 1;
+        if(length < 2) //base case for full recursion, sorted
+            return;
 
+        int part = partition(list, getPivot(list, b, e, 0, comparator), b, e, comparator);
+        if(length / 2 < SMALL_SORT_THRESHOLD){
+            insertionSort(list, b, part - 1, comparator);
+            insertionSort(list, part + 1, e, comparator);
+        } else {
+            quicksortRecurse(list, b, part - 1, comparator);
+            quicksortRecurse(list, part + 1, e, comparator);
+        }
     }
 
     /**
@@ -141,14 +150,14 @@ public class SortUtil {
      */
     static <T> int partition(ArrayList<T> list, int pivot, int b, int e, Comparator<? super T> comparator)
     {
-        Collections.swap(list, pivot, list.size() - 1);
-        int left = 0;
-        int right = list.size() - 2;
+        Collections.swap(list, pivot, e);
+        int left = b;
+        int right = e - 1;
         while(left < right)
         {
-            while(comparator.compare(list.get(left), list.get(list.size()-1)) <= 0 && left < right)
+            while(comparator.compare(list.get(left), list.get(e)) <= 0 && left < right)
                 left++;
-            while(comparator.compare(list.get(right), list.get(list.size()-1)) >= 0 && right > left)
+            while(comparator.compare(list.get(right), list.get(e)) >= 0 && right > left)
                 right--;
             if(left < right) {
                 Collections.swap(list, left, right);
@@ -156,10 +165,10 @@ public class SortUtil {
             }
         }
         //Move right back if it overshot
-        if(comparator.compare(list.get(right), list.get(list.size()-1)) <= 0)
+        if(comparator.compare(list.get(right), list.get(e)) <= 0)
             right++;
 
-        Collections.swap(list, right, list.size()-1);
+        Collections.swap(list, right, e);
         return right;
     }
 
@@ -172,10 +181,10 @@ public class SortUtil {
      * @param list
      * @param b - beg index, inclusive
      * @param e - end index, inclusive
-     * @param mode
+     * @param mode - type of pivot selection
      * @return index of pivot
      */
-    <T> int getPivot (ArrayList<T> list, int b, int e, int mode, Comparator<? super T> comparator)
+    static <T> int getPivot (ArrayList<T> list, int b, int e, int mode, Comparator<? super T> comparator)
     {
         switch(mode){
             case 0: //middle
@@ -184,6 +193,7 @@ public class SortUtil {
                 Random rand = new Random();
                 return b + rand.nextInt(e - b);
             case 2: //median of sample
+                //TODO: This is returning a value. Adjust it to return the index.
                 ArrayList<T> sample = new ArrayList<>();
                 sample.add(list.get(b));
                 sample.add(list.get(b + (e - b)/2));

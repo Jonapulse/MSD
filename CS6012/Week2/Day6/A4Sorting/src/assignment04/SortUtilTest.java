@@ -87,18 +87,28 @@ class SortUtilTest {
 
     @org.junit.jupiter.api.Test
     void quicksort() {
-        ArrayList worstCaseList = SortUtil.generateWorstCase(100);
+        ArrayList worstCaseList = SortUtil.generateWorstCase(100000);
+        SortUtil.quicksort(worstCaseList, Comparator.naturalOrder());
+        for(int i = 0; i < worstCaseList.size(); i++) {
+            assertEquals(worstCaseList.get(i), i + 1);
+        }
     }
 
     @org.junit.jupiter.api.Test
     void partition() {
         ArrayList<Integer> listSeparate = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
-        assertEquals(SortUtil.partition(listSeparate, 4, Comparator.naturalOrder()), 1);
+        assertEquals(SortUtil.partition(listSeparate, 4, 0, listSeparate.size() - 1, Comparator.naturalOrder()), 1);
         assertEquals(listSeparate.get(0), 1);
 
         ArrayList<Integer> listSeparate2 = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
-        assertEquals(SortUtil.partition(listSeparate2, 1, Comparator.naturalOrder()), 4);
+        assertEquals(SortUtil.partition(listSeparate2, 1, 0, listSeparate2.size() - 1, Comparator.naturalOrder()), 4);
         assertEquals(listSeparate2.get(5), 25);
+
+        ArrayList<Integer> listSeparate2WithPadding = new ArrayList<>(Arrays.asList(99, 0, 0, 7, 10, 25, 1, 2, 3));
+        int part = SortUtil.partition(listSeparate2WithPadding, 4, 3, listSeparate2WithPadding.size() - 1, Comparator.naturalOrder());
+        assertEquals(part, 7);
+        assertEquals(listSeparate2WithPadding.get(8), 25);
+        assertEquals(listSeparate2WithPadding.get(0), 99);
     }
 
     @org.junit.jupiter.api.Test
