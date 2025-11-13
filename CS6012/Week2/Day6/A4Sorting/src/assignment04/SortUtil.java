@@ -61,24 +61,24 @@ public class SortUtil {
 
        //Loop until l or r runs out
          //
-       while(l < endL - beg && r < endR - endL){
-           if(comparator.compare(in.get(l), out.get(r)) <= 0){
+       while(l <= endL - beg && r <= endR){
+           if(comparator.compare(in.get(l), in.get(r)) <= 0){
                out.set(i, in.get(l));
                i++; l++;
            }
            else
            {
-               out.set(i, out.get(r));
+               out.set(i, in.get(r));
                i++; r++;
            }
        }
 
        //fill remaining ls or rs
          //
-        for( ; l < endL - beg; l++, i++)
+        for( ; l <= endL - beg; l++, i++)
             out.set(i, in.get(l));
-        for( ; r < endR - endL; r++, i++)
-            out.set(i, out.get(r));
+        for( ; r <= endR; r++, i++)
+            out.set(i, in.get(r));
     }
 
     /**
