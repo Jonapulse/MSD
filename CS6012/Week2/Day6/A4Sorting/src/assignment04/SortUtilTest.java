@@ -12,16 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SortUtilTest {
 
-
+/*
  //   ArrayList<Integer> arrInterwoven6, arr6varied;
     @BeforeEach
     void setUp() {
        // arr1to6 = new ArrayList<>(Arrays.asList(1,3,5,2,4,7));
     //    arr6varied = new ArrayList<>(Arrays.asList(7,10,25,1,2,3));
     }
+    */
 
     @org.junit.jupiter.api.Test
     void mergesort() {
+        ArrayList worstCaseList = SortUtil.generateWorstCase(10000);
+        SortUtil.mergesort(worstCaseList, Comparator.naturalOrder());
+        for(int i = 0; i < worstCaseList.size(); i++) {
+            assertEquals(worstCaseList.get(i), i + 1);
+        }
     }
 
     @org.junit.jupiter.api.Test
@@ -51,6 +57,27 @@ class SortUtilTest {
     }
 
     @org.junit.jupiter.api.Test
+    void mergeSmall(){
+        ArrayList<Integer> listTiny =  new ArrayList<>(Arrays.asList(2,1));
+        ArrayList dummy = new ArrayList();
+        for(int i = 0; i < listTiny.size(); i++)
+            dummy.add(0);
+
+        SortUtil.merge(listTiny, dummy, 0, 0, 1, Comparator.naturalOrder());
+        for(int i = 0; i < 2; i++)
+            assertEquals(dummy.get(i), i + 1);
+
+        ArrayList listTinyAndLate = new ArrayList(Arrays.asList(0,0,0,2,1));
+        dummy = new ArrayList();
+        for(int i = 0; i < listTinyAndLate.size(); i++)
+            dummy.add(0);
+
+        SortUtil.merge(listTinyAndLate, dummy, 3, 3, 4, Comparator.naturalOrder());
+        assertEquals(dummy.get(3), 1);
+        assertEquals(dummy.get(4), 2);
+    }
+
+    @org.junit.jupiter.api.Test
     void insertionSort() {
         ArrayList<Integer> shortTest = new ArrayList<>(Arrays.asList(1, 3, 5, 2, 4, 6));
         SortUtil.insertionSort(shortTest, 0, shortTest.size() - 1, Comparator.naturalOrder());
@@ -60,12 +87,18 @@ class SortUtilTest {
 
     @org.junit.jupiter.api.Test
     void quicksort() {
+        ArrayList worstCaseList = SortUtil.generateWorstCase(100);
     }
 
     @org.junit.jupiter.api.Test
     void partition() {
         ArrayList<Integer> listSeparate = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
+        assertEquals(SortUtil.partition(listSeparate, 4, Comparator.naturalOrder()), 1);
+        assertEquals(listSeparate.get(0), 1);
 
+        ArrayList<Integer> listSeparate2 = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
+        assertEquals(SortUtil.partition(listSeparate2, 1, Comparator.naturalOrder()), 4);
+        assertEquals(listSeparate2.get(5), 25);
     }
 
     @org.junit.jupiter.api.Test

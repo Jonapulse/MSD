@@ -4,7 +4,8 @@ import java.util.*;
 
 public class SortUtil {
 
-    final int SMALL_SORT_THRESHOLD = 100;
+    final static int SMALL_SORT_THRESHOLD = 100;
+    final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
     /// MergeSort & Helpers
@@ -21,44 +22,56 @@ public class SortUtil {
         if(comparator == null)
             comparator = (Comparator<? super T>) Comparator.naturalOrder();
 
-        //TODO: pre-allocate the temp array to use for this
-        //mergeSortRecurse
-    }
-
-
-    static <T> void mergeSortRecurse(ArrayList<T> list, ArrayList<T> out, int b, int e, Comparator<? super T> comparator)
-    {
-        //if arr.length < 2
-            // return;
-
-        //if left > threshold
-        // mergeSort(left)
-        //else
-        //insertion sort
-        //if right > threshold
-       // mergeSort(right)
-        //else
-        //insertion sort
-
-       // merge(arr, left, right)
-        //? Is this where we copy back from scratch? Think through it functionally. Yeah.
+        ArrayList<T> scratch = new ArrayList<T>();
+        scratch.addAll(list);
+        mergeSortRecurse(list, scratch, 0, list.size() - 1, comparator);
     }
 
     /**
+     * Performs mergeSort recursively on list, using out to help write and copy in-place.
+     *
+     * @param list
+     * @param out
+     * @param b - start index, inclusive
+     * @param e - end index, inclusive
+     * @param comparator
+     */
+    static <T> void mergeSortRecurse(ArrayList<T> list, ArrayList<T> out, int b, int e, Comparator<? super T> comparator)
+    {
+        int length = e - b + 1;
+        if(length < 2) //base case for full recursion, sorted
+            return;
+
+        int mid = (b + e) / 2;
+        if(length / 2 < SMALL_SORT_THRESHOLD){
+            insertionSort(list, b, mid, comparator);
+            insertionSort(list, mid + 1, e, comparator);
+        } else {
+            mergeSortRecurse(list, out, b, mid, comparator);
+            mergeSortRecurse(list, out, mid + 1, e, comparator);
+        }
+
+        merge(list, out, b, mid, e, comparator);
+        for(int i = b; i <= e; i++)
+            list.set(i, out.get(i));
+    }
+
+    /**
+     * March through in, writing the smallest sequential values from left (beg to mid) and right (mid + 1 to end) to out
      *
      * @param out
      * @param beg  - begin
-     * @param endL - final index of L. 'beginR' == endL + 1;
-     * @param endR - final index of R.
+     * @param mid - final index of L. 'beginR' == mid + 1;
+     * @param end - final index of R.
      */
-    static <T> void merge(ArrayList<T> in, ArrayList<T> out, int beg, int endL, int endR, Comparator<? super T> comparator){
-       int i = 0;
+    static <T> void merge(ArrayList<T> in, ArrayList<T> out, int beg, int mid, int end, Comparator<? super T> comparator){
+       int i = beg;
        int l = beg;
-       int r = endL + 1;
+       int r = mid + 1;
 
        //Loop until l or r runs out
          //
-       while(l <= endL - beg && r <= endR){
+       while(l <= mid && r <= end){
            if(comparator.compare(in.get(l), in.get(r)) <= 0){
                out.set(i, in.get(l));
                i++; l++;
@@ -72,9 +85,9 @@ public class SortUtil {
 
        //fill remaining ls or rs
          //
-        for( ; l <= endL - beg; l++, i++)
+        for( ; l <= mid; l++, i++)
             out.set(i, in.get(l));
-        for( ; r <= endR; r++, i++)
+        for( ; r <= end; r++, i++)
             out.set(i, in.get(r));
     }
 
@@ -101,7 +114,7 @@ public class SortUtil {
      * @param comparator
      */
     public static <T> void quicksort(ArrayList<T> list, Comparator<? super T> comparator){
-        //
+        quicksortRecurse(list, 0, list.size() - 1, comparator);
     }
 
     /**
@@ -112,32 +125,73 @@ public class SortUtil {
      * @param comparator
      */
     static <T> void quicksortRecurse(ArrayList<T> list, int b, int e, Comparator<? super T> comparator){
-        //partition the list
+        int part = partition(list,)
         //quicksort left
         //quicksort right
+
+
     }
 
     /**
-     * Partitions
+     * re-orders list, placing pivot in order, smaller elements left, larger elements right (only pivot order guaranteed)
      *
      * @param list
      * @param pivot
      * @return index of pivot, an index all values earlier in the array are smaller, and all later are larger
      */
-    static <T> int partition(ArrayList<T> list, int pivot, Comparator<? super T> comparator)
+    static <T> int partition(ArrayList<T> list, int pivot, int b, int e, Comparator<? super T> comparator)
     {
-        //swap pivot to end
-        //left = 0;
-        //right = end - 1//to not point at pivot
-        //while(left < right)
-            //while(arr[left < pivot)
-                //left++
-            //while(arr[right > pivot)
-                //right--;
-            //swap left/right
-            //left++ right--
-        //swap left and pivot
-        return -1;
+        Collections.swap(list, pivot, list.size() - 1);
+        int left = 0;
+        int right = list.size() - 2;
+        while(left < right)
+        {
+            while(comparator.compare(list.get(left), list.get(list.size()-1)) <= 0 && left < right)
+                left++;
+            while(comparator.compare(list.get(right), list.get(list.size()-1)) >= 0 && right > left)
+                right--;
+            if(left < right) {
+                Collections.swap(list, left, right);
+                left++; right--;
+            }
+        }
+        //Move right back if it overshot
+        if(comparator.compare(list.get(right), list.get(list.size()-1)) <= 0)
+            right++;
+
+        Collections.swap(list, right, list.size()-1);
+        return right;
+    }
+
+    /**
+     * Utility class to switch between pivot methods
+     * mode 0 - middle index
+     * mode 1 - random
+     * mode 2 - median of 3 (if I wanna get fancy I'll implement median of 9)
+     *
+     * @param list
+     * @param b - beg index, inclusive
+     * @param e - end index, inclusive
+     * @param mode
+     * @return index of pivot
+     */
+    <T> int getPivot (ArrayList<T> list, int b, int e, int mode, Comparator<? super T> comparator)
+    {
+        switch(mode){
+            case 0: //middle
+                return b + (e - b)/2;
+            case 1: //random
+                Random rand = new Random();
+                return b + rand.nextInt(e - b);
+            case 2: //median of sample
+                ArrayList<T> sample = new ArrayList<>();
+                sample.add(list.get(b));
+                sample.add(list.get(b + (e - b)/2));
+                sample.add(list.get(e));
+                return medianOf3(sample, comparator);
+            default: //start
+                return b;
+        }
     }
 
     /**
@@ -173,6 +227,7 @@ public class SortUtil {
         if(list.size() < 9)
             return medianOf3(list, comparator);
 
+        //NOTE: Note yet implemented.
   //      ArrayList<Integer> medians = new ArrayList<Integer>();
    //     medians.add(list.get(medianOf3(list.subList(0, 2), comparator)));
         return -1;
