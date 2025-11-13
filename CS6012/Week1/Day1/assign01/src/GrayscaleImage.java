@@ -86,8 +86,7 @@ public class GrayscaleImage {
      * @throws IllegalArgumentException if x, y are not within the image width/height
      */
     public double getPixel(int x, int y){
-        //STUDENT Fill in this in to work correctly
-       return Double.NaN;
+       return imageData[x][y];
     }
 
     /**
