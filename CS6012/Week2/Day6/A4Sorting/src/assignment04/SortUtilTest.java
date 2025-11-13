@@ -52,14 +52,10 @@ class SortUtilTest {
 
     @org.junit.jupiter.api.Test
     void insertionSort() {
-        //{1,3,5,2,4,6}
-        ArrayList<Integer> leftRight = new ArrayList<>();
-        leftRight.add(1);
-        leftRight.add(3);
-        leftRight.add(5);
-        leftRight.add(2);
-        leftRight.add(4);
-        leftRight.add(6);
+        ArrayList<Integer> shortTest = new ArrayList<>(Arrays.asList(1, 3, 5, 2, 4, 6));
+        SortUtil.insertionSort(shortTest, 0, shortTest.size() - 1, Comparator.naturalOrder());
+        for(int i = 0; i < 6; i++)
+            assertEquals(shortTest.get(i), i + 1);
     }
 
     @org.junit.jupiter.api.Test

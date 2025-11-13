@@ -82,15 +82,18 @@ public class SortUtil {
     }
 
     /**
+     * In-place Insertion sort, marching through array swapping values earlier until sorted
      *
-     * @param list
+     * @param out
      * @param b - begin index
      * @param e - end index
      * @return
      */
-    public static <T> ArrayList<T> insertionSort(ArrayList<T> list, int b, int e)
+    public static <T> void insertionSort(ArrayList<T> out, int b, int e, Comparator<? super T> comparator)
     {
-        return null;
+        for( ; b <= e; b++)
+            for(int j = b; j > 0 && comparator.compare(out.get(j), out.get(j - 1)) <= 0; j--)
+                Collections.swap(out, j, j - 1);
     }
 
     ///////////////////////
