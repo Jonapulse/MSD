@@ -1,9 +1,6 @@
 package assignment04;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
+import java.util.*;
 
 public class SortUtil {
 
@@ -121,6 +118,7 @@ public class SortUtil {
     }
 
     /**
+     * Partitions
      *
      * @param list
      * @param pivot
@@ -148,9 +146,20 @@ public class SortUtil {
      * @param list
      * @return index of the median
      */
-    private <T> int medianOf3(ArrayList<T> list){
-        //TODO: Figure out how to do this without sort, and with using those funky Ts
-        return -1;
+    static <T> int medianOf3(ArrayList<T> list, Comparator<? super T> comparator){
+        if(comparator.compare(list.get(0),list.get(1)) >= 0){
+            if(comparator.compare(list.get(0),list.get(2)) < 0)
+                return 0;
+            else if (comparator.compare(list.get(1),list.get(2)) >= 0)
+                return 2;
+            else
+                return 1;
+        } else if (comparator.compare(list.get(1),list.get(2)) < 0)
+            return 1;
+        else if (comparator.compare(list.get(0),list.get(2)) >= 0)
+            return 0;
+        else
+            return 2;
     }
 
     /**
@@ -159,14 +168,13 @@ public class SortUtil {
      * @param list
      * @return index of the median
      */
-    private <T> int medianOf9(ArrayList<T> list)
+    static <T> int medianOf9(ArrayList<T> list, Comparator<? super T> comparator)
     {
         if(list.size() < 9)
-            return medianOf3(list);
+            return medianOf3(list, comparator);
 
-
-        //get 9 random samples.
-        //Try to minimize the median for 3 lists of 3 and do that on the forth
+  //      ArrayList<Integer> medians = new ArrayList<Integer>();
+   //     medians.add(list.get(medianOf3(list.subList(0, 2), comparator)));
         return -1;
     }
 

@@ -64,5 +64,18 @@ class SortUtilTest {
 
     @org.junit.jupiter.api.Test
     void partition() {
+        ArrayList<Integer> listSeparate = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
+
+    }
+
+    @org.junit.jupiter.api.Test
+    void medianOf3() {
+        assertEquals(1, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 2, 3)), Comparator.naturalOrder()));
+        assertEquals(0, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(2, 1, 3)), Comparator.naturalOrder()));
+        assertEquals(2, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 3, 2)), Comparator.naturalOrder()));
+    }
+
+    @org.junit.jupiter.api.Test
+    void medianOf9() {
     }
 }
