@@ -18,7 +18,7 @@ public class Main {
             problemSizes[i] = ns.get(i);
         }
 
-        var timer = new AddTimer(problemSizes, 10);
+        var timer = new AddTimer(problemSizes, 1);
         var results = timer.run();
         System.out.println("n, time");
         for(var result: results){
