@@ -1,11 +1,13 @@
 package assignment04;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,6 +32,54 @@ class SortUtilTest {
         }
     }
 
+    @Test
+    void mergesortEven()
+    {
+        ArrayList worstCaseList = SortUtil.generateWorstCase(6);
+        SortUtil.mergesort(worstCaseList, Comparator.naturalOrder());
+        for(int i = 0; i < worstCaseList.size(); i++) {
+            assertEquals(worstCaseList.get(i), i + 1);
+        }
+    }
+
+    @Test
+    void mergesortThoroughRandomCheck()
+    {
+        int start = 11;
+        int growFactor = 2;
+        int end = start * (int)Math.pow(growFactor, 10);
+        int randomChecks = 100;
+        for(int n = start; n < end; n *= growFactor)
+        {
+            for(int i = 0; i < randomChecks; i++)
+            {
+                ArrayList averageCaseList = SortUtil.generateAverageCase(n);
+                //Collections.sort(averageCaseList); //Completes successfully in 4.901 s (growing 15 times with 100 random checks)
+                SortUtil.mergesort(averageCaseList, Comparator.naturalOrder());
+                for(int j = 0; j < averageCaseList.size(); j++)
+                    {
+                    assertEquals(averageCaseList.get(j), j + 1);
+                    }
+            }
+        }
+    }
+
+    @Test
+    void mergesortSmallEdgeCases()
+    {
+        ArrayList<Integer> empty = new ArrayList<Integer>();
+        ArrayList<Integer> one = new ArrayList<Integer>(Arrays.asList(1));
+        ArrayList<Integer> two = new ArrayList<Integer>(Arrays.asList(2,1));
+
+        SortUtil.mergesort(empty, Comparator.naturalOrder());
+        SortUtil.mergesort(one, Comparator.naturalOrder());
+        SortUtil.mergesort(two, Comparator.naturalOrder());
+
+        Assertions.assertEquals(one.get(0), 1);
+        Assertions.assertEquals(two.get(0), 1);
+        Assertions.assertEquals(two.get(1), 2);
+    }
+
     @org.junit.jupiter.api.Test
     void mergeInterWoven() {
         ArrayList<Integer> listInterwoven = new ArrayList<>(Arrays.asList(1, 3, 5, 2, 4, 6));
@@ -40,6 +90,7 @@ class SortUtilTest {
         for(int i = 0; i < 6; i++)
             assertEquals(dummy.get(i), i + 1);
     }
+
     @org.junit.jupiter.api.Test
     void mergeSeparate() {
         ArrayList<Integer> listSeparate = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
@@ -94,6 +145,43 @@ class SortUtilTest {
         }
     }
 
+    @Test
+    void quicksortThoroughRandomCheck()
+    {
+        int start = 11;
+        int growFactor = 2;
+        int end = start * (int)Math.pow(growFactor, 15);
+        int randomChecks = 100;
+        for(int n = start; n < end; n *= growFactor)
+        {
+            for(int i = 0; i < randomChecks; i++)
+            {
+                ArrayList averageCaseList = SortUtil.generateAverageCase(n);
+                //Collections.sort(averageCaseList); //Completes successfully in 4.901 s (15 grows 100 checks)
+                SortUtil.quicksort(averageCaseList, Comparator.naturalOrder()); //Completes successfully in 5.779 s (15 grows 100 checks
+                for(int j = 0; j < averageCaseList.size(); j++)
+                {
+                    assertEquals(averageCaseList.get(j), j + 1);
+                }
+            }
+        }
+    }
+
+    void quicksortSmallEdgeCases()
+    {
+        ArrayList<Integer> empty = new ArrayList<Integer>();
+        ArrayList<Integer> one = new ArrayList<Integer>(Arrays.asList(1));
+        ArrayList<Integer> two = new ArrayList<Integer>(Arrays.asList(2,1));
+
+        SortUtil.quicksort(empty, Comparator.naturalOrder());
+        SortUtil.quicksort(one, Comparator.naturalOrder());
+        SortUtil.quicksort(two, Comparator.naturalOrder());
+
+        Assertions.assertEquals(one.get(0), 1);
+        Assertions.assertEquals(two.get(0), 1);
+        Assertions.assertEquals(two.get(1), 2);
+    }
+
     @org.junit.jupiter.api.Test
     void partition() {
         ArrayList<Integer> listSeparate = new ArrayList<>(Arrays.asList(7, 10, 25, 1, 2, 3));
@@ -116,9 +204,5 @@ class SortUtilTest {
         assertEquals(1, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 2, 3)), Comparator.naturalOrder()));
         assertEquals(0, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(2, 1, 3)), Comparator.naturalOrder()));
         assertEquals(2, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 3, 2)), Comparator.naturalOrder()));
-    }
-
-    @org.junit.jupiter.api.Test
-    void medianOf9() {
     }
 }
