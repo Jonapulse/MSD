@@ -2,24 +2,24 @@ package assignment02;
 
 import java.util.GregorianCalendar;
 
-public class LibraryBook extends Book {
+public class LibraryBook<T> extends Book {
 
     ///Fields holder and dueDate are null when the book is not checked out
-    String holder = null;
+    <T> holder = null;
     GregorianCalendar dueDate = null;
 
     public LibraryBook(long isbn, String author, String title) {
         super(isbn, author, title);
     }
 
-    public String getHolder() {
+    public <T> getHolder() {
         return holder;
     }
 
     public GregorianCalendar getDueDate() {
         return dueDate;
     }
-    public void checkOut(String holder, GregorianCalendar dueDate) {
+    public void checkOut(<T> holder, GregorianCalendar dueDate) {
         this.holder = holder;
         this.dueDate = dueDate;
     }

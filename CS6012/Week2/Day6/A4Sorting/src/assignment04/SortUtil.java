@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 100;
+    final static int SMALL_SORT_THRESHOLD = 10;
     final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
@@ -41,8 +41,10 @@ public class SortUtil {
         int length = e - b + 1;
         if(length < 2) //base case for full recursion, sorted
             return;
-        if(length < SMALL_SORT_THRESHOLD)
+        if(length < SMALL_SORT_THRESHOLD) {
             insertionSort(list, b, e, comparator);
+            return;
+        }
 
         int mid = (b + e) / 2;
         mergeSortRecurse(list, out, b, mid, comparator);

@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Class representation of a library (a collection of library books).
  *
  */
-public class Library {
+public class Library <T> {
 
     private ArrayList<LibraryBook> library;
 
