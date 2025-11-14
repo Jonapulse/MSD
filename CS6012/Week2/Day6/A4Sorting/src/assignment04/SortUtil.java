@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 10;
+    final static int SMALL_SORT_THRESHOLD = 3;
     final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
@@ -100,8 +100,8 @@ public class SortUtil {
      */
     public static <T> void insertionSort(ArrayList<T> out, int b, int e, Comparator<? super T> comparator)
     {
-        for( ; b <= e; b++)
-            for(int j = b; j > 0 && comparator.compare(out.get(j), out.get(j - 1)) <= 0; j--)
+        for(int i = b ; i <= e; i++)
+            for(int j = b; j > b && comparator.compare(out.get(j), out.get(j - 1)) <= 0; j--)
                 Collections.swap(out, j, j - 1);
     }
 

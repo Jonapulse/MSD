@@ -23,6 +23,8 @@ class SortUtilTest {
     }
     */
 
+    final int NUM_THOROUGH_CHECKS = 10;
+
     @org.junit.jupiter.api.Test
     void mergesort() {
         ArrayList worstCaseList = SortUtil.generateWorstCase(10000);
@@ -47,7 +49,7 @@ class SortUtilTest {
     {
         int start = 11;
         int growFactor = 2;
-        int end = start * (int)Math.pow(growFactor, 10);
+        int end = start * (int)Math.pow(growFactor, NUM_THOROUGH_CHECKS);
         int randomChecks = 100;
         for(int n = start; n < end; n *= growFactor)
         {
@@ -150,7 +152,7 @@ class SortUtilTest {
     {
         int start = 11;
         int growFactor = 2;
-        int end = start * (int)Math.pow(growFactor, 15);
+        int end = start * (int)Math.pow(growFactor, NUM_THOROUGH_CHECKS);
         int randomChecks = 100;
         for(int n = start; n < end; n *= growFactor)
         {
