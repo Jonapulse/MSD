@@ -60,7 +60,7 @@ public class SortUtil {
      * March through in, writing the smallest sequential values from left (beg to mid) and right (mid + 1 to end) to out
      *
      * @param out
-     * @param beg  - begin
+     * @param beg - begin index
      * @param mid - final index of L. 'beginR' == mid + 1;
      * @param end - final index of R.
      */
@@ -126,19 +126,18 @@ public class SortUtil {
      */
     static <T> void quicksortRecurse(ArrayList<T> list, int b, int e, Comparator<? super T> comparator){
         //TODO: better pivot, occasional random
-
         int length = e - b + 1;
         if(length < 2) //base case for full recursion, sorted
             return;
+        if(length < SMALL_SORT_THRESHOLD)
+        {
+            insertionSort(list, b, e, comparator);
+            return;
+        }
 
         int part = partition(list, getPivot(list, b, e, 0, comparator), b, e, comparator);
-        if(length / 2 < SMALL_SORT_THRESHOLD){
-            insertionSort(list, b, part - 1, comparator);
-            insertionSort(list, part + 1, e, comparator);
-        } else {
-            quicksortRecurse(list, b, part - 1, comparator);
-            quicksortRecurse(list, part + 1, e, comparator);
-        }
+        quicksortRecurse(list, b, part - 1, comparator);
+        quicksortRecurse(list, part + 1, e, comparator);
     }
 
     /**
