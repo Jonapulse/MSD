@@ -1,3 +1,5 @@
+package assignment02;
+
 import java.util.GregorianCalendar;
 
 public class LibraryBook extends Book {

@@ -1,3 +1,5 @@
+package assignment02;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +50,7 @@ class LibraryTest {
     public void testLargeLibrary(){
         // test a medium library
         var lib = new Library();
-        lib.addAll("Mushroom_Publishing.txt");
+        lib.addAll("src/Mushroom_Publishing.txt");
 
         // FILL IN MORE TESTS HERE!
     }
