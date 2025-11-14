@@ -35,7 +35,7 @@ public class Library <T> {
      *
      * @param list -- list of library books to be added
      */
-    public void addAll(ArrayList<LibraryBook> list) {
+    public void addAll(ArrayList<LibraryBook<T>> list) {
         library.addAll(list);
     }
 
@@ -48,7 +48,7 @@ public class Library <T> {
      * @param filename
      */
     public void addAll(String filename) {
-        ArrayList<LibraryBook> toBeAdded = new ArrayList<LibraryBook>();
+        ArrayList<LibraryBook<T>> toBeAdded = new ArrayList<LibraryBook<T>>();
 
         try (Scanner fileIn = new Scanner(new File(filename))) {
 
@@ -74,7 +74,7 @@ public class Library <T> {
                         throw new ParseException("Title", lineNum);
                     }
                     String title = lineIn.next();
-                    toBeAdded.add(new LibraryBook(isbn, author, title));
+                    toBeAdded.add(new LibraryBook<T>(isbn, author, title));
                 }
                 lineNum++;
             }
@@ -97,8 +97,8 @@ public class Library <T> {
      *
      * @param isbn -- ISBN of the book to be looked up
      */
-    public String lookup(long isbn) {
-        for (LibraryBook book : library) {
+    public T lookup(long isbn) {
+        for (LibraryBook<T> book : library) {
             if (isbn == book.getIsbn()) {
                 return book.getHolder();
             }
@@ -113,10 +113,10 @@ public class Library <T> {
      *
      * @param holder -- holder whose checked out books are returned
      */
-    public ArrayList<LibraryBook> lookup(String holder) {
-        ArrayList<LibraryBook> checkedOutList = new ArrayList<>();
-        for (LibraryBook book : library) {
-            String checkedOutBy = book.getHolder();
+    public ArrayList<LibraryBook<T>> lookup(T holder) {
+        ArrayList<LibraryBook<T>> checkedOutList = new ArrayList<>();
+        for (LibraryBook<T> book : library) {
+            T checkedOutBy = book.getHolder();
             if (checkedOutBy != null && checkedOutBy.equals(holder))
                 checkedOutList.add(book);
         }
@@ -129,8 +129,8 @@ public class Library <T> {
      * @param isbn --
      * @return LibraryBook with matching isbn
      */
-    public LibraryBook lookupBook(long isbn) {
-        for (LibraryBook book : library) {
+    public LibraryBook<T> lookupBook(long isbn) {
+        for (LibraryBook<T> book : library) {
             if (book.getIsbn() == isbn)
                 return book;
         }
@@ -153,8 +153,8 @@ public class Library <T> {
      * @param year   -- year of the new due date of the library book
      *
      */
-    public boolean checkout(long isbn, String holder, int month, int day, int year) {
-        LibraryBook book = lookupBook(isbn);
+    public boolean checkout(long isbn, T holder, int month, int day, int year) {
+        LibraryBook<T> book = lookupBook(isbn);
         if (book == null || book.getHolder() != null)
             return false;
         book.checkOut(holder, new GregorianCalendar(year, month, day));
@@ -173,7 +173,7 @@ public class Library <T> {
      * @param isbn -- ISBN of the library book to be checked in
      */
     public boolean checkin(long isbn) {
-        LibraryBook book = lookupBook(isbn);
+        LibraryBook<T> book = lookupBook(isbn);
         if (book == null || book.getHolder() == null)
             return false;
         book.checkIn();
@@ -190,11 +190,11 @@ public class Library <T> {
      *
      * @param holder -- holder of the library books to be checked in
      */
-    public boolean checkin(String holder) {
-        ArrayList<LibraryBook> checkedOutList = lookup(holder);
+    public boolean checkin(T holder) {
+        ArrayList<LibraryBook<T>> checkedOutList = lookup(holder);
         if(checkedOutList == null || checkedOutList.isEmpty())
             return false;
-        for(LibraryBook book : lookup(holder))
+        for(LibraryBook<T> book : lookup(holder))
             book.checkIn();
         return true;
     }

@@ -12,7 +12,7 @@ class LibraryTest {
 
     @Test
     public void testEmpty() {
-        Library lib = new Library();
+        Library<String> lib = new Library<String>();
         assertNull(lib.lookup(978037429279L));
 
         ArrayList<LibraryBook> booksCheckedOut = lib.lookup("Jane Doe");
@@ -26,7 +26,7 @@ class LibraryTest {
     @Test
     public void testNonEmpty() {
 
-        var lib = new Library();
+        var lib = new Library<String>();
         // test a small library
         lib.add(9780374292799L, "Thomas L. Friedman", "The World is Flat");
         lib.add(9780330351690L, "Jon Krakauer", "Into the Wild");
