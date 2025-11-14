@@ -1,6 +1,3 @@
-package assignment03;
-
-
 /**
  * Abstract class which can be used as a skeleton for perfoming timing tests
  * You provide the problem sizes, number of times to repeat the tests

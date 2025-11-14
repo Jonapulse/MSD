@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * Represents a grayscale (black and white) image as a 2D array of "pixel" brightnesses
  * 255 is "white" 127 is "gray" 0 is "black" with intermediate values in between
- * Author: Ben Jones and ***STUDENT FILL YOUR NAME IN***
+ * Author: Ben Jones and Jon Pulsipher
  */
 public class GrayscaleImage {
     private double[][] imageData; // the actual image data
@@ -85,9 +85,10 @@ public class GrayscaleImage {
      * @return the brightness value at the specified coordinates
      * @throws IllegalArgumentException if x, y are not within the image width/height
      */
-    public double getPixel(int x, int y){
-        //STUDENT Fill in this in to work correctly
-       return Double.NaN;
+    public double getPixel(int x, int y) throws IllegalArgumentException{
+       if(x < 0 || y < 0 || x >= imageData.length || y >= imageData[0].length)
+           throw new IllegalArgumentException("x or y out of bounds");
+        return imageData[y][x];
     }
 
     /**
@@ -104,8 +105,13 @@ public class GrayscaleImage {
 
         GrayscaleImage otherImage = (GrayscaleImage)other;
 
-        //STUDENT: implement equals to return true only when all pixels are exactly equal
-        return this == otherImage; //<-- This is an incorrect implementation!
+        for(var row = 0; row < imageData.length; row++){
+            for(var col = 0; col < imageData[0].length; col++){
+                if(imageData[row][col] != otherImage.imageData[row][col])
+                    return false;
+            }
+        }
+        return true;
     }
 
 
@@ -114,8 +120,13 @@ public class GrayscaleImage {
      * @return the average of the imageData array
      */
     public double averageBrightness(){
-        //STUDENT FILL ME IN WITH A CORRECT IMPLEMENTATION
-        return Double.NaN;
+        double sum = 0;
+        for(var row = 0; row < imageData.length; row++){
+            for(var col = 0; col < imageData[0].length; col++){
+                sum += imageData[row][col];
+            }
+        }
+        return sum / (imageData.length * imageData[0].length);
     }
 
     /**
@@ -126,8 +137,14 @@ public class GrayscaleImage {
      * @return a GrayScale image with pixel data uniformly rescaled so that its averageBrightness() is 127
      */
     public GrayscaleImage normalized(){
-        //STUDENT FILL ME IN WITH A CORRECT IMPLEMENTATION
-        return null;
+        double normalizeFactor = 127 / averageBrightness();
+        double[][] normalizedData = new double[imageData.length][imageData[0].length];
+        for(var row = 0; row < imageData.length; row++){
+            for(var col = 0; col < imageData[0].length; col++){
+                normalizedData[row][col] = imageData[row][col] * normalizeFactor;
+            }
+        }
+        return new GrayscaleImage(normalizedData);
     }
 
 
@@ -138,8 +155,13 @@ public class GrayscaleImage {
      * @return a new GrayscaleImage that is a mirrored version of the this
      */
     public GrayscaleImage mirrored(){
-        //STUDENT: FILL ME IN WITH A CORRECT IMPLEMENTATION
-        return null;
+        double[][]  mirroredData = new double[imageData.length][imageData[0].length];
+        for(var row = 0; row < imageData.length; row++){
+            for(var col = 0; col < imageData[0].length; col++){
+                mirroredData[col][row] = imageData[col][imageData.length - 1 - row];
+            }
+        }
+        return new GrayscaleImage( mirroredData);
     }
 
     /**
@@ -154,8 +176,13 @@ public class GrayscaleImage {
      * @throws IllegalArgumentException if the specified rectangle goes outside the bounds of the original image
      */
     public GrayscaleImage cropped(int startRow, int startCol, int width, int height){
-        //STUDENT: FILL ME IN
-        return null;
+        double[][] croppedData = new double[width][height];
+        for(var row = 0; row < width; row++){
+            for(var col = 0; col < height; col++){
+                croppedData[col][row] = imageData[startCol + col][startRow + row];
+            }
+        }
+        return new GrayscaleImage(croppedData);
     }
 
     /**
@@ -169,8 +196,28 @@ public class GrayscaleImage {
      * @return a new, square, GrayscaleImage
      */
     public GrayscaleImage squarified(){
-        //STUDENT: FILL ME IN
-        return null;
+        int shortY = 0;
+        int nudgeY = 0;
+        int shortX = 0;
+        int nudgeX = 0;
+        int yMinusX = imageData.length - imageData[0].length;
+        if(yMinusX < 0) {//X is larger
+            shortX = -yMinusX;
+            nudgeX = yMinusX % 2 == 1 ? 1 : 0;
+        }
+        else {
+            shortY = yMinusX;
+            nudgeY = yMinusX % 2 == 1 ? 1 : 0;
+        }
+
+        double[][] squaredData = new double[imageData.length - shortY - nudgeY][imageData[0].length - shortX - nudgeX];
+        for(var row = 0; row < imageData[0].length - shortX - nudgeX; row++){
+            for(var col = 0; col < imageData.length - shortY - nudgeY; col++){
+                squaredData[col][row] = imageData[col + shortY / 2 - nudgeY][row + shortX / 2 - nudgeX];
+            }
+        }
+
+        return new GrayscaleImage( squaredData );
     }
 
 

@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 100;
+    final static int SMALL_SORT_THRESHOLD = 10;
     final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
@@ -41,15 +41,14 @@ public class SortUtil {
         int length = e - b + 1;
         if(length < 2) //base case for full recursion, sorted
             return;
+        if(length < SMALL_SORT_THRESHOLD) {
+            insertionSort(list, b, e, comparator);
+            return;
+        }
 
         int mid = (b + e) / 2;
-        if(length / 2 < SMALL_SORT_THRESHOLD){
-            insertionSort(list, b, mid, comparator);
-            insertionSort(list, mid + 1, e, comparator);
-        } else {
-            mergeSortRecurse(list, out, b, mid, comparator);
-            mergeSortRecurse(list, out, mid + 1, e, comparator);
-        }
+        mergeSortRecurse(list, out, b, mid, comparator);
+        mergeSortRecurse(list, out, mid + 1, e, comparator);
 
         merge(list, out, b, mid, e, comparator);
         for(int i = b; i <= e; i++)
@@ -247,7 +246,7 @@ public class SortUtil {
     public static ArrayList<Integer> generateBestCase(int size)
     {
         ArrayList<Integer> list = new ArrayList<>();
-        for(int i = 0; i < size; i++)
+        for(int i = 1; i <= size; i++)
         {
             list.add(i);
         }
@@ -257,7 +256,7 @@ public class SortUtil {
     public static ArrayList<Integer> generateAverageCase(int size)
     {
         ArrayList<Integer> list = new ArrayList<>();
-        for(int i = 0; i < size; i++)
+        for(int i = 1; i <= size; i++)
         {
             list.add(i);
         }
