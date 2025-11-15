@@ -12,7 +12,7 @@ public class VolumeAdjuster implements AudioComponent{
         AudioClip original = input_.getClip();
         AudioClip scaledOriginal = new AudioClip();
         for(int i = 0; i < AudioClip.TOTAL_SAMPLES; i++)
-            scaledOriginal.setSample(i, (int)(original.getSample(i) * scale_));
+            scaledOriginal.setSample(i, (int)Math.clamp(original.getSample(i) * scale_, AudioClip.MIN_CLIP_VALUE, AudioClip.MAX_CLIP_VALUE));
         return scaledOriginal;
     }
 
@@ -29,13 +29,13 @@ public class VolumeAdjuster implements AudioComponent{
     // VolumeAdjuster
     //
     private AudioComponent input_;
-    private float scale_;
+    private double scale_;
 
-    public VolumeAdjuster(float volume) {
+    public VolumeAdjuster(double volume) {
         scale_ = volume;
     }
 
-    public void changeVolume(float volume){
+    public void changeVolume(double volume){
         scale_ = volume;
     }
 }

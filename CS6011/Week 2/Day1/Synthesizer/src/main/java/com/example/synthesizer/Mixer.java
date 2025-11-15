@@ -12,7 +12,7 @@ public class Mixer implements AudioComponent {
         for(int i = 1; i < inputs.size(); i++) {
             AudioClip add = inputs.get(i).getClip();
             for(int j = 0; j < AudioClip.TOTAL_SAMPLES; j++)
-                base.setSample(j, base.getSample(j) + add.getSample(j));
+                base.setSample(j, (int)Math.clamp(base.getSample(j) + add.getSample(j), AudioClip.MIN_CLIP_VALUE, AudioClip.MAX_CLIP_VALUE));
         }
         return base;
     }

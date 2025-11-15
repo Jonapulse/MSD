@@ -4,6 +4,8 @@ public class AudioClip {
     public static final float DURATION = 2.0f;
     public static final int SAMPLE_RATE = 44100;
     public static final int TOTAL_SAMPLES = (int)(SAMPLE_RATE * DURATION);
+    public static final int MIN_CLIP_VALUE = -32768;
+    public static final int MAX_CLIP_VALUE = 32767;
 
     private byte[] clipRawBytes_;
 
