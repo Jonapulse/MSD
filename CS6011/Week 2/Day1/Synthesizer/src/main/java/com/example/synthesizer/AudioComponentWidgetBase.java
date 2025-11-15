@@ -62,4 +62,6 @@ public class AudioComponentWidgetBase extends VBox {
     public AudioClip getAudioClip() {
         return audioComponent_.getClip();
     }
+
+    public AudioComponent getAudioComponent() { return audioComponent_; }
 }
