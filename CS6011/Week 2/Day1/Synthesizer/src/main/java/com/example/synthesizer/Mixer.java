@@ -3,7 +3,7 @@ package com.example.synthesizer;
 import java.util.ArrayList;
 
 public class Mixer implements AudioComponent {
-    //Audio Componenent Implementation
+
     @Override
     public AudioClip getClip() {
         if(inputs.isEmpty())

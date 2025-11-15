@@ -23,6 +23,15 @@ public class AudioComponentWidgetBase extends VBox {
     * display themselves (e.g. by childing this object to parent).
      */
     AudioComponentWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom) {
+        setupWidgetBase(x, y, title, audioComponent, parent, custom, true);
+    }
+    // Constructor overload used to hide right panel
+    AudioComponentWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom, boolean includeRightPanel) {
+        setupWidgetBase(x, y, title, audioComponent, parent, custom, includeRightPanel);
+    }
+
+    void setupWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom, boolean includeRightPanel)
+    {
         this.audioComponent_ = audioComponent;
         this.parent_ = parent;
 
@@ -37,27 +46,27 @@ public class AudioComponentWidgetBase extends VBox {
         contentWidget.getChildren().add(custom);
         VBox interactPanel = new VBox(10);
         contentWidget.getChildren().add(interactPanel);
-        Button deleteButton = new Button("X");
-        deleteButton.setOnAction(e -> {parent_.getChildren().remove(this);});
-        interactPanel.getChildren().add(deleteButton);
 
-        //TODO: Implement whatever you want cabling to be.
+        if(includeRightPanel){
+            Button deleteButton = new Button("X");
+            deleteButton.setOnAction(e -> {parent_.getChildren().remove(this);});
+            interactPanel.getChildren().add(deleteButton);
+
+            //TODO: Implement whatever you want cabling to be.
 //        Pane cable = new Pane();
 //        interactPanel.getChildren().add(cable);
-        Button cableButton = new Button("C");
-        interactPanel.getChildren().add(cableButton);
-        cableButton.setOnAction((e) -> {
-            Cable c = new Cable(this, audioComponent_);
-        });
-
-//        //PLACEHOLDER: Temp play button (to be subsumed by Speaker)
-//        Button playBtn = new Button("P");
-//        playBtn.setOnAction(e -> SoundHandler.playSound(getAudioClip()));
-//        interactPanel.getChildren().add(playBtn);
+            Button cableButton = new Button("C");
+            interactPanel.getChildren().add(cableButton);
+            cableButton.setOnAction((e) -> {
+                Cable c = new Cable(this, audioComponent_);
+            });
+        }
 
         this.setLayoutX(x);
         this.setLayoutY(y);
     }
+
+
 
     public AudioClip getAudioClip() {
         return audioComponent_.getClip();

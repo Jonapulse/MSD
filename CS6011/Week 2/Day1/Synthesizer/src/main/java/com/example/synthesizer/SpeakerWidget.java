@@ -16,7 +16,7 @@ public class SpeakerWidget extends AudioComponentWidgetBase {
         customPanel.getChildren().add(title);
         Button speakerButton = new Button("Speaker");
         customPanel.getChildren().add(speakerButton);
-        super(x, y, "Speaker", mixer, parent, customPanel);
+        super(x, y, "Speaker", mixer, parent, customPanel, false);
 
         speakerButton.setOnAction(e -> {
             SoundHandler.playSound(getAudioClip());

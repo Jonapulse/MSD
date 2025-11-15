@@ -20,9 +20,16 @@ public class SineWaveWidget extends AudioComponentWidgetBase {
         customPanel.getChildren().add(title);
         Slider newFrequencySlider = new Slider(MIN_FREQUENCY,MAX_FREQUENCY, A4); //Min/Max Freq Piano
         customPanel.getChildren().add(newFrequencySlider);
+        Text frequencyText = new Text("Frequency: " + A4);
+        customPanel.getChildren().add(frequencyText);
 
         super(x, y, "Sine Wave", sineWave, parent, customPanel);
         frequencySlider_ = newFrequencySlider;
+        frequencySlider_.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int frequency  = newValue.intValue();
+            ((SineWave)super.audioComponent_).updateClip(frequency);
+            frequencyText.setText("Frequency: " + frequency);
+        });
     }
 
     @Override
