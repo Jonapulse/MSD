@@ -34,10 +34,15 @@ public class SynthesizeApplication extends Application {
 
     private int swcNumber = 0;
     private void makeSineWave(AnchorPane ap) {
-        SineWaveWidget sineW = new SineWaveWidget(100, 100, ap);
+        SineWaveWidget sineW = new SineWaveWidget(50, 50, ap);
         ap.getChildren().add(sineW);
-        SpeakerWidget speakerW = new SpeakerWidget(200, 75, ap);
-        speakerW.getAudioComponent().connectInput(sineW.getAudioComponent());
+
+        VolumeAdjusterWidget volumeW = new VolumeAdjusterWidget(100, 150, ap);
+        ap.getChildren().add(volumeW);
+        volumeW.getAudioComponent().connectInput(sineW.getAudioComponent());
+
+        SpeakerWidget speakerW = new SpeakerWidget(200, 50, ap);
+        speakerW.getAudioComponent().connectInput(volumeW.getAudioComponent());
         ap.getChildren().add(speakerW);
 
 //        HBox swBox = new HBox();

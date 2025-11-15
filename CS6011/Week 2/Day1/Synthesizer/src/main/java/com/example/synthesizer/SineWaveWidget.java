@@ -34,7 +34,7 @@ public class SineWaveWidget extends AudioComponentWidgetBase {
 
     @Override
     public AudioClip getAudioClip() {
-        super.audioComponent_ = new SineWave((int)frequencySlider_.getValue());
+        ((SineWave)super.audioComponent_).updateClip((int)frequencySlider_.getValue());
         return super.audioComponent_.getClip();
     }
 }
