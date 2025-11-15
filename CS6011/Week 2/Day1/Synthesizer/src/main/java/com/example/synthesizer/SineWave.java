@@ -33,7 +33,6 @@ public class SineWave implements AudioComponent {
             clip_.setSample(i, (int)(DEFAULT_VOLUME * Math.sin(2 * Math.PI * frequency * i / AudioClip.SAMPLE_RATE)));
     }
     // SineWave
-    // NOTES: Are there conventions for how to organize implementations?
     //
     private AudioClip clip_;
     private static final short DEFAULT_VOLUME = 24575; //Short.MAX_VALUE * 0.75f, Some room to increase, more room to decrease

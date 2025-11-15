@@ -1,15 +1,22 @@
 package com.example.synthesizer;
 
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.scene.shape.Line;
+import javafx.scene.input.MouseEvent;
 
 public class AudioComponentWidgetBase extends VBox {
     AudioComponent audioComponent_;
     Pane parent_;
+
+    //Cabling
+    Line attemptLine_;
+    Cable cableIn_;
+    Cable cableOut_;
 
     /*
     * The generic structure of AudioComponentWidget is VBox contains...
@@ -43,6 +50,19 @@ public class AudioComponentWidgetBase extends VBox {
         this.getChildren().add(titleWidget);
         HBox contentWidget = new HBox(10);
         this.getChildren().add(contentWidget);
+        Circle cableInput = new Circle(10);
+
+        cableInput.setOnDragDetected((e) -> {
+            System.out.println("we start full drag");
+            startFullDrag();
+            e.consume();
+        });
+        cableInput.setOnMouseDragReleased(e -> {
+            System.out.println("Drag released on target node! Input");
+            e.consume();
+        });
+
+        contentWidget.getChildren().add(cableInput);
         contentWidget.getChildren().add(custom);
         VBox interactPanel = new VBox(10);
         contentWidget.getChildren().add(interactPanel);
@@ -52,25 +72,93 @@ public class AudioComponentWidgetBase extends VBox {
             deleteButton.setOnAction(e -> {parent_.getChildren().remove(this);});
             interactPanel.getChildren().add(deleteButton);
 
-            //TODO: Implement whatever you want cabling to be.
-//        Pane cable = new Pane();
-//        interactPanel.getChildren().add(cable);
+
             Button cableButton = new Button("C");
+
             interactPanel.getChildren().add(cableButton);
-            cableButton.setOnAction((e) -> {
-                Cable c = new Cable(this, audioComponent_);
+            cableButton.setOnDragDetected((e) -> {
+                System.out.println("we start full drag output");
+                startFullDrag();
+                beginCabling(e);
+                e.consume();
             });
+            cableButton.setOnMouseDragged(e -> {
+                //updateCableLine(e);
+//                if(attemptLine_ != null)
+//                {
+//                    attemptLine_.setEndX(e.getSceneX());
+//                    attemptLine_.setEndY(e.getSceneY());
+//                }
+                //e.consume();
+            });
+            cableButton.setOnMouseDragReleased((e) -> {
+                System.out.println("Drag released on target node! Output!");
+                //TODO: wait for connect?
+                endCabling();
+                e.consume();
+            });
+
+            /*
+
+            cableButton.setOnMousePressed((e) -> beginCabling(e));
+            cableButton.setOnMouseDragged((e) -> updateCableLine(e));
+            cableButton.setOnMouseReleased((e) -> cleanupCableLine());
+             */
+
         }
 
         this.setLayoutX(x);
         this.setLayoutY(y);
     }
 
-
-
     public AudioClip getAudioClip() {
         return audioComponent_.getClip();
     }
 
     public AudioComponent getAudioComponent() { return audioComponent_; }
+
+    private void beginCabling(MouseEvent e) {
+        System.out.println("beginCabling");
+        attemptLine_ = new Line(e.getSceneX(), e.getSceneY(), e.getSceneX(), e.getSceneY());
+        attemptLine_.setOnMouseMoved((e1) -> {
+            attemptLine_.setEndX(e1.getSceneX());
+            attemptLine_.setEndY(e1.getSceneY());
+            System.out.println("Hello");
+        });
+        attemptLine_.setOnMouseDragged((e1) -> {
+            System.out.println("baby weird dragged");
+        });
+
+        parent_.getChildren().add(attemptLine_);
+        e.consume();
+    }
+
+    private void updateCableLine(MouseEvent e)
+        {
+            if(attemptLine_ != null)
+            {
+                attemptLine_.setEndX(e.getSceneX());
+                attemptLine_.setEndY(e.getSceneY());
+            }
+        }
+
+    private void cleanupCableLine()
+        {
+            parent_.getChildren().remove(attemptLine_);
+        }
+
+    private void dragDropped()
+    {
+        System.out.println("dragDropped");
+    }
+
+    private void endCabling(){
+        AudioComponentWidgetBase attemptor = CablingHandlerS.getInstance().widgetAttemptingCable_;
+        if(attemptor != null){
+
+        }
+    }
+
+
+
 }

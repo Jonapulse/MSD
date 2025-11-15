@@ -3,14 +3,16 @@ package com.example.synthesizer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class SynthesizeApplication extends Application {
+    AudioComponentWidgetBase widgetAttemptingCable_ = null;
+
     @Override
     public void start(Stage stage) throws IOException {
         //In class stuff
@@ -27,7 +29,7 @@ public class SynthesizeApplication extends Application {
         ap.getChildren().add(menu);
 
         Scene scene = new Scene(ap,320, 240);
-        stage.setTitle("Hello!");
+        stage.setTitle("Synthesizer");
         stage.setScene(scene);
         stage.show();
     }
@@ -44,33 +46,5 @@ public class SynthesizeApplication extends Application {
         SpeakerWidget speakerW = new SpeakerWidget(200, 50, ap);
         speakerW.getAudioComponent().connectInput(volumeW.getAudioComponent());
         ap.getChildren().add(speakerW);
-
-//        HBox swBox = new HBox();
-//        swBox.setPrefWidth(100);
-//
-//        VBox leftPanel = new VBox(10);
-//        Text title = new Text("Sine Wave");
-//        leftPanel.getChildren().add(title);
-//        Slider frequencySlider = new Slider(28,4185, 440); //Min/Max Freq Piano
-//        leftPanel.getChildren().add(frequencySlider);
-//        swBox.getChildren().add(leftPanel);
-//
-//        VBox rightPanel = new VBox(10);
-//        Button playBtn = new Button("Play");
-//        rightPanel.getChildren().add(playBtn);
-//        swBox.getChildren().add(rightPanel);
-//        ap.getChildren().add(swBox);
-//        swBox.setLayoutX(200 + swcNumber++ * 100);
-//        swBox.setLayoutY(200);
-//
-//        playBtn.setOnAction(e -> playSineWave(frequencySlider));
-
-    }
-
-    private void playSineWave(Slider frequencySlider) {
-        // SINE WAVE TEST
-        AudioComponent genSine = new SineWave((int)frequencySlider.getValue()); // Your code
-        AudioClip genClip = genSine.getClip();
-        SoundHandler.playSound(genSine.getClip());
     }
 }
