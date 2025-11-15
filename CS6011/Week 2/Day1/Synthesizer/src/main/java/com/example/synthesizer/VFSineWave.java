@@ -17,11 +17,11 @@ public class VFSineWave implements AudioComponent {
     @Override
     public void connectInput(AudioComponent input) {
         input_ = input;
-        int phase = 0;
+        float phase = 0;
         AudioClip inputClip = input_.getClip();
         for(int i = 0; i < (int)(AudioClip.SAMPLE_RATE * AudioClip.DURATION); i++) {
             phase += 2 * Math.PI * inputClip.getSample(i) / AudioClip.SAMPLE_RATE;
-            clip_.setSample(i, (int) (Short.MAX_VALUE * Math.sin(phase)));
+            clip_.setSample(i, (int) (AudioClip.MAX_CLIP_VALUE * Math.sin(phase)));
         }
     }
 

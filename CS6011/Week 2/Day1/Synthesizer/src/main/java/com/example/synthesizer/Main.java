@@ -46,7 +46,7 @@ public class Main {
         AudioComponent linRamp = new LinearRamp(50, 2000);
         AudioComponent genVFSine = new VFSineWave();
         genVFSine.connectInput(linRamp);
-        SoundHandler.playSound(linRamp.getClip());
+        SoundHandler.playSound(genVFSine.getClip());
 
     }
 }
