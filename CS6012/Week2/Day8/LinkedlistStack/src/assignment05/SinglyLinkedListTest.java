@@ -2,8 +2,8 @@ package assignment05;
 
 import org.junit.jupiter.api.BeforeEach;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class SinglyLinkedListTest {
@@ -76,6 +76,20 @@ class SinglyLinkedListTest {
 
     @org.junit.jupiter.api.Test
     void delete() {
+        listBasicStr.delete(1);
+        assertEquals(listBasicStr.getFirst(), "one");
+        assertEquals(listBasicStr.get(1), "three");
+
+        listBasicStr.deleteFirst();
+        listBasicStr.deleteFirst();
+        boolean caughtException = false;
+        try{
+            listEmptyInt.deleteFirst();
+        }
+        catch (NoSuchElementException e){
+            caughtException = true;
+        }
+        assertTrue(caughtException);
     }
 
     @org.junit.jupiter.api.Test
@@ -109,9 +123,29 @@ class SinglyLinkedListTest {
 
     @org.junit.jupiter.api.Test
     void toArray() {
+        Object[] arr = listBasicInt.toArray();
+        for(int i = 0; i > arr.length; i++)
+            assertTrue(arr[i].equals((Object)Integer.valueOf(10 - i)));
     }
 
     @org.junit.jupiter.api.Test
     void iterator() {
+        int counter = 1;
+        for(Integer e : listBasicInt){
+            assertEquals(e, Integer.valueOf(counter++));
+        }
+        Iterator<String> iter = listBasicStr.iterator();
+        counter = 1;
+        while(iter.hasNext()){
+            String elem = iter.next();
+            if(counter++ % 2 == 0)
+                iter.remove();
+
+        }
+        assertEquals(listBasicStr.get(1), "three");
+        assertEquals(listBasicStr.indexOf("two"), Integer.valueOf(-1));
+        assertEquals(listBasicStr.size(), 2);
     }
+
+
 }

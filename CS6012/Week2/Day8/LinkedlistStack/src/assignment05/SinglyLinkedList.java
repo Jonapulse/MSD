@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class SinglyLinkedList<E> implements List<E> {
+public class SinglyLinkedList<E> implements List<E>{
 
     /**
      * Node storing E value and Node next for LinkedList
@@ -216,7 +216,55 @@ public class SinglyLinkedList<E> implements List<E> {
      */
     @Override
     public Iterator iterator() {
-        return null;
+        return new SinglyLinkedListIterator();
+    }
+
+    public class SinglyLinkedListIterator implements Iterator<E> {
+        private int nextIndex = 0;
+        private Node<E> prevNode = header;
+        private Node<E> currentNode = null;
+        private boolean canRemove = false;
+
+        public SinglyLinkedListIterator() {
+            currentNode = header;
+        }
+
+        /**
+         * @return true if nextIndex within size
+         */
+        @Override
+        public boolean hasNext() throws NoSuchElementException {
+            return currentNode.getNext() != null;
+        }
+
+        /**
+         * @return next element if present
+         * @throws NoSuchElementException
+         */
+        @Override
+        public E next() {
+            if(!hasNext())
+                throw new NoSuchElementException();
+            canRemove = true;
+            prevNode = currentNode;
+            currentNode = currentNode.getNext();
+            return currentNode.getValue();
+        }
+
+        /**
+         * Removes element at nextIndex if next has been called for that element
+         * O(1) implementation
+         * @throws IllegalStateException
+         */
+        @Override
+        public void remove() {
+            if(!canRemove)
+                throw new IllegalStateException();
+            prevNode.next = currentNode.next;
+            currentNode = prevNode;
+            size_--;
+            canRemove = false;
+        }
     }
 
     //Utility class for Testing
