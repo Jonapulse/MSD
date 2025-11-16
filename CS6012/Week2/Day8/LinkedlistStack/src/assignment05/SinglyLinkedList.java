@@ -1,6 +1,5 @@
 package assignment05;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
