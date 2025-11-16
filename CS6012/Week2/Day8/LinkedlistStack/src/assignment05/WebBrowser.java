@@ -5,9 +5,9 @@ import java.util.NoSuchElementException;
 
 public class WebBrowser {
 
-    Stack<URL> backlog = new LinkedListStack<>();
+    Stack<URL> backlog = new ArrayStack<>();
     URL currentPage = null;
-    Stack<URL> frontlog = new LinkedListStack<>();;
+    Stack<URL> frontlog = new ArrayStack<>();;
 
     public WebBrowser() {}
 

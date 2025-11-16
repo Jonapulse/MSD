@@ -57,8 +57,8 @@ class SinglyLinkedListTest {
 
     @org.junit.jupiter.api.Test
     void get() {
-        for(int i = 10; i > 0; i--)
-            assertEquals(listBasicInt.get(i), Integer.valueOf(i));
+        for(int i = 9; i >= 0; i--)
+            assertEquals(listBasicInt.get(i), Integer.valueOf(i + 1));
     }
 
     @org.junit.jupiter.api.Test
