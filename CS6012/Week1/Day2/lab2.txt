@@ -1,57 +1,35 @@
+Jon Pulsipher - 6012 - Lab 2: Timing Experiments
 1) On your computer, how many times per second does the millisecond timer update?
-1 second - Approximately 1000.0 times per second //WAIT I NEED TO CLOSE EVERYTHING ON MY COMPUTER
-10 seconds - 999.5, then 1000.0. Also negatively loops (int overflow? Yeah, long gives a reasonable number about 1.5x INT_MAX)
+It updates the millisecond value 1000.0 times per second, but loops ~330,142,100 times per second. 
 
 2) Is it possible to determine how many times per second the nanosecond timer updates? If so, how many? If not, why not?
+Not really, because it's influenced by other things happening in your computer that are outside of your control. It is possible 
+to determine how many times it did update (by recording it) and make a good guess for how many times it will next time (by recording 
+it many times, subtracting out the additional time you took recording it, and averaging)).
 
 3) Judging by experiment 4, how long does it appear to take to compute System.nanoTime()?
+It "appears" to take ~100 nanoseconds because that's the value getting printed. Adding a -1 value to our printout array when continue 
+is called shows that our loop will call System.nanoTime 2-3 times before receiving an updated value for nanotime. If System.nanoTime 
+accounts for most of the runtime of our loop, than it takes at most 33 - 50 nanoseconds. 
 
 4) Estimate the precision of your answer above (+/- how many nanoseconds?)
+41 nanoseconds +/- 8 nanoseconds. We could time a more accurate number with a compensation loop that subtracted the time for 
+non System.nanoTime() assignments and look-ups in the loop.
 
 5) How long does it take to compute the square root of the numbers 1 through 10?
+~61 nanoseconds.
 
 6) Estimate the precision of your answer above (+/- how many nanoseconds?)
++/- 4 (from 10 tests: 65, 67, 59, 58, 62, 61, 59, 59, 58, 64)
 
 7) If you repeat the square root test 100x as many times, does the precision improve?
+Yes, but with diminishing returns. With one test you have very little sense of how precise your measurement was, but even two
+tests are a significant improvement. 
 
 8) How could you improve the results (get a more accurate estimate of elapsed time)?
-
-
-
-Questions as we go:
-E1 - Did the millisecond timer advance in one millisecond steps? Mostly, 
-but with a 5 millisecond blip at the start, 2 later, etc...
-Lol, E3 v E4. E3 100000, E4 100.
-E5 - 10,000,000 updates to nanosecond per second, which is 1/100 nanoseconds.
-
-1-
-Time advanced 9960595.7 times per second.
-The loop tested the time 378287335 times.
-
-2-
-Time advanced 9983363.2 times per second.
-The loop tested the time 379185447 times.
-
-3-
-Time advanced 9959777.7 times per second.
-The loop tested the time 377613848 times.
-
-4-
-Time advanced 9984242.3 times per second.
-The loop tested the time 379228988 times.
-
-5-
-Time advanced 9981042.7 times per second.
-The loop tested the time 378926456 times.
-
-6 - check - closed chrome streaming youtube)
-Time advanced 9984327.2 times per second.
-The loop tested the time 379706500 times.
-...that's very close.
-
-We have data for 2,3,4. 
-Compare multiple times with Experiment 6.
-Pick back up taking notes at Timing an algorithm.
-
-E7 - 
-5 tests - 62, 70, 68, 61, 53
+You could...
+- average multiple results of running this measurement (they do vary)
+- turn off other processes on the computer, especially those with variable performance
+- potentially, add a 'while' loop for the process to 'spin down' at the end? I don't know why this would work, but in the same
+way I've seen unexpected values at the start of a loop that doesn't spin up, I have seen unexpected values at the end. Please 
+tell me if I've gone mad.

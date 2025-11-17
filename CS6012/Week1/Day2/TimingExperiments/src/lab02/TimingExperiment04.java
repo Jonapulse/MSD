@@ -8,8 +8,10 @@ public class TimingExperiment04 {
     long[] advanceAmounts = new long[100];
     while (advanceCount < 100) {
       long currentTime = System.nanoTime();
-      if (currentTime == lastTime)
-        continue;
+      if (currentTime == lastTime) {
+          advanceAmounts[advanceCount++] = -1;
+          continue;
+      }
       advanceAmounts[advanceCount++] = currentTime - lastTime;
       lastTime = currentTime;
     }
