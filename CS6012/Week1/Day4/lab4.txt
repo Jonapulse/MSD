@@ -1,15 +1,26 @@
+Jon Pulsipher - 6012 - Lab 4: Debugger Practice
 1) Which two binarySearch tests are failing?
+Part1.binarySearch(arr1, 0) == true and Part1.binarySearch(arr2, 20) == false
 
 2) What are the values of arr and goal passed in to binary search?
+arr = [1, 2, 3, 4, 5]
+goal = 0
 
 3) For each of the two cases of binarySearch that are failing, which return statements are they executing in error (is it returning true when it should be returning false, or the other way around)?
+Part1.binarySearch(arr1, 0) == true should return false because 0 is not present, and Part1.binarySearch(arr2, 20) == false should return return true because 20 is present.
 
 4) What is the bug in binarySearch? How do you fix it?
+We are comparing goal to the index 'mid', but we should be comparing it to arr[mid]
 
 5) Which loops appear to be inifinite?
+Loop 2 and Loop 4.
 
 6) For the loops that you found to be infinite, briefly explain why they are never progressing.
+Loop 2 continues while b < 10 and b starts as 0 and is only altered through multiplication. b will always be 0, thus smaller than 10.
+Loop 4 continues while f > 0. f starts at 5 and has c (with a value of 1) subtracted from it, but the sign of c is swapped every loop. f oscillateds betweent 4 and 5 forever, never going below 0 and ending the loop.
 
 7) What does the call to password.split(" ") appear to do? Hint: examine the input value of "password", then examine the items in the "tokens" array returned by the call.
+Turns "a b c" into ["a", "b", "c"]
 
 8) What is the correct password?
+"1 4 9 16 25"

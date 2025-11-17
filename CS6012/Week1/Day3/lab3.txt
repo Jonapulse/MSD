@@ -1,1 +1,2 @@
+Jon Pulsipher - 6012 - Lab 3: visualizing timing data
 Hi! I've done this using Assignment 5's stack implementations (LinkedListStackAnalysis.pdf, copied into this document.) Is that alright? 
