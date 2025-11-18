@@ -12,18 +12,35 @@ public class LibraryBook<T> extends Book {
         super(isbn, author, title);
     }
 
+    /**
+     * Returns holder. Expected T are String name, String, email, or PhoneNumber #.
+     * @return
+     */
     public T getHolder() {
         return holder;
     }
 
+    /**
+     * @return dueDate as Gregorian Calendar
+     */
     public GregorianCalendar getDueDate() {
         return dueDate;
     }
+
+    /**
+     * "checks out" this book, setting a holder and due date.
+     * @param holder
+     * @param dueDate
+     */
     public void checkOut(T holder, GregorianCalendar dueDate) {
         this.holder = holder;
         this.dueDate = dueDate;
     }
 
+    /**
+     * resets holder and due date to null. Library recognize books with null holders
+     * as "checked out".
+     */
     public void checkIn() {
         this.holder = null;
         this.dueDate = null;
