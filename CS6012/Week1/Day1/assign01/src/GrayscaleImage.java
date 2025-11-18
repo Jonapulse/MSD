@@ -104,6 +104,8 @@ public class GrayscaleImage {
         }
 
         GrayscaleImage otherImage = (GrayscaleImage)other;
+        if(imageData.length != otherImage.imageData.length ||  imageData[0].length != otherImage.imageData[0].length)
+            return false;
 
         for(var row = 0; row < imageData.length; row++){
             for(var col = 0; col < imageData[0].length; col++){
@@ -158,7 +160,7 @@ public class GrayscaleImage {
         double[][]  mirroredData = new double[imageData.length][imageData[0].length];
         for(var row = 0; row < imageData.length; row++){
             for(var col = 0; col < imageData[0].length; col++){
-                mirroredData[col][row] = imageData[col][imageData.length - 1 - row];
+                mirroredData[row][col] = imageData[row][imageData[0].length - 1 - col];
             }
         }
         return new GrayscaleImage( mirroredData);
@@ -179,7 +181,7 @@ public class GrayscaleImage {
         double[][] croppedData = new double[width][height];
         for(var row = 0; row < width; row++){
             for(var col = 0; col < height; col++){
-                croppedData[col][row] = imageData[startCol + col][startRow + row];
+                croppedData[row][col] = imageData[startRow + row][startCol + col];
             }
         }
         return new GrayscaleImage(croppedData);
@@ -211,9 +213,9 @@ public class GrayscaleImage {
         }
 
         double[][] squaredData = new double[imageData.length - shortY - nudgeY][imageData[0].length - shortX - nudgeX];
-        for(var row = 0; row < imageData[0].length - shortX - nudgeX; row++){
-            for(var col = 0; col < imageData.length - shortY - nudgeY; col++){
-                squaredData[col][row] = imageData[col + shortY / 2 - nudgeY][row + shortX / 2 - nudgeX];
+        for(var row = 0; row < imageData.length - shortY - nudgeY; row++){
+            for(var col = 0; col < imageData[0].length - shortX - nudgeX; col++){
+                squaredData[row][col] = imageData[row + shortY / 2 - nudgeY][col + shortX / 2 - nudgeX];
             }
         }
 

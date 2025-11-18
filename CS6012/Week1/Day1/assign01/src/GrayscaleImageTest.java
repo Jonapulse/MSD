@@ -7,11 +7,13 @@ class GrayscaleImageTest {
 
     private GrayscaleImage smallSquare;
     private GrayscaleImage smallWide;
+    private GrayscaleImage smallWideEven;
 
     @BeforeEach
     void setUp() {
         smallSquare = new GrayscaleImage(new double[][]{{1,2},{3,4}});
         smallWide = new GrayscaleImage(new double[][]{{1,2,3},{4,5,6}});
+        smallWideEven = new GrayscaleImage(new double[][]{{1,2,3,4},{5,6,7,8}});
     }
 
     @Test
@@ -24,10 +26,55 @@ class GrayscaleImageTest {
     }
 
     @Test
+    void testGetPixelBounds()
+    {
+        boolean caughtException = false;
+        try{
+            smallSquare.getPixel(-1,0);
+        } catch(IllegalArgumentException e){
+            caughtException = true;
+        }
+        assertTrue(caughtException);
+
+        try{
+            smallSquare.getPixel(2,0);
+        } catch(IllegalArgumentException e){
+            caughtException = true;
+        }
+        assertTrue(caughtException);
+
+        try{
+            smallSquare.getPixel(0,-1);
+        } catch(IllegalArgumentException e){
+            caughtException = true;
+        }
+        assertTrue(caughtException);
+
+        try{
+            smallSquare.getPixel(0,2);
+        } catch(IllegalArgumentException e){
+            caughtException = true;
+        }
+        assertTrue(caughtException);
+    }
+
+
+    @Test
     void testEquals() {
         assertEquals(smallSquare, smallSquare);
         var equivalent = new GrayscaleImage(new double[][]{{1,2},{3,4}});
         assertEquals(smallSquare, equivalent);
+    }
+
+    @Test
+    void testNotEquals() {
+        var notEquivalent = new GrayscaleImage(new double[][]{{2,3},{1,4}});
+        assertNotEquals(smallSquare, notEquivalent);
+    }
+
+    @Test
+    void testNotEqualsSize() {
+        assertNotEquals(smallSquare, smallWide);
     }
 
     @Test
@@ -56,12 +103,24 @@ class GrayscaleImageTest {
     void mirrored() {
         var expected = new GrayscaleImage(new double[][]{{2,1},{4,3}});
         assertEquals(smallSquare.mirrored(), expected);
+
+        var expectedUneven = new GrayscaleImage(new double[][]{{3,2,1},{6,5,4}});
+        assertEquals(smallWide.mirrored(), expectedUneven);
     }
 
     @Test
     void cropped() {
         var cropped = smallSquare.cropped(1,1,1,1);
         assertEquals(cropped, new GrayscaleImage(new double[][]{{4}}));
+
+        var croppedUneven = smallWide.cropped(0,1,2,2);
+        assertEquals(croppedUneven, new GrayscaleImage(new double[][]{{2,3},{5,6}}));
+    }
+
+    @Test
+    void croppedTiny(){
+        var cropped = smallWide.cropped(1,2,1,1);
+        assertEquals(cropped.getPixel(0,0), 6);
     }
 
     @Test
@@ -70,6 +129,13 @@ class GrayscaleImageTest {
         var expected = new GrayscaleImage(new double[][]{{1,2},{4,5}});
         assertEquals(squared, expected);
     }
+
+    @Test
+    void squarifiedEven(){
+        var squared = smallWideEven.squarified();
+        assertEquals(squared,  new GrayscaleImage(new double[][]{{2,3},{6,7}}));
+    }
+
 
     @Test
     void testGetPixelThrowsOnNegativeX(){
