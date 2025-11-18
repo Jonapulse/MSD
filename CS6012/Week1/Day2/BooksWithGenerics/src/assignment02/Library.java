@@ -289,7 +289,16 @@ public class Library <T> {
             Comparator<LibraryBook<T>> {
         @Override
         public int compare(LibraryBook<T> o1, LibraryBook<T> o2) {
-            return o1.getAuthor().compareTo(o2.getAuthor());
+            String[] author1Name = o1.getAuthor().split(" ");
+            String[] author2Name = o2.getAuthor().split(" ");
+            int lastNameCompare = author1Name[author1Name.length - 1].compareTo(author2Name[author2Name.length - 1]);
+            if(lastNameCompare == 0){
+                int firstNameCompare = author1Name[0].compareTo(author2Name[0]);
+                if(firstNameCompare == 0){
+                    return o1.getTitle().compareTo(o2.getTitle());
+                }
+                else return firstNameCompare;
+            } else return lastNameCompare;
         }
     }
 

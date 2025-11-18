@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,10 +50,28 @@ class LibraryTest {
     @Test
     public void testLargeLibrary(){
         // test a medium library
-        var lib = new Library();
+        var lib = new Library<String>();
+        lib.addAll("src/Mushroom_Publishing_Test.txt");
+
+        //Ordered by Author (fake books checking first/last name and same author title order
+        ArrayList<LibraryBook<String>> allBooks = lib.getOrderedByAuthor();
+        assertEquals(allBooks.get(0).getIsbn(), 9781843193319L);
+        assertEquals(allBooks.get(1).getIsbn(), 9781843191230L);
+        assertEquals(allBooks.get(2).getIsbn(), 9781843192022L);
+    }
+
+    @Test
+    public void libraryGetOverdue()
+    {
+        var lib = new Library<String>();
         lib.addAll("src/Mushroom_Publishing.txt");
 
-        // FILL IN MORE TESTS HERE!
+        lib.checkout(9781843192954L, "Jon", 11, 17, 2025);
+        lib.checkout(9781843193319L, "Jon", 12, 25, 2025);
+
+        ArrayList<LibraryBook<String>> overdue = lib.getOverdueList(12, 1, 2025);
+        assertEquals(overdue.size(), 1);
+        assertEquals(overdue.get(0).getIsbn(), 9781843192954L );
     }
 
     @Test
@@ -107,7 +126,4 @@ class LibraryTest {
         assertTrue(lib.checkin(patron2));
 
     }
-
-    //TODO: Test over by duedate, test get overdue, test orderByAuthor test orderbyisbn,
-
 }
