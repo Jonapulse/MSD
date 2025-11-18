@@ -79,11 +79,6 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E>{
             return false;
     }
 
-    //Code Review - considering optimization to look up all insertions and do one big swap
-     //store all insertion points in ordered list of {insertIndex, element}
-     //resize array if necessary
-     //step through, copying array or filling from ordered list
-     //(removeAll same deal)
     /**
      * @param elements
      * @return true if data changed, else false
@@ -132,8 +127,6 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E>{
                 atLeastOneChange = true;
         return atLeastOneChange;
     }
-
-
 
     /**
      * @param element
@@ -291,14 +284,6 @@ public class BinarySearchSet<E> implements SortedSet<E>, Iterable<E>{
             BinarySearchSet.this.remove(data_[--nextIndex]);
             canRemove = false;
         }
-
-        /**
-         * not implementing
-         */
-//        @Override
-//        public void forEachRemaining(Consumer<? super E> action) {
-//            Iterator.super.forEachRemaining(action);
-//        }
     }
 
     /**
