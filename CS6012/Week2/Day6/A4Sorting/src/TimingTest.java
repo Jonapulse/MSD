@@ -15,7 +15,7 @@ public class TimingTest extends TimerTemplate {
 
     @Override
     protected void setup(int n) {
-        worstCase = SortUtil.generateWorstCase(n);
+        worstCase = SortUtil.generateAverageCase(n);
     }
 
     @Override

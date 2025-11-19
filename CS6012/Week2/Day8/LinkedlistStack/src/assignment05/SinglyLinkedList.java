@@ -66,9 +66,7 @@ public class SinglyLinkedList<E> implements List<E>{
     public void insert(int index, E element) throws IndexOutOfBoundsException {
         if(index < 0 || index > size_)
             throw new IndexOutOfBoundsException();
-        Node previousNode = getNodeBeforeIndex(index);
-        if(previousNode == header)
-            System.out.println("Oh no it's header");
+        Node<E> previousNode = getNodeBeforeIndex(index);
         Node<E> newNode = new Node<>(element, previousNode.next);
         previousNode.setNext(newNode);
         size_++;
@@ -108,7 +106,7 @@ public class SinglyLinkedList<E> implements List<E>{
     public E get(int index) throws IndexOutOfBoundsException {
         if(index < 0 || index >= size_)
             throw new IndexOutOfBoundsException();
-        Node<E> nodeBefore =  getNodeBeforeIndex(index);
+        Node<E> nodeBefore = getNodeBeforeIndex(index);
         return nodeBefore.getNext().getValue();
     }
 
@@ -219,7 +217,6 @@ public class SinglyLinkedList<E> implements List<E>{
     }
 
     public class SinglyLinkedListIterator implements Iterator<E> {
-        private int nextIndex = 0;
         private Node<E> prevNode = header;
         private Node<E> currentNode = null;
         private boolean canRemove = false;
