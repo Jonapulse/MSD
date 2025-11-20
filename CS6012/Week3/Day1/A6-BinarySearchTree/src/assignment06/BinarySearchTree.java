@@ -272,6 +272,8 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
     @Override
     public ArrayList<T> toArrayList() {
         ArrayList<T> list = new ArrayList<>();
+        if(root == null)
+            return list;
         inOrderFillArrayList(list, root);
         return list;
     }
