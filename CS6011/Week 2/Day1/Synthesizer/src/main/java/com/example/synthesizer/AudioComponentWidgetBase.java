@@ -11,14 +11,15 @@ import javafx.scene.text.Text;
 import javafx.scene.shape.Line;
 import javafx.scene.input.MouseEvent;
 
+import java.util.ArrayList;
+
 public class AudioComponentWidgetBase extends VBox {
     AudioComponent audioComponent_;
     Pane parent_;
 
     //Cabling
-    Line attemptLine_;
-    Cable cableIn_;
-    Cable cableOut_;
+    Line attemptLine_; //Not currently in use
+    ArrayList<Cable> cablesOut_;
 
     /*
     * The generic structure of AudioComponentWidget is VBox contains...
@@ -61,6 +62,8 @@ public class AudioComponentWidgetBase extends VBox {
         });
         cableInput.addEventHandler(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
             System.out.println("Drag released on target node! Input");
+            System.out.println("I am ");
+            //Cable between this and other, which will do connection and make object.
             e.consume();
         });
 
@@ -139,6 +142,14 @@ public class AudioComponentWidgetBase extends VBox {
         if(attemptor != null){
 
         }
+    }
+
+    public void connectAudioComponent(AudioComponent sourceAC){
+        audioComponent_.connectInput(sourceAC);
+    }
+
+    public void disconnectAudioComponent(AudioComponent sourceAC){
+        audioComponent_.disconnectInput(sourceAC);
     }
 
 

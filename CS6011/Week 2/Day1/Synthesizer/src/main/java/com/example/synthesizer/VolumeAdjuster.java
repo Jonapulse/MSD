@@ -26,6 +26,11 @@ public class VolumeAdjuster implements AudioComponent{
         input_ = input;
     }
 
+    @Override
+    public void disconnectInput(AudioComponent input) {
+        input_ = null;
+    }
+
     // VolumeAdjuster
     //
     private AudioComponent input_;

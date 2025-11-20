@@ -23,6 +23,8 @@ public class SineWave implements AudioComponent {
         assert(false); //This Component does not accept input
     }
 
+    @Override
+    public void disconnectInput(AudioComponent input) { assert(false); }
     /**
      * re-initializes the audioClip so audioComponents can update while maintaining connections to other audioComponents
      */

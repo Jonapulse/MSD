@@ -25,6 +25,11 @@ public class VFSineWave implements AudioComponent {
         }
     }
 
+    @Override
+    public void disconnectInput(AudioComponent input) {
+        input_ = null;
+    }
+
     // VFSineWave
     //
     private AudioClip clip_;
