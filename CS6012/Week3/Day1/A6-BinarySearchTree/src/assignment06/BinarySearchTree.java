@@ -76,9 +76,13 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
      *
      * @param items
      * @return true if anything added, else false
+     * @throws NullPointerException
      */
     @Override
-    public boolean addAll(Collection<? extends T> items) {
+    public boolean addAll(Collection<? extends T> items) throws NullPointerException{
+        if(items == null)
+            throw new NullPointerException();
+
         int startSize = size;
         for(T item : items)
             add(item);
@@ -124,9 +128,13 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
      *
      * @param items
      * @return true of all items in set
+     * @throws NullPointerException
      */
     @Override
-    public boolean containsAll(Collection<? extends T> items) {
+    public boolean containsAll(Collection<? extends T> items) throws NullPointerException {
+        if(items == null)
+            throw new NullPointerException();
+
         for(T item : items)
             if(!contains(item))
                 return false;
@@ -240,7 +248,10 @@ public class BinarySearchTree<T extends Comparable<? super T>> implements Sorted
      * @return true if any items removed from set
      */
     @Override
-    public boolean removeAll(Collection<? extends T> items) {
+    public boolean removeAll(Collection<? extends T> items) throws NullPointerException {
+        if(items == null)
+            throw new NullPointerException();
+
         int startSize = size;
         for(T item : items)
             removeRec(root, item);
