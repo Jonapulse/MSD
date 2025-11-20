@@ -19,6 +19,10 @@ public class WhiteNoise implements AudioComponent {
         assert(false); //This Component does not accept input
     }
 
+    @Override
+    public void disconnectInput(AudioComponent input) {assert(false);}
+
+
     // WhiteNoise
     //
     private AudioClip clip_;

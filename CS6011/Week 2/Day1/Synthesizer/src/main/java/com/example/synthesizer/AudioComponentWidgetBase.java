@@ -22,26 +22,26 @@ public class AudioComponentWidgetBase extends VBox {
     ArrayList<Cable> cablesOut_;
 
     /*
-    * The generic structure of AudioComponentWidget is VBox contains...
-    * ___________________   Title and another HBox, which contains...
-    * |____Title________|   Variable left side and another VBox, which contains...
-    * |<Varies | Delete |   Delete button and Cable interface.
-    * |  by    |--------|
-    * |_Type>__|_Cable__|
-    *
-    * NOTE: 'parent' is sent in as a reference for self-deletion. Caller must handle
-    * display themselves (e.g. by childing this object to parent).
+     * The generic structure of AudioComponentWidget is VBox contains...
+     * ___________________   Title and another HBox, which contains...
+     * |____Title________|   Variable left side and another VBox, which contains...
+     * |<Varies | Delete |   Delete button and Cable interface.
+     * |  by    |--------|
+     * |_Type>__|_Cable__|
+     *
+     * NOTE: 'parent' is sent in as a reference for self-deletion. Caller must handle
+     * display themselves (e.g. by childing this object to parent).
      */
     AudioComponentWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom) {
         setupWidgetBase(x, y, title, audioComponent, parent, custom, true);
     }
+
     // Constructor overload used to hide right panel
     AudioComponentWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom, boolean includeRightPanel) {
         setupWidgetBase(x, y, title, audioComponent, parent, custom, includeRightPanel);
     }
 
-    void setupWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom, boolean includeRightPanel)
-    {
+    void setupWidgetBase(double x, double y, String title, AudioComponent audioComponent, Pane parent, Pane custom, boolean includeRightPanel) {
         this.audioComponent_ = audioComponent;
         this.parent_ = parent;
 
@@ -61,9 +61,7 @@ public class AudioComponentWidgetBase extends VBox {
             e.consume();
         });
         cableInput.addEventHandler(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
-            System.out.println("Drag released on target node! Input");
-            System.out.println("I am ");
-            //Cable between this and other, which will do connection and make object.
+            CablingHandlerS.getInstance().widgetAttemptingCable_.connectCableFromSource(audioComponent_, (Circle) e.getSource(), (Circle) e.getTarget());
             e.consume();
         });
 
@@ -72,9 +70,11 @@ public class AudioComponentWidgetBase extends VBox {
         VBox interactPanel = new VBox(10);
         contentWidget.getChildren().add(interactPanel);
 
-        if(includeRightPanel){
+        if (includeRightPanel) {
             Button deleteButton = new Button("X");
-            deleteButton.setOnAction(e -> {parent_.getChildren().remove(this);});
+            deleteButton.setOnAction(e -> {
+                parent_.getChildren().remove(this);
+            });
             interactPanel.getChildren().add(deleteButton);
 
 
@@ -83,10 +83,12 @@ public class AudioComponentWidgetBase extends VBox {
             interactPanel.getChildren().add(cableButton);
             cableButton.addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
                 startFullDrag();
-                //beginCabling(e);
-                attemptLine_ = new Line(e.getSceneX(), e.getSceneY(), e.getSceneX(), e.getSceneY());
+                CablingHandlerS.getInstance().widgetAttemptingCable_ = this;
 
-                parent_.getChildren().add(attemptLine_);
+                //After hours of trying to get a line drawing AND an object receiving a drag, I'm throwing in the towel
+                // beginCabling(e);
+                //attemptLine_ = new Line(e.getSceneX(), e.getSceneY(), e.getSceneX(), e.getSceneY());
+                //parent_.getChildren().add(attemptLine_);
                 e.consume();
             });
 
@@ -110,48 +112,47 @@ public class AudioComponentWidgetBase extends VBox {
         return audioComponent_.getClip();
     }
 
-    public AudioComponent getAudioComponent() { return audioComponent_; }
+    public AudioComponent getAudioComponent() {
+        return audioComponent_;
+    }
 
+    /* //Tragic attempt to get visual cabling working
     private void beginCabling(MouseEvent e) {
         System.out.println("beginCabling");
         attemptLine_ = new Line(e.getSceneX(), e.getSceneY(), e.getSceneX(), e.getSceneY());
-
         parent_.getChildren().add(attemptLine_);
         e.consume();
     }
 
-    private void updateCableLine(MouseEvent e)
-        {
-            System.out.println("Hullo? " + (attemptLine_ == null));
-            if(attemptLine_ != null)
-            {
-                System.out.println(e.getSceneX() + " and  " + e.getSceneY());
-                attemptLine_.setEndX(e.getSceneX());
-                attemptLine_.setEndY(e.getSceneY());
-            }
+    private void updateCableLine(MouseEvent e) {
+        System.out.println("Hullo? " + (attemptLine_ == null));
+        if (attemptLine_ != null) {
+            System.out.println(e.getSceneX() + " and  " + e.getSceneY());
+            attemptLine_.setEndX(e.getSceneX());
+            attemptLine_.setEndY(e.getSceneY());
         }
+    }
 
-    private void cleanupCableLine()
-        {
-            parent_.getChildren().remove(attemptLine_);
-            attemptLine_ = null;
-        }
+    private void cleanupCableLine() {
+        parent_.getChildren().remove(attemptLine_);
+        attemptLine_ = null;
+    }
 
-    private void endCabling(){
+    private void endCabling() {
         AudioComponentWidgetBase attemptor = CablingHandlerS.getInstance().widgetAttemptingCable_;
-        if(attemptor != null){
-
+        if (attemptor != null) {
         }
     }
+    */
 
-    public void connectAudioComponent(AudioComponent sourceAC){
-        audioComponent_.connectInput(sourceAC);
+    public void connectCableFromSource(AudioComponent targetAC, Circle start, Circle end) {
+        targetAC.connectInput(audioComponent_);
+        Cable newCable = new Cable(this, start, end, audioComponent_, targetAC);
     }
 
-    public void disconnectAudioComponent(AudioComponent sourceAC){
-        audioComponent_.disconnectInput(sourceAC);
+    public void disconnectCablesFromSource() {
+        while(!cablesOut_.isEmpty()) {
+            cablesOut_.removeFirst().disconnectCable();
+        }
     }
-
-
-
 }

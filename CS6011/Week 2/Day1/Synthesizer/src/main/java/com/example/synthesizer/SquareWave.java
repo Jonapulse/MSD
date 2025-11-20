@@ -18,6 +18,8 @@ public class SquareWave implements AudioComponent {
         assert(false); //This Component does not accept input
     }
 
+    @Override
+    public void disconnectInput(AudioComponent input) {assert(false);}
     // SquareWave
     // NOTES: Are there conventions for how to organize implementations?
     //

@@ -1,26 +1,26 @@
 package com.example.synthesizer;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
-/* On creation or modification, Cable will listen for a valid connection on the next
-* click to connect itself to a target, else it will destroy itself.
+/* Cable adds and removes itself in the constructor/disconnectCable
  */
 public class Cable extends Line {
-    Pane startAnchor_;
+    Pane parent_;
     Pane endAnchor_;
-    AudioComponentWidgetBase sourceAudioComponent_;
-    AudioComponentWidgetBase endAudioComponent_;
+    AudioComponent startAudioComponent_;
+    AudioComponent endAudioComponent_;
 
-    Cable(Pane startAnchor, Pane endAnchor, AudioComponentWidgetBase sourceW, AudioComponentWidgetBase targetW) {
-        startAnchor_ = startAnchor;
-        endAnchor_ = endAnchor;
-        sourceAudioComponent_ = sourceW;
+    Cable(Pane parent, Circle start, Circle end, AudioComponent sourceW, AudioComponent targetW) {
+        parent_ = parent;
+        startAudioComponent_ = sourceW;
         endAudioComponent_ = targetW;
-
-        super(startAnchor.getLayoutX(), startAnchor.getLayoutY(), endAnchor.getLayoutX(), endAnchor.getLayoutY());
-        targetW.connectAudioComponent(sourceW.getAudioComponent());
-
+        super(start.getLayoutX(), start.getLayoutY(), end.getLayoutX(), end.getLayoutY());
+        parent_.getChildren().add(this);
     }
 
-
+    public void disconnectCable(){
+        parent_.getChildren().remove(this);
+        endAudioComponent_.disconnectInput(startAudioComponent_);
+    }
 }
