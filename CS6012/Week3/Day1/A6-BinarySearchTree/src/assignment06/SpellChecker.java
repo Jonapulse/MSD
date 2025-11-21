@@ -37,7 +37,7 @@ public class SpellChecker {
   /**
    * Constructor--creates dictionary from a file.
    *
-   * @param dictionary_file
+   * @param dictionaryFile
    *          - the File that contains Strings used to build the dictionary
    */
   public SpellChecker(File dictionaryFile) {
@@ -52,7 +52,7 @@ public class SpellChecker {
    *          - the String to be added to the dictionary
    */
   public void addToDictionary(String word) {
-    // FILL IN
+    dictionary.add(word);
   }
 
   /**
@@ -62,23 +62,26 @@ public class SpellChecker {
    *          - the String to be removed from the dictionary
    */
   public void removeFromDictionary(String word) {
-    // FILL IN
+    dictionary.remove(word);
   }
 
   /**
    * Spell-checks a document against the dictionary.
    *
-   * @param document_file
+   * @param documentFile
    *          - the File that contains Strings to be looked up in the dictionary
    * @return a List of misspelled words
    */
   public List<String> spellCheck(File documentFile) {
 
     List<String> wordsToCheck = readFromFile(documentFile);
+    List<String> misspelled =  new ArrayList<>();
+    for(String word : wordsToCheck) {
+        if(!dictionary.contains(word))
+            misspelled.add(word);
+    }
 
-    // FILL IN -- do not return null
-
-    return null;
+    return misspelled;
   }
 
   /**
@@ -88,7 +91,10 @@ public class SpellChecker {
    *          - the List of Strings to be added to the dictionary
    */
   private void buildDictionary(List<String> words) {
-    // FILL IN
+      dictionary = new BinarySearchTree<>();
+      for (String word : words) {
+          addToDictionary(word);
+      }
   }
 
   /**

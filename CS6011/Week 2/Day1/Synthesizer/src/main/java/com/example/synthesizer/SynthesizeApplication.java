@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class SynthesizeApplication extends Application {
     AudioComponentWidgetBase widgetAttemptingCable_ = null;
@@ -41,10 +40,10 @@ public class SynthesizeApplication extends Application {
 
         VolumeAdjusterWidget volumeW = new VolumeAdjusterWidget(100, 150, ap);
         ap.getChildren().add(volumeW);
-        volumeW.getAudioComponent().connectInput(sineW.getAudioComponent());
+     //   volumeW.getAudioComponent().connectInput(sineW.getAudioComponent());
 
         SpeakerWidget speakerW = new SpeakerWidget(200, 50, ap);
-        speakerW.getAudioComponent().connectInput(volumeW.getAudioComponent());
         ap.getChildren().add(speakerW);
+     //   speakerW.getAudioComponent().connectInput(volumeW.getAudioComponent());
     }
 }

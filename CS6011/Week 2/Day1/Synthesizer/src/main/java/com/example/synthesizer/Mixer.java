@@ -26,6 +26,10 @@ public class Mixer implements AudioComponent {
     public void connectInput(AudioComponent input) {
         inputs.add(input);
     }
+    @Override
+    public void disconnectInput(AudioComponent input) {
+        inputs.remove(input);
+    }
 
     private ArrayList<AudioComponent> inputs;
 

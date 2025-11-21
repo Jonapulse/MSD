@@ -1,13 +1,11 @@
 import assignment04.SortUtil;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Random;
 
 public class TimingTest extends TimerTemplate {
 
-    ArrayList<Integer> worstCase;
+    ArrayList<Integer> averageCase;
 
     public TimingTest(int[] problemSizes, int timesToLoop) {
         super(problemSizes, timesToLoop);
@@ -15,13 +13,17 @@ public class TimingTest extends TimerTemplate {
 
     @Override
     protected void setup(int n) {
+<<<<<<< HEAD
 
         worstCase = SortUtil.generateAverageCase(n);
+=======
+        averageCase = SortUtil.generateAverageCase(n);
+>>>>>>> refs/remotes/origin/main
     }
 
     @Override
     protected void timingIteration(int n) {
-        SortUtil.mergesort(worstCase, Comparator.naturalOrder());
+        SortUtil.mergesort(averageCase, Comparator.naturalOrder());
     }
 
     @Override

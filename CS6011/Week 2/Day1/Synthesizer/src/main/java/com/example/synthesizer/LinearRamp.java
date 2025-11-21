@@ -16,6 +16,9 @@ public class LinearRamp implements AudioComponent {
         assert(false); //This Component does not accept input
     }
 
+    @Override
+    public void disconnectInput(AudioComponent input) {assert(false);}
+
     private AudioClip clip_;
     public LinearRamp(int start, int stop){
         clip_ = new AudioClip();

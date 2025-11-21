@@ -12,7 +12,7 @@ public class SpellCheckerDemo {
 
   public static void main(String[] args) {
 
-    SpellChecker mySC = new SpellChecker(new File("dictionary.txt"));
+    SpellChecker mySC = new SpellChecker(new File("src/dictionary.txt"));
 
     run_spell_check(mySC, "hello_world.txt");
     run_spell_check(mySC, "good_luck.txt");
@@ -20,7 +20,7 @@ public class SpellCheckerDemo {
 
   private static void run_spell_check(SpellChecker sc, String documentFilename) {
 
-    File doc = new File(documentFilename);
+    File doc = new File("src/" + documentFilename);
     List<String> misspelledWords = sc.spellCheck(doc);
     if (misspelledWords.size() == 0) {
       System.out.println("There are no misspelled words in file " + doc + ".");

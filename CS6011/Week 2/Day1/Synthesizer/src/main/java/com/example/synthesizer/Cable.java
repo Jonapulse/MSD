@@ -1,42 +1,26 @@
 package com.example.synthesizer;
-import javafx.scene.Node;
-import javafx.scene.input.PickResult;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-/* On creation or modification, Cable will listen for a valid connection on the next
-* click to connect itself to a target, else it will destroy itself.
+/* Cable adds and removes itself in the constructor/disconnectCable
  */
-public class Cable extends Line implements MouseListener {
-    Pane startAnchor_;
+public class Cable extends Line {
+    Pane parent_;
     Pane endAnchor_;
-    AudioComponent sourceAudioComponent_;
-    AudioComponent targetAudioComponent_;
-    boolean attemptingConnection_ = false;
+    AudioComponent startAudioComponent_;
+    AudioComponent endAudioComponent_;
 
-    Cable(Pane startAnchor, AudioComponent sourceAudioComponent){
-        startAnchor_ = startAnchor;
-        sourceAudioComponent_ = sourceAudioComponent;
-        attemptingConnection_ = true;
+    Cable(Pane parent, Circle start, Circle end, AudioComponent sourceW, AudioComponent targetW) {
+        parent_ = parent;
+        startAudioComponent_ = sourceW;
+        endAudioComponent_ = targetW;
+        super(start.getLayoutX(), start.getLayoutY(), end.getLayoutX(), end.getLayoutY());
+        parent_.getChildren().add(this);
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        System.out.println(e.getSource());
-//        PickResult pick = (PickResult) e.get();
-//        Node clickedNode = (Node)e.getPickResult().getIntersectedNode();
-//        System.out.println(e.);
+    public void disconnectCable(){
+        parent_.getChildren().remove(this);
+        endAudioComponent_.disconnectInput(startAudioComponent_);
     }
-
-    //Un-used interface methods
-    @Override
-    public void mousePressed(MouseEvent e) {}
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-    @Override
-    public void mouseEntered(MouseEvent e) {}
-    @Override
-    public void mouseExited(MouseEvent e) {}
 }
