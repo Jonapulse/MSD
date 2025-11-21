@@ -3,31 +3,26 @@ import assignment04.SortUtil;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class TimingTest extends TimerTemplate {
+public class TimingTestPivots extends TimerTemplate {
 
     ArrayList<Integer> averageCase;
 
-    public TimingTest(int[] problemSizes, int timesToLoop) {
+    public TimingTestPivots(int[] problemSizes, int timesToLoop) {
         super(problemSizes, timesToLoop);
     }
 
     @Override
     protected void setup(int n) {
-<<<<<<< HEAD
-
-        worstCase = SortUtil.generateAverageCase(n);
-=======
         averageCase = SortUtil.generateAverageCase(n);
->>>>>>> refs/remotes/origin/main
     }
 
     @Override
     protected void timingIteration(int n) {
-        SortUtil.mergesort(averageCase, Comparator.naturalOrder());
+        SortUtil.quicksort(new ArrayList<>(averageCase), Comparator.naturalOrder());
     }
 
     @Override
     protected void compensationIteration(int n) {
-        //null
+        ArrayList<Integer> dummy = new  ArrayList<>(averageCase);
     }
 }

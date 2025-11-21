@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 1000;
+    final static int SMALL_SORT_THRESHOLD = 200;
     final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
