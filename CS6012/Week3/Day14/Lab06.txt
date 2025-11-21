@@ -1,0 +1,7 @@
+Lab06 - Jon Pulsipher and Tyler Han
+Code in Tyler's repo - https://github.com/TylerHan1226/MSD-Tyler/tree/main/3-CS6012/CS6012-project/src/lab06
+
+We found for initializing, the ArrayList PQ is 10x+ faster than the TreeSet PQ,
+but for removal, the ArrayList PQ is 10x slower than the TreeSet PQ.
+The differences between average and best case removals was quite small, but 
+for initialization shuffled creation took 3-4x the time.
