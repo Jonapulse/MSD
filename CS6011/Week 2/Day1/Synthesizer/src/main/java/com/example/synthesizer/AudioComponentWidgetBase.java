@@ -1,6 +1,5 @@
 package com.example.synthesizer;
 
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.HBox;
@@ -9,17 +8,20 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.shape.Line;
-import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
 public class AudioComponentWidgetBase extends VBox {
     AudioComponent audioComponent_;
     Pane parent_;
+    private boolean draggingWidget_ = false;
+
+    final int DEFAULT_WIDTH = 100;
+    final int DEFAULT_HEIGHT = 50;
 
     //Cabling
-    Line attemptLine_; //Not currently in use
-    ArrayList<Cable> cablesOut_;
+   // Line attemptLine_; //Not currently in use
+    ArrayList<Cable> cablesOut_ = new ArrayList<>();
 
     /*
      * The generic structure of AudioComponentWidget is VBox contains...
@@ -45,8 +47,28 @@ public class AudioComponentWidgetBase extends VBox {
         this.audioComponent_ = audioComponent;
         this.parent_ = parent;
 
-        this.setPrefWidth(100);
+        this.setPrefWidth(DEFAULT_WIDTH);
         this.setStyle("-fx-background-color:gray; -fx-padding: 5px; -fx-border-color: blue; -fx-border-width: 2px;");
+
+        //Handle drag on full widget
+         //
+        this.addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
+            startFullDrag();
+            System.out.println("Hey there");
+            draggingWidget_ = true;
+            e.consume();
+        });
+        this.addEventHandler(MouseDragEvent.MOUSE_DRAG_OVER, e-> {
+            if(draggingWidget_) {
+                this.setLayoutX(e.getSceneX() - DEFAULT_WIDTH/2);
+                this.setLayoutY(e.getSceneY() -  DEFAULT_HEIGHT/2);
+            }
+            e.consume();
+        } );
+        this.addEventHandler(MouseDragEvent.MOUSE_DRAG_RELEASED, e-> {
+            draggingWidget_ = false;
+            e.consume();
+        });
 
         Text titleWidget = new Text(title);
         titleWidget.setStyle("-fx-alignment: CENTER;");
@@ -55,13 +77,10 @@ public class AudioComponentWidgetBase extends VBox {
         this.getChildren().add(contentWidget);
         Circle cableInput = new Circle(10);
 
-        cableInput.addEventHandler(MouseDragEvent.DRAG_DETECTED, (e) -> {
-            System.out.println("we start full drag");
-            startFullDrag();
-            e.consume();
-        });
+        //Handle receiving drag
+         //
         cableInput.addEventHandler(MouseDragEvent.MOUSE_DRAG_RELEASED, e -> {
-            CablingHandlerS.getInstance().widgetAttemptingCable_.connectCableFromSource(audioComponent_, (Circle) e.getSource(), (Circle) e.getTarget());
+            CablingHandlerS.getInstance().widgetAttemptingCable_.connectCableFromSource(this);
             e.consume();
         });
 
@@ -82,6 +101,7 @@ public class AudioComponentWidgetBase extends VBox {
 
             interactPanel.getChildren().add(cableButton);
             cableButton.addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
+                draggingWidget_ = false;
                 startFullDrag();
                 CablingHandlerS.getInstance().widgetAttemptingCable_ = this;
 
@@ -145,14 +165,32 @@ public class AudioComponentWidgetBase extends VBox {
     }
     */
 
-    public void connectCableFromSource(AudioComponent targetAC, Circle start, Circle end) {
-        targetAC.connectInput(audioComponent_);
-        Cable newCable = new Cable(this, start, end, audioComponent_, targetAC);
+    public void connectCableFromSource(AudioComponentWidgetBase targetW) {
+        targetW.getAudioComponent().connectInput(audioComponent_);
+      //  cablesOut_.add(new Cable(this, start, end, audioComponent_, targetAC));
+        Line testLine = new Line(cableFromX(),cableFromY(), cableToX(), cableToY());
+        parent_.getChildren().add(testLine);
     }
 
     public void disconnectCablesFromSource() {
         while(!cablesOut_.isEmpty()) {
             cablesOut_.removeFirst().disconnectCable();
         }
+    }
+
+    public int cableFromX(){
+        return (int)(getLayoutX() + DEFAULT_WIDTH * 0.85f);
+    }
+
+    public int cableFromY(){
+        return (int)(getLayoutY() + DEFAULT_HEIGHT * 2 / 5);
+    }
+
+    public int cableToX(){
+        return (int)(getLayoutX() + DEFAULT_WIDTH * 0.1f);
+    }
+
+    public int cableToY(){
+        return (int)getLayoutY();
     }
 }
