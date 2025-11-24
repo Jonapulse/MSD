@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 
 public class BinarySearchTree<T extends Comparable<? super T>> implements SortedSet<T>{
 
-    public class Node{
+    private class Node{
         T value = null;
         Node left = null;
         Node right = null;
