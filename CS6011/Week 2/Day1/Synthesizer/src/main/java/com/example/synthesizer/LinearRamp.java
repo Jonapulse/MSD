@@ -19,12 +19,16 @@ public class LinearRamp implements AudioComponent {
     @Override
     public void disconnectInput(AudioComponent input) {assert(false);}
 
-    private AudioClip clip_;
-    public LinearRamp(int start, int stop){
+    public void updateClip(int start, int stop){
         clip_ = new AudioClip();
         int numSamples = (int)(AudioClip.SAMPLE_RATE * AudioClip.DURATION);
         for(int i = 0; i < numSamples; i++) {
             clip_.setSample(i, (int) Math.clamp(((1f * start * (numSamples - i) + stop * i) / numSamples), Short.MIN_VALUE, Short.MAX_VALUE));
         }
+    }
+
+    private AudioClip clip_;
+    public LinearRamp(int start, int stop){
+        updateClip(start, stop);
     }
 }

@@ -54,14 +54,13 @@ public class AudioComponentWidgetBase extends VBox {
          //
         this.addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
             startFullDrag();
-            System.out.println("Hey there");
             draggingWidget_ = true;
             e.consume();
         });
         this.addEventHandler(MouseDragEvent.MOUSE_DRAG_OVER, e-> {
             if(draggingWidget_) {
                 this.setLayoutX(e.getSceneX() - DEFAULT_WIDTH/2);
-                this.setLayoutY(e.getSceneY() -  DEFAULT_HEIGHT/2);
+                this.setLayoutY(e.getSceneY() - DEFAULT_HEIGHT/2);
             }
             e.consume();
         } );
@@ -85,17 +84,18 @@ public class AudioComponentWidgetBase extends VBox {
         });
 
         contentWidget.getChildren().add(cableInput);
-        contentWidget.getChildren().add(custom);
+        if(custom != null)
+            contentWidget.getChildren().add(custom);
         VBox interactPanel = new VBox(10);
         contentWidget.getChildren().add(interactPanel);
 
         if (includeRightPanel) {
             Button deleteButton = new Button("X");
             deleteButton.setOnAction(e -> {
+                disconnectCablesFromSource();
                 parent_.getChildren().remove(this);
             });
             interactPanel.getChildren().add(deleteButton);
-
 
             Button cableButton = new Button("C");
 
@@ -103,25 +103,10 @@ public class AudioComponentWidgetBase extends VBox {
             cableButton.addEventHandler(MouseDragEvent.DRAG_DETECTED, e -> {
                 draggingWidget_ = false;
                 startFullDrag();
+                disconnectCablesFromSource(); //Clear any existing cables
                 CablingHandlerS.getInstance().widgetAttemptingCable_ = this;
-
-                //After hours of trying to get a line drawing AND an object receiving a drag, I'm throwing in the towel
-                // beginCabling(e);
-                //attemptLine_ = new Line(e.getSceneX(), e.getSceneY(), e.getSceneX(), e.getSceneY());
-                //parent_.getChildren().add(attemptLine_);
                 e.consume();
             });
-
-            // Handle line update on parent pane
-//            parent_.setOnMouseDragOver(e -> {
-//                updateCableLine(e);
-//                //Let event bubble
-//            });
-//            parent_.setOnMouseDragReleased(e -> {
-//                if(attemptLine_ != null){
-//                    cleanupCableLine();
-//                }
-//            });
         }
 
         this.setLayoutX(x);
