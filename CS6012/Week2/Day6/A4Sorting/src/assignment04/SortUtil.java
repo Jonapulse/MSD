@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 1000;
+    final static int SMALL_SORT_THRESHOLD = 200;
     final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
@@ -124,7 +124,6 @@ public class SortUtil {
      * @param comparator
      */
     static <T> void quicksortRecurse(ArrayList<T> list, int b, int e, Comparator<? super T> comparator){
-        //TODO: better pivot, occasional random
         int length = e - b + 1;
         if(length < 2) //base case for full recursion, sorted
             return;
@@ -134,7 +133,7 @@ public class SortUtil {
             return;
         }
 
-        int part = partition(list, getPivot(list, b, e, 0, comparator), b, e, comparator);
+        int part = partition(list, getPivot(list, b, e, 1, comparator), b, e, comparator);
         quicksortRecurse(list, b, part - 1, comparator);
         quicksortRecurse(list, part + 1, e, comparator);
     }
