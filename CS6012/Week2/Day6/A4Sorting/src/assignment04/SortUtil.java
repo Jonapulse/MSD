@@ -5,7 +5,6 @@ import java.util.*;
 public class SortUtil {
 
     final static int SMALL_SORT_THRESHOLD = 200;
-    final static float RANDOM_PIVOT_FREQUENCY = 0.25f; //TODO: Find real value. 25% for debug so it happens enough to error.
 
     ///////////////////////
     /// MergeSort & Helpers
@@ -119,8 +118,8 @@ public class SortUtil {
     /**
      *
      * @param list
-     * @param b
-     * @param e
+     * @param b - beginning, inclusive
+     * @param e - ending, inclusive
      * @param comparator
      */
     static <T> void quicksortRecurse(ArrayList<T> list, int b, int e, Comparator<? super T> comparator){
@@ -143,6 +142,8 @@ public class SortUtil {
      *
      * @param list
      * @param pivot
+     * @param b - beginning, inclusive
+     * @param e - ending, inclusive
      * @return index of pivot, an index all values earlier in the array are smaller, and all later are larger
      */
     static <T> int partition(ArrayList<T> list, int pivot, int b, int e, Comparator<? super T> comparator)
@@ -173,7 +174,8 @@ public class SortUtil {
      * Utility class to switch between pivot methods
      * mode 0 - middle index
      * mode 1 - random
-     * mode 2 - median of 3 (if I wanna get fancy I'll implement median of 9)
+     * mode 2 - median of 3
+     * mode 3 - median of 9
      *
      * @param list
      * @param b - beg index, inclusive
@@ -190,12 +192,12 @@ public class SortUtil {
                 Random rand = new Random();
                 return b + rand.nextInt(e - b);
             case 2: //median of sample
-                //TODO: This is returning a value. Adjust it to return the index.
-                ArrayList<T> sample = new ArrayList<>();
-                sample.add(list.get(b));
-                sample.add(list.get(b + (e - b)/2));
-                sample.add(list.get(e));
-                return medianOf3(sample, comparator);
+                int median = medianOf3(list, new int[]{b, b + (e - b)/2, e}, comparator);
+                if(median < b || median > e || b > e)
+                    return -1;
+                return median;
+            case 3: //median of medians of 1st, 2nd, and 3rd thirds of list.
+                return medianOf9(list, b, e, comparator);
             default: //start
                 return b;
         }
@@ -204,23 +206,26 @@ public class SortUtil {
     /**
      * Approximates the median of a list by taking the median of values at start, middle, and end
      *
-     * @param list
+     * @param list, three indices to check
      * @return index of the median
      */
-    static <T> int medianOf3(ArrayList<T> list, Comparator<? super T> comparator){
-        if(comparator.compare(list.get(0),list.get(1)) >= 0){
-            if(comparator.compare(list.get(0),list.get(2)) < 0)
-                return 0;
-            else if (comparator.compare(list.get(1),list.get(2)) >= 0)
-                return 2;
+    static <T> int medianOf3(ArrayList<T> list, int[] indices, Comparator<? super T> comparator){
+        int xMoreThanY = comparator.compare(list.get(indices[0]), list.get(indices[1]));
+        int xMoreThanZ = comparator.compare(list.get(indices[0]), list.get(indices[2]));
+        int yMoreThanZ = comparator.compare(list.get(indices[1]), list.get(indices[2]));
+        if(xMoreThanY >= 0){
+            if(xMoreThanZ < 0)
+                return indices[0];
+            else if (yMoreThanZ >= 0)
+                return indices[1];
             else
-                return 1;
-        } else if (comparator.compare(list.get(1),list.get(2)) < 0)
-            return 1;
-        else if (comparator.compare(list.get(0),list.get(2)) >= 0)
-            return 0;
+                return indices[2];
+        } else if (yMoreThanZ < 0)
+            return indices[1];
+        else if (xMoreThanZ >= 0)
+            return indices[0];
         else
-            return 2;
+            return indices[2];
     }
 
     /**
@@ -229,15 +234,17 @@ public class SortUtil {
      * @param list
      * @return index of the median
      */
-    static <T> int medianOf9(ArrayList<T> list, Comparator<? super T> comparator)
+    static <T> int medianOf9(ArrayList<T> list, int b, int e, Comparator<? super T> comparator)
     {
+        int size = e - b + 1;
         if(list.size() < 9)
-            return medianOf3(list, comparator);
+            return medianOf3(list, new int[]{b, b + size/2, e}, comparator);
 
-        //NOTE: Note yet implemented.
-  //      ArrayList<Integer> medians = new ArrayList<Integer>();
-   //     medians.add(list.get(medianOf3(list.subList(0, 2), comparator)));
-        return -1;
+        int firstMedian = medianOf3(list, new int[]{b, size/6, size/3 - 1}, comparator);
+        int secondMedian =  medianOf3(list, new int[]{b + size/3, b + size/2, size * 2 / 3 - 1}, comparator);
+        int thirdMedian = medianOf3(list, new int[]{size * 2 / 3, size * 5 / 6, size - 1}, comparator);
+
+        return medianOf3(list, new int[]{firstMedian, secondMedian, thirdMedian}, comparator);
     }
 
     /////////////////////

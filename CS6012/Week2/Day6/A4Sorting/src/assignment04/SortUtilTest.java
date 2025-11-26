@@ -203,8 +203,28 @@ class SortUtilTest {
 
     @org.junit.jupiter.api.Test
     void medianOf3() {
-        assertEquals(1, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 2, 3)), Comparator.naturalOrder()));
-        assertEquals(0, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(2, 1, 3)), Comparator.naturalOrder()));
-        assertEquals(2, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 3, 2)), Comparator.naturalOrder()));
+        assertEquals(1, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 2, 3)), new int[]{0,1,2}, Comparator.naturalOrder()));
+        assertEquals(0, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(2, 1, 3)), new int[]{0,1,2}, Comparator.naturalOrder()));
+        assertEquals(2, SortUtil.medianOf3(new ArrayList<Integer>(Arrays.asList(1, 3, 2)), new int[]{0,1,2}, Comparator.naturalOrder()));
     }
+
+    @Test
+    void medianOf3CheckingWorstCases()
+    {
+        ArrayList<Integer> listWorst = new ArrayList<>(Arrays.asList(3,2,1));
+        assertEquals(1, SortUtil.medianOf3(listWorst, new int[]{0,1,2}, Comparator.naturalOrder()));
+        assertEquals(1, SortUtil.medianOf3(listWorst, new int[]{1,2,0}, Comparator.naturalOrder()));
+        assertEquals(1, SortUtil.medianOf3(listWorst, new int[]{2,0,1}, Comparator.naturalOrder()));
+
+    }
+
+
+    @Test
+    void medianOfNine()
+    {
+        assertEquals(4, SortUtil.medianOf9(new ArrayList<Integer>(Arrays.asList(1, 2, 3,4,5,6,7,8,9)), 0, 8, Comparator.naturalOrder()));
+        assertEquals(5, SortUtil.medianOf9(new ArrayList<Integer>(Arrays.asList(1, 8, 3,2,6,4,7,5,9)), 0, 8, Comparator.naturalOrder()));
+        assertEquals(3, SortUtil.medianOf9(new ArrayList<Integer>(Arrays.asList(5, 2, 3,4,1,6,7,8,9)), 0, 8, Comparator.naturalOrder()));
+    }
+
 }
