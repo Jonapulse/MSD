@@ -1,6 +1,7 @@
 package assignment07;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
@@ -40,6 +41,19 @@ class ChainingHashTableTest {
         assertTrue(hashTablePreExpand.add("oranges"));
         assertTrue(hashTablePreExpand.contains("oranges"));
         assertTrue(hashTablePreExpand.contains("apples"));
+    }
+
+    @Test
+    void stressAddAndRemove() {
+        for(int i = 0; i < 1_000_000; i++) {
+            hashTableEmpty.add(i + "");
+        }
+        assertTrue(hashTableEmpty.contains("123456"));
+        for(int i = 0; i < 1_000_000; i++) {
+            hashTableEmpty.remove(i + "");
+        }
+        assertFalse(hashTableEmpty.contains("123456"));
+        assertTrue(hashTableEmpty.isEmpty());
     }
 
     @org.junit.jupiter.api.Test
