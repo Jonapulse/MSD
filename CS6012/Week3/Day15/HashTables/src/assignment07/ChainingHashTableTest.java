@@ -19,7 +19,7 @@ class ChainingHashTableTest {
         hashTableBasic = new ChainingHashTable(20, new GoodHashFunctor());
         hashTableBasic.addAll(Arrays.asList("apples", "bananas", "pears", "kumquats", "kiwis"));
         hashTableEmpty = new ChainingHashTable(20, new GoodHashFunctor());
-        hashTablePreExpand = new ChainingHashTable(10, new GoodHashFunctor());
+        hashTablePreExpand = new ChainingHashTable(9, new GoodHashFunctor());
         hashTablePreExpand.addAll(Arrays.asList("apples", "bananas", "pears", "kumquats"));
         hashTableMidHashFunctorTest = new ChainingHashTable(20, new MediocreHashFunctor());
         hashTableMidHashFunctorTest.addAll(Arrays.asList("apples", "bananas", "pears", "kumquats", "kiwis"));
@@ -30,37 +30,58 @@ class ChainingHashTableTest {
 
     @org.junit.jupiter.api.Test
     void add() {
-    }
+        assertTrue(hashTableEmpty.add("oranges"));
+        assertFalse(hashTableEmpty.add("oranges")); //no duplicate
+        assertTrue(hashTableEmpty.contains("oranges"));
 
-    @org.junit.jupiter.api.Test
-    void addAll() {
+        assertTrue(hashTableBasic.add("oranges"));
+        assertTrue(hashTableBasic.contains("oranges"));
+
+        assertTrue(hashTablePreExpand.add("oranges"));
+        assertTrue(hashTablePreExpand.contains("oranges"));
+        assertTrue(hashTablePreExpand.contains("apples"));
     }
 
     @org.junit.jupiter.api.Test
     void clear() {
+        hashTableBasic.clear();
+        assertTrue(hashTableBasic.isEmpty());
+        assertTrue(hashTableBasic.size() == 0);
     }
 
     @org.junit.jupiter.api.Test
     void contains() {
+        assertTrue(hashTableBasic.contains("apples"));
+        assertFalse(hashTableBasic.contains("oranges"));
+        assertFalse(hashTableEmpty.contains("apples"));
     }
 
     @org.junit.jupiter.api.Test
     void containsAll() {
+        assertTrue(hashTableBasic.containsAll(Arrays.asList("apples", "bananas")));
+        assertFalse(hashTableBasic.containsAll(Arrays.asList("apples", "pears", "oranges")));
     }
 
     @org.junit.jupiter.api.Test
     void isEmpty() {
+        assertTrue(hashTableEmpty.isEmpty());
+        assertFalse(hashTableBasic.isEmpty());
     }
 
     @org.junit.jupiter.api.Test
     void remove() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void removeAll() {
+        assertTrue(hashTableBasic.remove("apples"));
+        assertFalse(hashTableBasic.contains("apples"));
+        assertFalse(hashTableBasic.remove("chocolate"));
     }
 
     @org.junit.jupiter.api.Test
     void size() {
+        assertEquals(5, hashTableBasic.size());
+        assertEquals(0, hashTableEmpty.size());
+        assertTrue(hashTablePreExpand.add("filler"));
+        assertEquals(5, hashTablePreExpand.size());
+        assertTrue(hashTablePreExpand.remove("filler"));
+        assertEquals(4, hashTablePreExpand.size());
     }
 }

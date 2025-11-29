@@ -27,7 +27,7 @@ public class ChainingHashTable implements Set<String> {
      */
     @Override
     public boolean add(String item) {
-        if(size / capacity >= RESIZE_FRACTION)
+        if((size + 1) / (float) capacity >= RESIZE_FRACTION)
             expandAndRehash();
 
         int originalSize = size;
@@ -62,6 +62,7 @@ public class ChainingHashTable implements Set<String> {
      */
     private void expandAndRehash(){
         capacity *= 2;
+        size = 0;
         LinkedList<String>[] oldStorage = storage;
         storage = (LinkedList<String>[])new LinkedList[capacity];
         for(int i = 0; i < oldStorage.length; i++){
