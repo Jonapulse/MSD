@@ -8,7 +8,8 @@ public class SortTimingAnalysis {
                 (int)Math.pow(2,14),(int)Math.pow(2,15), (int)Math.pow(2,16), (int)Math.pow(2,17), (int)Math.pow(2,18),
                 (int)Math.pow(2,19), (int)Math.pow(2,20)};
        // TimingTestMergeThreshold t = new TimingTestMergeThreshold(problemSizes, 100);
-        TimingTestPivots t = new TimingTestPivots(problemSizes, 100);
+       // TimingTestPivots t = new TimingTestPivots(problemSizes, 100);
+        TimingTestMergeVsQuick t = new TimingTestMergeVsQuick(problemSizes, 100);
         var results = t.run();
 
         System.out.println("n, time");

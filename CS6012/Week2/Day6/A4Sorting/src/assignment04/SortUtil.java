@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 200;
+    final static int SMALL_SORT_THRESHOLD = 250;
 
     ///////////////////////
     /// MergeSort & Helpers
