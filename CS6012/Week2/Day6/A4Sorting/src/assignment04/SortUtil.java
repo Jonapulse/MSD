@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortUtil {
 
-    final static int SMALL_SORT_THRESHOLD = 200;
+    final static int SMALL_SORT_THRESHOLD = 250;
 
     ///////////////////////
     /// MergeSort & Helpers
@@ -100,7 +100,7 @@ public class SortUtil {
     public static <T> void insertionSort(ArrayList<T> out, int b, int e, Comparator<? super T> comparator)
     {
         for(int i = b ; i <= e; i++)
-            for(int j = b; j > b && comparator.compare(out.get(j), out.get(j - 1)) <= 0; j--)
+            for(int j = i; j > b && comparator.compare(out.get(j), out.get(j - 1)) <= 0; j--)
                 Collections.swap(out, j, j - 1);
     }
 
@@ -132,7 +132,7 @@ public class SortUtil {
             return;
         }
 
-        int part = partition(list, getPivot(list, b, e, 1, comparator), b, e, comparator);
+        int part = partition(list, getPivot(list, b, e - 1, 2, comparator), b, e, comparator);
         quicksortRecurse(list, b, part - 1, comparator);
         quicksortRecurse(list, part + 1, e, comparator);
     }
@@ -193,8 +193,6 @@ public class SortUtil {
                 return b + rand.nextInt(e - b);
             case 2: //median of sample
                 int median = medianOf3(list, new int[]{b, b + (e - b)/2, e}, comparator);
-                if(median < b || median > e || b > e)
-                    return -1;
                 return median;
             case 3: //median of medians of 1st, 2nd, and 3rd thirds of list.
                 return medianOf9(list, b, e, comparator);
@@ -210,6 +208,9 @@ public class SortUtil {
      * @return index of the median
      */
     static <T> int medianOf3(ArrayList<T> list, int[] indices, Comparator<? super T> comparator){
+        int valX = (int) list.get(indices[0]);
+        int valY = (int) list.get(indices[1]);
+        int valZ = (int) list.get(indices[2]);
         int xMoreThanY = comparator.compare(list.get(indices[0]), list.get(indices[1]));
         int xMoreThanZ = comparator.compare(list.get(indices[0]), list.get(indices[2]));
         int yMoreThanZ = comparator.compare(list.get(indices[1]), list.get(indices[2]));

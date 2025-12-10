@@ -3,13 +3,13 @@ import assignment04.SortUtil;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class TimingTestPivots extends TimerTemplate {
+public class TimingTestMergeVsQuick extends TimerTemplate {
 
     ArrayList<Integer> averageCase;
     ArrayList<Integer> worstCase;
     ArrayList<Integer> bestCase;
 
-    public TimingTestPivots(int[] problemSizes, int timesToLoop) {
+    public TimingTestMergeVsQuick(int[] problemSizes, int timesToLoop) {
         super(problemSizes, timesToLoop);
     }
 
@@ -25,12 +25,13 @@ public class TimingTestPivots extends TimerTemplate {
     @Override
     protected void timingIteration(int n)
     {
-        SortUtil.quicksort(new ArrayList<>(bestCase), Comparator.naturalOrder());
+    //    SortUtil.quicksort(new ArrayList<>(worstCase), Comparator.naturalOrder());
+        SortUtil.mergesort(new ArrayList<>(worstCase), Comparator.naturalOrder());
     }
 
     @Override
     protected void compensationIteration(int n)
     {
-        ArrayList<Integer> dummy = new ArrayList<>(bestCase);
+        ArrayList<Integer> dummy = new ArrayList<>(worstCase);
     }
 }

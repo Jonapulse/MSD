@@ -14,15 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SortUtilTest {
 
-/*
- //   ArrayList<Integer> arrInterwoven6, arr6varied;
-    @BeforeEach
-    void setUp() {
-       // arr1to6 = new ArrayList<>(Arrays.asList(1,3,5,2,4,7));
-    //    arr6varied = new ArrayList<>(Arrays.asList(7,10,25,1,2,3));
-    }
-    */
-
     final int NUM_THOROUGH_CHECKS = 10;
 
     @org.junit.jupiter.api.Test
