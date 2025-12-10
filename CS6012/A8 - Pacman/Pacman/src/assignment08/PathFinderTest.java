@@ -22,7 +22,7 @@ class PathFinderTest {
 
     @Test
     void outputSolution(){
-        
+
     }
 
     @org.junit.jupiter.api.Test
