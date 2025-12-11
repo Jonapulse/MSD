@@ -1,14 +1,23 @@
 package assignment08;
 
 import java.awt.geom.Point2D;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class PathFinder {
     public static void solveMaze(String inputFile, String outputFile){
         char[][] maze = getMazeFromFile(inputFile);
         ArrayList<Node> solvedPath = getMazeGraph(maze).pathFinderSearch(getPointWithValue(maze, 'S'), getPointWithValue(maze, 'G'));
         updateMazeWithSolution(maze, solvedPath);
-        writeSolutionToFile(maze, outputFile);
+        try{
+            writeSolutionToFile(maze, outputFile);
+        }
+        catch(IOException e){
+            System.out.println("Solution failed to write!");
+        }
     }
 
     /**
@@ -23,13 +32,30 @@ public class PathFinder {
      * @return
      */
     static char[][] getMazeFromFile(String inputFile) {
-        return null;
+        char[][] maze = null;
+
+        try (Scanner fileIn = new Scanner(inputFile)) {
+            String[] dimensions = fileIn.nextLine().split(" ");
+            int height = Integer.parseInt(dimensions[0]);
+            int width = Integer.parseInt(dimensions[1]);
+            maze = new char[height][width];
+
+            int row = 0;
+            while(fileIn.hasNextLine()){
+                String line = fileIn.nextLine();
+                for(int i = 0; i < maze[0].length; i++){
+                    maze[row][i] = line.charAt(i);
+                }
+                row++;
+            }
+        }
+        return maze;
     }
 
     /**
-     *
+     * Walks through the maze, making nodes for walkable spaces and adding their neighbors.
      * @param maze
-     * @return
+     * @return Graph representing maze
      */
     static Graph getMazeGraph(char[][] maze) {
         Node[][] mazeNodesInGrid = new Node[maze.length][maze[0].length];
@@ -87,26 +113,38 @@ public class PathFinder {
         return null;
     }
 
-
-    private static ArrayList<Node> breadthFirstSearch(Graph mazeGraph, Point2D s, Point2D g) {
-
-    }
-
-
-
+    /**
+     * Writes * solution into the char[][] maze, or leaves it unedited if no solution
+     * @param maze
+     * @param solvedPath
+     */
     private static void updateMazeWithSolution(char[][] maze, ArrayList<Node> solvedPath) {
-        for(Node node : solvedPath){
-            Point2D pathStep = node.positionXY;
-            maze[(int)pathStep.getX()][(int)pathStep.getY()] = '*';
+        if(solvedPath != null)
+        {
+            for(Node node : solvedPath){
+                Point2D pathStep = node.positionXY;
+                maze[(int)pathStep.getX()][(int)pathStep.getY()] = '*';
+            }
         }
     }
 
-    private static void writeSolutionToFile(char[][] chars, String outputFile) {
-
+    /**
+     * Welp, it writes the solution into a file
+     * @param solvedMaze
+     * @param outputFile
+     * @throws IOException
+     */
+    private static void writeSolutionToFile(char[][] solvedMaze, String outputFile) throws IOException {
+        try(PrintWriter out = new PrintWriter(new FileWriter(outputFile))) {
+            out.println(solvedMaze[0].length + " " + solvedMaze[0].length);
+            for(int i = 0; i < solvedMaze.length; i++){
+                for(int j = 0; j < solvedMaze[0].length; j++){
+                    out.print(solvedMaze[i][j]);
+                }
+                out.println();
+            }
+        } catch (IOException e){
+            throw e;
+        }
     }
-
-
-
-
-
 }
