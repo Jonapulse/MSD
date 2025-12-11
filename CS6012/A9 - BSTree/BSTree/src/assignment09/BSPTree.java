@@ -3,10 +3,12 @@ package assignment09;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BSPTree {
 
-    private Node root;
+    private Node root = null;
+    private Random r = new Random();
 
     class Node{
         Segment seg;
@@ -21,7 +23,29 @@ public class BSPTree {
     public BSPTree() {}
 
     public BSPTree(ArrayList<Segment> segs) {
-        //TODO: bulk construction
+        root = bulkConstructBSPTree(segs);
+    }
+
+    Node bulkConstructBSPTree(ArrayList<Segment> segs){
+        Node subRoot = new Node(segs.get(r.nextInt(segs.size())));
+        ArrayList<Segment> leftSegs = new ArrayList<>();
+        ArrayList<Segment> rightSegs = new ArrayList<>();
+
+        for(Segment seg : segs){
+            double side = subRoot.seg.whichSide(seg);
+            if(side == -1)
+                leftSegs.add(seg);
+            else if (side == 1)
+                rightSegs.add(seg);
+            else{
+                Segment[] leftRight = subRoot.seg.split(seg);
+                leftSegs.add(leftRight[0]);
+                rightSegs.add(leftRight[1]);
+            }
+        }
+        subRoot.left = bulkConstructBSPTree(leftSegs);
+        subRoot.right = bulkConstructBSPTree(rightSegs);
+        return subRoot;
     }
 
     /**
