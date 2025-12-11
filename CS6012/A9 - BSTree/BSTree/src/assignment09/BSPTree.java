@@ -26,8 +26,19 @@ public class BSPTree {
         root = bulkConstructBSPTree(segs);
     }
 
+    /**
+     * Builds a BSPTree using by selecting a random root and filling its left and right
+     * sides Node's with recursively built sub-roots using the left and right sub-arrays.
+     * @param segs
+     * @return new subRoot
+     */
     Node bulkConstructBSPTree(ArrayList<Segment> segs){
-        Node subRoot = new Node(segs.get(r.nextInt(segs.size())));
+        if(segs == null || segs.isEmpty()) return null;
+
+        int randomPick = r.nextInt(segs.size());
+        Node subRoot = new Node(segs.get(randomPick));
+        segs.remove(randomPick);
+
         ArrayList<Segment> leftSegs = new ArrayList<>();
         ArrayList<Segment> rightSegs = new ArrayList<>();
 
@@ -74,21 +85,62 @@ public class BSPTree {
         return n;
     }
 
+    /**
+     * Traverses far to near recursively, applying the callback function
+     * @param x
+     * @param y
+     * @param callback
+     */
     void traverseFarToNear(double x, double y, SegmentCallback callback) {
         traverseFarToNearRecurse(root, x, y, callback);
     }
 
+    /**
+     * The recursive portion of traverseFarToNear
+     * @param n
+     * @param x
+     * @param y
+     * @param callback
+     */
     void traverseFarToNearRecurse(Node n, double x, double y, SegmentCallback callback) {
-         int leftProximity = n.left.seg.whichSidePoint(x, y);
-         traverseFarToNearRecurse(leftProximity < 0 ? n.left : n.right, x, y, callback);
-         callback.callback(n.seg);
-         traverseFarToNearRecurse(leftProximity < 0 ? n.right : n.left, x, y, callback);
+        if (n == null)
+            return;
+
+        Node farNode = null;
+        Node nearNode = null;
+        int leftProximity = n.left != null ? n.left.seg.whichSidePoint(x, y) : 0;
+        int rightProximity = n.right != null ? n.right.seg.whichSidePoint(x, y) : 0;
+        if (leftProximity < 0) {
+            farNode = n.left;
+            nearNode = n.right;
+        } else if (leftProximity > 0) {
+            farNode = n.right;
+            nearNode = n.left;
+        } else if (rightProximity < 0) {
+            farNode = n.right; //and left node is null
+        } else
+            farNode = n.left;
+
+        traverseFarToNearRecurse(farNode, x, y, callback);
+        callback.callback(n.seg);
+        traverseFarToNearRecurse(nearNode, x, y, callback);
     }
 
+    /**
+     * Checks collision recursively
+     * @param query
+     * @return
+     */
     Segment collision(Segment query){
         return collisionRec(root, query);
     }
 
+    /**
+     * The recursive portion of collision
+     * @param n
+     * @param query
+     * @return
+     */
     Segment collisionRec(Node n, Segment query){
         if(n.seg.intersects(query))
             return n.seg;
