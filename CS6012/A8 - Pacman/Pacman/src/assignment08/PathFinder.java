@@ -1,19 +1,20 @@
 package assignment08;
 
 import java.awt.geom.Point2D;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PathFinder {
     public static void solveMaze(String inputFile, String outputFile){
-        char[][] maze = getMazeFromFile(inputFile);
-        ArrayList<Node> solvedPath = getMazeGraph(maze).pathFinderSearch(getPointWithValue(maze, 'S'), getPointWithValue(maze, 'G'));
-        updateMazeWithSolution(maze, solvedPath);
         try{
+            char[][] maze = getMazeFromFile(inputFile);
+            ArrayList<Node> solvedPath = getMazeGraph(maze).pathFinderSearch(getPointWithValue(maze, 'S'), getPointWithValue(maze, 'G'));
+            updateMazeWithSolution(maze, solvedPath);
             writeSolutionToFile(maze, outputFile);
+        }
+        catch(FileNotFoundException e){
+            System.out.println("File not found");
         }
         catch(IOException e){
             System.out.println("Solution failed to write!");
@@ -31,10 +32,9 @@ public class PathFinder {
      * @param inputFile
      * @return
      */
-    static char[][] getMazeFromFile(String inputFile) {
+    static char[][] getMazeFromFile(String inputFile) throws FileNotFoundException {
         char[][] maze = null;
-
-        try (Scanner fileIn = new Scanner(inputFile)) {
+        try (Scanner fileIn = new Scanner(new File(inputFile))) {
             String[] dimensions = fileIn.nextLine().split(" ");
             int height = Integer.parseInt(dimensions[0]);
             int width = Integer.parseInt(dimensions[1]);
@@ -48,6 +48,8 @@ public class PathFinder {
                 }
                 row++;
             }
+        } catch(FileNotFoundException e){
+            throw e;
         }
         return maze;
     }
@@ -123,7 +125,8 @@ public class PathFinder {
         {
             for(Node node : solvedPath){
                 Point2D pathStep = node.positionXY;
-                maze[(int)pathStep.getX()][(int)pathStep.getY()] = '*';
+                if(maze[(int)pathStep.getX()][(int)pathStep.getY()] == ' ')
+                    maze[(int)pathStep.getX()][(int)pathStep.getY()] = '*';
             }
         }
     }
@@ -136,7 +139,7 @@ public class PathFinder {
      */
     private static void writeSolutionToFile(char[][] solvedMaze, String outputFile) throws IOException {
         try(PrintWriter out = new PrintWriter(new FileWriter(outputFile))) {
-            out.println(solvedMaze[0].length + " " + solvedMaze[0].length);
+            out.println(solvedMaze.length + " " + solvedMaze[0].length);
             for(int i = 0; i < solvedMaze.length; i++){
                 for(int j = 0; j < solvedMaze[0].length; j++){
                     out.print(solvedMaze[i][j]);
