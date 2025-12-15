@@ -1,7 +1,7 @@
 /**
  * Workspace for SortUtil timing analysis
  */
-public class ArrayStackListAnalysis {
+public class HashTableAnalysis {
     public static void main(String[] args) {
         //Mergesort Threshold - best?
         //Threshold: 100, 500, 1000, 5000, 10000
@@ -15,15 +15,16 @@ public class ArrayStackListAnalysis {
                 (int)Math.pow(2,19), (int)Math.pow(2,20),
                 (int)Math.pow(2, 10),(int)Math.pow(2, 10),}; //End buffer
          */
-        int[] problemSizes = {(int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11),
+       /* int[] problemSizes = {(int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11),
                 (int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11), (int)Math.pow(2,11),
-                (int)Math.pow(2,16), (int)Math.pow(2,16), (int)Math.pow(2,16), (int)Math.pow(2,16),};
-        ALvsLLTimingTest t = new ALvsLLTimingTest(problemSizes, 100);
+                (int)Math.pow(2,16), (int)Math.pow(2,16), (int)Math.pow(2,16), (int)Math.pow(2,16),};*/
+        int[] problemSizes = {1};
+        HashTimingTest t = new HashTimingTest(problemSizes, 100);
         var results = t.run();
 
         System.out.println("n, time");
         for(var result: results){
-            System.out.println(result.n() + ", " + (result.avgNanoSecs()));
+            System.out.println(result.n() + ", " + (result.avgNanoSecs()) / 1_000_000 + "ms");
         }
     }
 }

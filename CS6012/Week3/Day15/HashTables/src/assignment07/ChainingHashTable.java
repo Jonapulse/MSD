@@ -32,6 +32,7 @@ public class ChainingHashTable implements Set<String> {
 
         int originalSize = size;
         int hashedIndex = compress(hashFunctor.hash(item));
+        boolean collision = false;
         if(storage[hashedIndex] == null){
             storage[hashedIndex] = new LinkedList<>();
             storage[hashedIndex].add(item);
@@ -39,10 +40,12 @@ public class ChainingHashTable implements Set<String> {
         } else {
             if(!storage[hashedIndex].contains(item)) {
                 storage[hashedIndex].add(item);
+                collision = true;
                 size++;
             }
         }
-        return size != originalSize;
+        return collision;
+       // return size != originalSize;
     }
 
     /**
