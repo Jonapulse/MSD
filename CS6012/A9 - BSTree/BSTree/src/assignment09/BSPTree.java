@@ -106,6 +106,18 @@ public class BSPTree {
         if (n == null)
             return;
 
+        int side = n.seg.whichSidePoint(x, y);
+        if(side < 0){
+            traverseFarToNearRecurse(n.right, x, y, callback);
+            callback.callback(n.seg);
+            traverseFarToNearRecurse(n.left, x, y, callback);
+        }else {
+            traverseFarToNearRecurse(n.left, x, y, callback);
+            callback.callback(n.seg);
+            traverseFarToNearRecurse(n.right, x, y, callback);
+        }
+
+                /*
         Node farNode = null;
         Node nearNode = null;
         int leftProximity = n.left != null ? n.left.seg.whichSidePoint(x, y) : 0;
@@ -124,6 +136,7 @@ public class BSPTree {
         traverseFarToNearRecurse(farNode, x, y, callback);
         callback.callback(n.seg);
         traverseFarToNearRecurse(nearNode, x, y, callback);
+        */
     }
 
     /**
@@ -139,9 +152,11 @@ public class BSPTree {
      * The recursive portion of collision
      * @param n
      * @param query
-     * @return
+     * @return seg that collides or null if no collision
      */
     Segment collisionRec(Node n, Segment query){
+        if(n == null)
+            return null;
         if(n.seg.intersects(query))
             return n.seg;
         double side = n.seg.whichSide(query);
