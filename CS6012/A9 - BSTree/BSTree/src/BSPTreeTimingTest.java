@@ -1,18 +1,14 @@
-import assignment07.BadHashFunctor;
-import assignment07.ChainingHashTable;
-import assignment07.GoodHashFunctor;
-import assignment07.MediocreHashFunctor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class HashTimingTest extends TimerTemplate {
+public class BSPTreeTimingTest extends TimerTemplate {
 
 
     ArrayList<String> words;
-    public HashTimingTest(int[] problemSizes, int timesToLoop) {
+    public BSPTreeTimingTest(int[] problemSizes, int timesToLoop) {
         super(problemSizes, timesToLoop);
     }
 
@@ -23,7 +19,6 @@ public class HashTimingTest extends TimerTemplate {
 
     @Override
     protected void timingIteration(int n) {
-        ChainingHashTable hashTable = new ChainingHashTable(100_000, new GoodHashFunctor());
         int collisions = 0;
         for(String word : words){
             if(hashTable.add(word))

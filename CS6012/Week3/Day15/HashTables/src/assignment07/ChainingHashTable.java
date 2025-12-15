@@ -44,7 +44,8 @@ public class ChainingHashTable implements Set<String> {
                 size++;
             }
         }
-        return size != originalSize;
+        return collision;
+       // return size != originalSize;
     }
 
     /**
