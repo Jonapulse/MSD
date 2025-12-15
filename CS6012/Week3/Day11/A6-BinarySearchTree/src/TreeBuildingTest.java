@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TreeSet;
 
 public class TreeBuildingTest extends TimerTemplate {
 
@@ -22,12 +23,13 @@ public class TreeBuildingTest extends TimerTemplate {
         }
 
         //Shuffled, after sort creation
-        Collections.shuffle(testArray);
+      //  Collections.shuffle(testArray);
     }
 
     @Override
     protected void timingIteration(int n) {
-        BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+      //  BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+        TreeSet<Integer> tree = new TreeSet<>();
         for(int i = 0; i < testArray.size(); i++) {
             tree.add(i);
         }
@@ -35,7 +37,8 @@ public class TreeBuildingTest extends TimerTemplate {
 
     @Override
     protected void compensationIteration(int n) {
-        BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+     //   BinarySearchTree<Integer> tree = new BinarySearchTree<>();
+        TreeSet<Integer> tree = new TreeSet<>();
         for(int i = 0; i < testArray.size(); i++) {
             //Nuffin'!
         }
