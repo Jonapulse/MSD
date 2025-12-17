@@ -66,7 +66,7 @@ class PathFinderTest {
             char[][] solved = PathFinder.testSolveMaze(PacmanApp.readMaze("megaMaze.txt"));
             String mySolvedMaze = PacmanApp.mazeToString(solved);
             String theirSolvedMaze = PacmanApp.mazeToString(PacmanApp.readMaze("megaMazeOutput.txt"));
-            assertEquals(mySolvedMaze, theirSolvedMaze);
+            assertEquals(theirSolvedMaze, mySolvedMaze);
         } catch (IOException e){
             System.out.println("megaMaze is failing to load, or its solution is");
         }
