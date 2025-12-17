@@ -52,6 +52,7 @@ public class Graph {
                 if(!visited.contains(neighbor)){ //Keep searching
                     q.add(neighbor);
                     paths.put(neighbor, n);
+               //     visited.add(neighbor);
                 }
             }
         }

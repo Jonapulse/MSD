@@ -22,6 +22,15 @@ public class PathFinder {
     }
 
     /**
+     * Pared down 'solveMaze' for Unit Tests
+     */
+    static char[][] testSolveMaze(char[][] maze){
+        ArrayList<Node> solvedPath = getMazeGraph(maze).pathFinderSearch(getPointWithValue(maze, 'S'), getPointWithValue(maze, 'G'));
+        updateMazeWithSolution(maze, solvedPath);
+        return maze;
+    }
+
+    /**
      * Converts an input file to an int[][] describe a maze with these characteristics:
      * * 1st line of input file is "<height> <width>" as in "5 5" for a 5x5 maze
      * * For subsequent lines...
@@ -126,7 +135,7 @@ public class PathFinder {
             for(Node node : solvedPath){
                 Point2D pathStep = node.positionXY;
                 if(maze[(int)pathStep.getX()][(int)pathStep.getY()] == ' ')
-                    maze[(int)pathStep.getX()][(int)pathStep.getY()] = '*';
+                    maze[(int)pathStep.getX()][(int)pathStep.getY()] = '.';
             }
         }
     }

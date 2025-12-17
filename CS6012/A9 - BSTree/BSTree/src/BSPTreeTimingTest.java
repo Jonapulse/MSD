@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class BSPTreeTimingTest extends TimerTemplate {
 
     ArrayList<Segment> segments;
+    BSPTree bspTree;
 
     ArrayList<String> words;
     public BSPTreeTimingTest(int[] problemSizes, int timesToLoop) {
@@ -20,17 +21,15 @@ public class BSPTreeTimingTest extends TimerTemplate {
     protected void setup(int n) {
         segments = new ArrayList<Segment>();
         for(int i = 0; i < n; i++){
-            segments.add(new Segment(i,i, i+0.5, i+0.5));
+            segments.add(new Segment(0 + i,0 + i, 0 + i, 1 + i));
         }
+        bspTree = new BSPTree(segments);
     }
 
     @Override
     protected void timingIteration(int n) {
-        BSPTree bspTree = new BSPTree(segments);
-        /*
-        for(int i = 0; i < segments.length(); i++)
-            bspTree.add(segments.get(i)
-         */
+       // bspTree.collision(new Segment(0, 0, 1, 1));
+        bspTree.analysis_collision(new Segment(0, 0, 1, 1));
     }
 
     @Override
@@ -39,8 +38,4 @@ public class BSPTreeTimingTest extends TimerTemplate {
     }
 
 
-//    public static void main(String[] args) {
-//        ArrayList<String> words = getWordsFromFile("linuxwords.txt");
-//        System.out.println(words.size());
-//    }
 }
