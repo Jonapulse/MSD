@@ -39,19 +39,22 @@ public class Graph {
             //Search Neighbors
              //
             for(Node neighbor: n.neighbors){
-                if(neighbor.equals(targetNode)){ //Found target
-                    ArrayList<Node> shortestPath = new ArrayList<>();
-                    shortestPath.add(neighbor);
-                    shortestPath.add(n);
-                    while(paths.containsKey(n)){
-                        n = paths.get(n);
-                        shortestPath.add(n);
-                    }
-                    return shortestPath;
-                }
+
                 if(!visited.contains(neighbor)){ //Keep searching
                     q.add(neighbor);
                     paths.put(neighbor, n);
+                    visited.add(neighbor);
+
+                    if(neighbor.equals(targetNode)){ //Found target
+                        ArrayList<Node> shortestPath = new ArrayList<>();
+                        shortestPath.add(neighbor);
+                        shortestPath.add(n);
+                        while(paths.containsKey(n)){
+                            n = paths.get(n);
+                            shortestPath.add(n);
+                        }
+                        return shortestPath;
+                    }
                 }
             }
         }

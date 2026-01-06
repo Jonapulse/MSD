@@ -9,14 +9,16 @@ public class BSPTreeAnalysis {
          //
 
 
-        int[] problemSizes = {(int)Math.pow(2,5)};
+        int[] problemSizes = {(int)Math.pow(2, 10), (int)Math.pow(2,11),(int)Math.pow(2, 12), (int)Math.pow(2,13),
+                (int)Math.pow(2, 14), (int)Math.pow(2,15),(int)Math.pow(2, 16), (int)Math.pow(2,17),
+                (int)Math.pow(2, 18), (int)Math.pow(2,19), (int)Math.pow(2,20)};
 
         BSPTreeTimingTest t = new BSPTreeTimingTest(problemSizes, 100);
         var results = t.run();
 
         System.out.println("n, time");
         for(var result: results){
-            System.out.println(result.n() + ", " + (result.avgNanoSecs()) / 1_000_000 + "ms");
+            System.out.println(result.n() + ", " + (result.avgNanoSecs()));
         }
     }
 }

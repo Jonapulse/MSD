@@ -63,7 +63,7 @@ public class BSPTree {
      * Inserts segment into BSPTree, splitting if necessary
      * @param seg
      */
-    void insert(Segment seg) {
+    public void insert(Segment seg) {
         insertRec(root, seg);
     }
 
@@ -144,10 +144,21 @@ public class BSPTree {
      * @param query
      * @return
      */
-    Segment collision(Segment query){
+    public Segment collision(Segment query){
         return collisionRec(root, query);
     }
 
+    public boolean collisionFound = false;
+
+    public Segment analysis_collision(Segment query){
+        this.traverseFarToNear(0, 0,
+                (segment) -> {
+                    if(segment.intersects(query)){
+                        collisionFound = true;
+                    }
+                });
+        return collisionFound ? query : null;
+    }
     /**
      * The recursive portion of collision
      * @param n
