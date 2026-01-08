@@ -40,7 +40,10 @@
 
 unsigned long variable_bit_sort(unsigned long arg, int num_bits)
 {
-  unsigned long bottom_byte = 0xff;
+  //Make mask with num_bits 1s at lower end
+  unsigned long bottom_byte = ~0;
+  bottom_byte >>= 8 * 16 - num_bits;
+
   unsigned long sorted_byte = 0;
   int bit_groups = 64 / num_bits;
   for(int i = 0; i < bit_groups; i++)
@@ -231,8 +234,28 @@ int testByteSort(){
 
   return 1;
 }
-// ...
-// ...
+
+int testNibbleSort()
+{
+  //Duplicates of ByteSort tests w/ Nibble result
+  //Sort from Example
+  if(nibble_sort(0x0403deadbeef0201) != 0xfeeeddba43210000)
+    return 0;
+
+  //Simple Variation 1
+  if(nibble_sort(0x019fa51283104cac) != 0xfccaa98543211100)
+    return 0;
+
+  // //Simple Variation 2
+  if(nibble_sort(0x000333111222ccca) != 0xccca333222111000)
+    return 0;
+
+  //Simple Variation 3
+  if(nibble_sort(0xbabababaabababff) != 0xffbbbbbbbaaaaaaa)
+    return 0;
+
+  return 1;
+}
 
 /*********************************************************************
  *
@@ -245,9 +268,9 @@ int testByteSort(){
 
 int main()
 {
-  printf("Hello World\n");
   printf(testByteSort() == 0 ? "ByteSort fails" : "ByteSort succeeds"); 
-
+  printf("\n");
+  printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
 
   //Testing default behavior
   // unsigned int test = 0xffffffff;
