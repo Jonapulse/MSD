@@ -221,12 +221,12 @@ int testByteSort(){
   if(byte_sort(0x019fa51283104cac) != 0xaca59f834c121001)
     return 0;
 
-  //Simple Variation 2
-  if(byte_sort(0x000333111222ccca) != 0xccca333221211030)
+  // //Simple Variation 2
+  if(byte_sort(0x000333111222ccca) != 0xccca332212110300)
     return 0;
 
   //Simple Variation 3
-  if(byte_sort(0xbabababababababa) != 0xbbbbbbbbaaaaaaaa)
+  if(byte_sort(0xbabababaabababff) != 0xffbabababaababab)
     return 0;
 
   return 1;
@@ -250,7 +250,7 @@ int main()
 
 
   //Testing default behavior
-  unsigned int test = 0xffffffff;
+  // unsigned int test = 0xffffffff;
   // test <<= 8;
   // test <<= 8;
   // test <<= 8;
@@ -261,7 +261,4 @@ int main()
   // test >>= 8;
   // test >>= 8;
   // test >>=8;
-
-
-  printf("and done");
 }
