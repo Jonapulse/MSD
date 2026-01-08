@@ -40,8 +40,8 @@
 
 unsigned long variable_bit_sort(unsigned long arg, int num_bits)
 {
-  unsigned int bottom_byte = 0x00ff;
-  unsigned int sorted_byte = 0;
+  unsigned long bottom_byte = 0xff;
+  unsigned long sorted_byte = 0;
   int bit_groups = 64 / num_bits;
   for(int i = 0; i < bit_groups; i++)
   {
@@ -49,7 +49,7 @@ unsigned long variable_bit_sort(unsigned long arg, int num_bits)
     int max_index = -1;
     for(int j = 0; j < bit_groups; j++)
     {
-      unsigned int byte_val = (arg >> j * num_bits) & bottom_byte;
+      unsigned long byte_val = (arg >> j * num_bits) & bottom_byte;
       if(byte_val > max){
         max = byte_val;
         max_index = j;
@@ -61,11 +61,17 @@ unsigned long variable_bit_sort(unsigned long arg, int num_bits)
 
     //Zero out the max num_bits using a left and right mask of 1s.
     unsigned long left_mask = ~0;
-    int shiftLeft = max_index + 1;
-    left_mask <<= shiftLeft * num_bits;
+    long shiftLeft = max_index + 1;
+    if(shiftLeft >= bit_groups)
+      left_mask = 0;
+    else
+      left_mask <<= shiftLeft * num_bits;
     unsigned long right_mask = ~0;
-    int shiftRight = bit_groups - max_index;
-    right_mask >>= num_bits * shiftRight;
+    long shiftRight = bit_groups - max_index;
+    if(shiftRight >= bit_groups)
+      right_mask = 0;
+    else
+      right_mask >>= num_bits * shiftRight;
     arg &= left_mask | right_mask;
   }
   return sorted_byte;
@@ -212,11 +218,11 @@ int testByteSort(){
     return 0;
 
   //Simple Variation 1
-  if(byte_sort(0x019fa51283104cac) != 0xfccaa98543211100)
+  if(byte_sort(0x019fa51283104cac) != 0xaca59f834c121001)
     return 0;
 
   //Simple Variation 2
-  if(byte_sort(0x000333111222ccca) != 0xccca333222111000)
+  if(byte_sort(0x000333111222ccca) != 0xccca333221211030)
     return 0;
 
   //Simple Variation 3
