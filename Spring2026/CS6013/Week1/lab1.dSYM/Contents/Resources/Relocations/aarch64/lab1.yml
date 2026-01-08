@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/jonapulse/MSD/Spring2026/CS6013/Week1/lab1'
+relocations:     []
+...

@@ -38,6 +38,39 @@
  *
  *********************************************************************/
 
+unsigned long variable_bit_sort(unsigned long arg, int num_bits)
+{
+  unsigned int bottom_byte = 0x00ff;
+  unsigned int sorted_byte = 0;
+  int bit_groups = 64 / num_bits;
+  for(int i = 0; i < bit_groups; i++)
+  {
+    unsigned int max = 0;
+    int max_index = -1;
+    for(int j = 0; j < bit_groups; j++)
+    {
+      unsigned int byte_val = (arg >> j * num_bits) & bottom_byte;
+      if(byte_val > max){
+        max = byte_val;
+        max_index = j;
+      }
+    }
+    //push the latest max onto the lower end of the sorted byte
+    sorted_byte <<= num_bits; 
+    sorted_byte |= max;
+
+    //Zero out the max num_bits using a left and right mask of 1s.
+    unsigned long left_mask = ~0;
+    int shiftLeft = max_index + 1;
+    left_mask <<= shiftLeft * num_bits;
+    unsigned long right_mask = ~0;
+    int shiftRight = bit_groups - max_index;
+    right_mask >>= num_bits * shiftRight;
+    arg &= left_mask | right_mask;
+  }
+  return sorted_byte;
+}
+
 /*********************************************************************
  *
  * byte_sort()
@@ -54,9 +87,12 @@
  *
  *********************************************************************/
 
+ /**
+  * 
+  */
 unsigned long byte_sort( unsigned long arg )
 {
-  return 0;
+  return variable_bit_sort(arg, 8);
 }
 
 /*********************************************************************
@@ -77,7 +113,7 @@ unsigned long byte_sort( unsigned long arg )
 
 unsigned long nibble_sort( unsigned long arg )
 {
-  return 0;
+  return variable_bit_sort(arg, 4);
 }
 
 /*********************************************************************/
@@ -137,12 +173,14 @@ Elt *name_list( char * name )
 
 void print_list( Elt* head )
 {
+  //TODO: Step through printing name
 }
 
 /*********************************************************************/
 
 void free_list( Elt* head )
 {
+  //TODO: Step through printing list
 }
 
 /*********************************************************************
@@ -168,8 +206,25 @@ void draw_me()
  *     Remember, when testing name_list(), you should create a 'myName'
  *     variable and pass it in.
  */
+int testByteSort(){
+  //Sort from Example
+  if(byte_sort(0x0403deadbeef0201) != 0xefdebead04030201)
+    return 0;
 
-// bool testByteSort() { ... }
+  //Simple Variation 1
+  if(byte_sort(0x019fa51283104cac) != 0xfccaa98543211100)
+    return 0;
+
+  //Simple Variation 2
+  if(byte_sort(0x000333111222ccca) != 0xccca333222111000)
+    return 0;
+
+  //Simple Variation 3
+  if(byte_sort(0xbabababababababa) != 0xbbbbbbbbaaaaaaaa)
+    return 0;
+
+  return 1;
+}
 // ...
 // ...
 
@@ -184,5 +239,23 @@ void draw_me()
 
 int main()
 {
-   // Call your test routines here...
+  printf("Hello World\n");
+  printf(testByteSort() == 0 ? "ByteSort fails" : "ByteSort succeeds"); 
+
+
+  //Testing default behavior
+  unsigned int test = 0xffffffff;
+  // test <<= 8;
+  // test <<= 8;
+  // test <<= 8;
+  // test <<= 8;
+  // test = ~0;
+  // unsigned int alt = (~0) >> 8;
+  // test >>= 8;
+  // test >>= 8;
+  // test >>= 8;
+  // test >>=8;
+
+
+  printf("and done");
 }
