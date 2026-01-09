@@ -231,6 +231,17 @@ void free_list( Elt* head )
 
 void draw_me()
 {
+  FILE *f = fopen("me.txt", "w");
+
+  fprintf(f, "  6767666767  \n");
+  fprintf(f, " 76 _    _ 67 \n");
+  fprintf(f, " 6  0.   0. 6 \n");
+  fprintf(f, "@     <      @\n");
+  fprintf(f, " \\|| - ||||/ \n");
+  fprintf(f, "  ---------   \n");
+  fprintf(f, " _---------_  \n");
+
+  fclose(f);
 }
 
 /*********************************************************************
@@ -303,7 +314,9 @@ int main()
   // printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
   // printf("\n");
   
-  char *my_name = "Jonathan"; 
-  Elt *my_name_list = name_list(my_name);
-  print_list(my_name_list);
+  // char *my_name = "Jonathan"; 
+  // Elt *my_name_list = name_list(my_name);
+  // print_list(my_name_list);
+
+  draw_me();
 }
