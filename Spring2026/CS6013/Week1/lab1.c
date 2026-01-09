@@ -38,6 +38,12 @@
  *
  *********************************************************************/
 
+ /**
+  * Helper function to sort a long by arbitrary number of bits
+  * 
+  * @param unsigned long arg - value to be sorted
+  * @return long, sorted with larger bits at the upper (left-hand) side
+  */
 unsigned long variable_bit_sort(unsigned long arg, int num_bits)
 {
   //Make mask with num_bits 1s at lower end
@@ -97,7 +103,10 @@ unsigned long variable_bit_sort(unsigned long arg, int num_bits)
  *********************************************************************/
 
  /**
+  * Sorts an unsigned long by byte using variable_bit_sort
   * 
+  * @param unsigned long arg - value to be sorted by byte
+  * @return long, sorted with larger bytes at the upper (left-hand) side
   */
 unsigned long byte_sort( unsigned long arg )
 {
@@ -120,6 +129,12 @@ unsigned long byte_sort( unsigned long arg )
  *
  *********************************************************************/
 
+ /**
+  * Sorts an unsigned long by "nibble" (4 bits) using variable_bit_sort
+  * 
+  * @param unsigned long arg - value to be sorted by byte
+  * @return long, sorted with larger bytes at the upper (left-hand) side
+  */
 unsigned long nibble_sort( unsigned long arg )
 {
   return variable_bit_sort(arg, 4);
@@ -137,7 +152,6 @@ typedef struct elt {
 /* Forward declaration of "free_list()"...
  *    This allows you to call free_list() in name_list() [if you'd like].
  */
-
 void free_list( Elt* head ); // [No code goes here!]
 
 /*********************************************************************
@@ -172,7 +186,12 @@ void free_list( Elt* head ); // [No code goes here!]
  * Note: free_list() might be useful for error handling for name_list()... 
  *
  *********************************************************************/
-
+ /**
+  * Takes a char* and returns a linked list representation of Elt's with char values
+  * 
+  * @param char* name - char* that will be converted to a linked list
+  * @return Elt* - pointer to the head of the linked list
+  */
 Elt *name_list( char * name )
 {
   char * pt = name;
@@ -196,6 +215,11 @@ Elt *name_list( char * name )
 
 /*********************************************************************/
 
+/**
+ * Prints the values of a linked list of Elt's
+ * 
+ * @param Elt* head - pointer to the head of the linked list
+ */
 void print_list( Elt* head )
 {
   Elt* ptr = head;
@@ -207,6 +231,11 @@ void print_list( Elt* head )
 
 /*********************************************************************/
 
+/**
+ * Frees the memory of a linked list of Elt's
+ * 
+ * @param Elt* head - pointer to the head of the linked list
+ */
 void free_list( Elt* head )
 {
   Elt* ptr = head;
@@ -228,7 +257,9 @@ void free_list( Elt* head )
  * - Don't use C++ iostreams
  *
  *********************************************************************/
-
+/**
+ * Prints an ASCII art self-portrait to me.txt
+ */
 void draw_me()
 {
   FILE *f = fopen("me.txt", "w");
@@ -290,11 +321,6 @@ int testNibbleSort()
   if(nibble_sort(0xbabababaabababff) != 0xffbbbbbbbaaaaaaa)
     return 0;
 
-  return 1;
-}
-
-int testNameList(){
-  //TODO: this
   return 1;
 }
 
