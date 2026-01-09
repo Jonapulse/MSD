@@ -1,6 +1,7 @@
+#include "cmdline.h"
 #include <iostream>
 
 int main(int argc, char* argv[]){
-	std::cout<<"MSDScript bitches!";
+	use_arguments(argc, argv);
 	return 0;
 }
