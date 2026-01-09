@@ -175,21 +175,46 @@ void free_list( Elt* head ); // [No code goes here!]
 
 Elt *name_list( char * name )
 {
-   return NULL;
+  char * pt = name;
+  Elt *prevElt = (Elt*) malloc(sizeof(Elt));
+  Elt *firstElt = prevElt;
+  prevElt->val = *pt;
+  pt++;
+  for( ; *pt != '\0'; pt++){
+    Elt *currElt = (Elt*) malloc(sizeof(Elt));
+    if(currElt == NULL)
+    {
+      free_list(firstElt);
+      return NULL;
+    }
+    currElt->val = *pt;
+    prevElt->link = currElt;
+    prevElt = currElt;
+  }
+  return firstElt;
 }
 
 /*********************************************************************/
 
 void print_list( Elt* head )
 {
-  //TODO: Step through printing name
+  Elt* ptr = head;
+  do{
+    printf("%c", ptr->val);
+    ptr = ptr->link;
+  }while(ptr != NULL);
 }
 
 /*********************************************************************/
 
 void free_list( Elt* head )
 {
-  //TODO: Step through printing list
+  Elt* ptr = head;
+  do{
+    Elt* nextEl = ptr->link;
+    free(ptr);
+    ptr = nextEl;
+  }while(ptr != NULL);
 }
 
 /*********************************************************************
@@ -224,7 +249,7 @@ int testByteSort(){
   if(byte_sort(0x019fa51283104cac) != 0xaca59f834c121001)
     return 0;
 
-  // //Simple Variation 2
+  //Simple Variation 2
   if(byte_sort(0x000333111222ccca) != 0xccca332212110300)
     return 0;
 
@@ -246,7 +271,7 @@ int testNibbleSort()
   if(nibble_sort(0x019fa51283104cac) != 0xfccaa98543211100)
     return 0;
 
-  // //Simple Variation 2
+  //Simple Variation 2
   if(nibble_sort(0x000333111222ccca) != 0xccca333222111000)
     return 0;
 
@@ -254,6 +279,11 @@ int testNibbleSort()
   if(nibble_sort(0xbabababaabababff) != 0xffbbbbbbbaaaaaaa)
     return 0;
 
+  return 1;
+}
+
+int testNameList(){
+  //TODO: this
   return 1;
 }
 
@@ -268,20 +298,12 @@ int testNibbleSort()
 
 int main()
 {
-  printf(testByteSort() == 0 ? "ByteSort fails" : "ByteSort succeeds"); 
-  printf("\n");
-  printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
-
-  //Testing default behavior
-  // unsigned int test = 0xffffffff;
-  // test <<= 8;
-  // test <<= 8;
-  // test <<= 8;
-  // test <<= 8;
-  // test = ~0;
-  // unsigned int alt = (~0) >> 8;
-  // test >>= 8;
-  // test >>= 8;
-  // test >>= 8;
-  // test >>=8;
+  // printf(testByteSort() == 0 ? "ByteSort fails" : "ByteSort succeeds"); 
+  // printf("\n");
+  // printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
+  // printf("\n");
+  
+  char *my_name = "Jonathan"; 
+  Elt *my_name_list = name_list(my_name);
+  print_list(my_name_list);
 }
