@@ -309,14 +309,17 @@ int testNameList(){
 
 int main()
 {
-  // printf(testByteSort() == 0 ? "ByteSort fails" : "ByteSort succeeds"); 
-  // printf("\n");
-  // printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
-  // printf("\n");
+  printf(testByteSort() == 0 ? "ByteSort fails" : "ByteSort succeeds"); 
+  printf("\n");
+  printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
+  printf("\n");
   
-  // char *my_name = "Jonathan"; 
-  // Elt *my_name_list = name_list(my_name);
-  // print_list(my_name_list);
+  char *my_name = "Jonathan"; 
+  Elt *my_name_list = name_list(my_name);
+  printf("Jonathan should match ");
+  print_list(my_name_list);
 
+  printf("\nAn ASCII self-portrait should be available in me.txt\n");
+  free_list(my_name_list);
   draw_me();
 }
