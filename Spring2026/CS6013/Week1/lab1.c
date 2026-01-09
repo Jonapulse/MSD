@@ -38,53 +38,7 @@
  *
  *********************************************************************/
 
- /**
-  * Helper function to sort a long by arbitrary number of bits
-  * 
-  * @param unsigned long arg - value to be sorted
-  * @return long, sorted with larger bits at the upper (left-hand) side
-  */
-unsigned long variable_bit_sort(unsigned long arg, int num_bits)
-{
-  //Make mask with num_bits 1s at lower end
-  unsigned long bottom_byte = ~0;
-  bottom_byte >>= 8 * 16 - num_bits;
-
-  unsigned long sorted_byte = 0;
-  int bit_groups = 64 / num_bits;
-  for(int i = 0; i < bit_groups; i++)
-  {
-    unsigned int max = 0;
-    int max_index = -1;
-    for(int j = 0; j < bit_groups; j++)
-    {
-      unsigned long byte_val = (arg >> j * num_bits) & bottom_byte;
-      if(byte_val > max){
-        max = byte_val;
-        max_index = j;
-      }
-    }
-    //push the latest max onto the lower end of the sorted byte
-    sorted_byte <<= num_bits; 
-    sorted_byte |= max;
-
-    //Zero out the max num_bits using a left and right mask of 1s.
-    unsigned long left_mask = ~0;
-    long shiftLeft = max_index + 1;
-    if(shiftLeft >= bit_groups)
-      left_mask = 0;
-    else
-      left_mask <<= shiftLeft * num_bits;
-    unsigned long right_mask = ~0;
-    long shiftRight = bit_groups - max_index;
-    if(shiftRight >= bit_groups)
-      right_mask = 0;
-    else
-      right_mask >>= num_bits * shiftRight;
-    arg &= left_mask | right_mask;
-  }
-  return sorted_byte;
-}
+ unsigned long variable_bit_sort(unsigned long arg, int num_bits);
 
 /*********************************************************************
  *
@@ -138,6 +92,54 @@ unsigned long byte_sort( unsigned long arg )
 unsigned long nibble_sort( unsigned long arg )
 {
   return variable_bit_sort(arg, 4);
+}
+
+/**
+  * Helper function to sort a long by arbitrary number of bits
+  * 
+  * @param unsigned long arg - value to be sorted
+  * @return long, sorted with larger bits at the upper (left-hand) side
+  */
+unsigned long variable_bit_sort(unsigned long arg, int num_bits)
+{
+  //Make mask with num_bits 1s at lower end
+  unsigned long bottom_byte = ~0;
+  bottom_byte >>= 8 * 16 - num_bits;
+
+  unsigned long sorted_byte = 0;
+  int bit_groups = 64 / num_bits;
+  for(int i = 0; i < bit_groups; i++)
+  {
+    unsigned int max = 0;
+    int max_index = -1;
+    for(int j = 0; j < bit_groups; j++)
+    {
+      unsigned long byte_val = (arg >> j * num_bits) & bottom_byte;
+      if(byte_val > max){
+        max = byte_val;
+        max_index = j;
+      }
+    }
+    //push the latest max onto the lower end of the sorted byte
+    sorted_byte <<= num_bits; 
+    sorted_byte |= max;
+
+    //Zero out the max num_bits using a left and right mask of 1s.
+    unsigned long left_mask = ~0;
+    long shiftLeft = max_index + 1;
+    if(shiftLeft >= bit_groups)
+      left_mask = 0;
+    else
+      left_mask <<= shiftLeft * num_bits;
+    unsigned long right_mask = ~0;
+    long shiftRight = bit_groups - max_index;
+    if(shiftRight >= bit_groups)
+      right_mask = 0;
+    else
+      right_mask >>= num_bits * shiftRight;
+    arg &= left_mask | right_mask;
+  }
+  return sorted_byte;
 }
 
 /*********************************************************************/
