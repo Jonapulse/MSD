@@ -285,10 +285,6 @@ void draw_me()
  *     variable and pass it in.
  */
 int testByteSort(){
-  //Sort from Example
-  if(byte_sort(0x0403deadbeef0201) != 0xefdebead04030201)
-    return 0;
-
   //Simple Variation 1
   if(byte_sort(0x019fa51283104cac) != 0xaca59f834c121001)
     return 0;
@@ -301,16 +297,16 @@ int testByteSort(){
   if(byte_sort(0xbabababaabababff) != 0xffbabababaababab)
     return 0;
 
+  //Dylan - test from his code
+  if(byte_sort(0x0403deadbeef0201) != 0xefdebead04030201)
+    return 0;
+
   return 1;
 }
 
 int testNibbleSort()
 {
   //Duplicates of ByteSort tests w/ Nibble result
-  //Sort from Example
-  if(nibble_sort(0x0403deadbeef0201) != 0xfeeeddba43210000)
-    return 0;
-
   //Simple Variation 1
   if(nibble_sort(0x019fa51283104cac) != 0xfccaa98543211100)
     return 0;
@@ -323,7 +319,49 @@ int testNibbleSort()
   if(nibble_sort(0xbabababaabababff) != 0xffbbbbbbbaaaaaaa)
     return 0;
 
+  //Dylan - test from his code
+  if(nibble_sort(0x0403deadbeef0201) != 0xfeeeddba43210000)
+    return 0;
+
+
   return 1;
+}
+
+//Tests from Demi
+void test_byte_sort(){   
+//Basic test
+  printf("Proceeding with byte sort tests...");
+  unsigned long input =0x0403deadbeef0201UL;
+  unsigned long expectation = 0xefdebead04030201UL;
+  unsigned long output = byte_sort(input);
+  printf("Basic test: %s\n", output == expectation ? "PASS" : "FAIL");
+   
+//testing what it does if the input is already sorted
+  input = 0x0807060504030201UL;
+  expectation = 0x0807060504030201UL;
+  output = byte_sort(input);
+  printf("Already sorted test: %s\n", output == expectation ? "PASS" : "FAIL");
+   
+//testing what it does if the input is already sorted
+   input = 0x0102030405060708UL;
+   expectation = 0x0807060504030201UL;
+   output = byte_sort(input);
+   printf("Reverse order test: %s\n", output == expectation ? "PASS" : "FAIL");
+   
+}
+
+void test_nibble_sort(){
+//Basic test
+  printf("Proceeding with nibble sort tests...");
+  unsigned long input =0x0403deadbeef0201;
+  unsigned long expectation = 0xfeeeddba43210000;
+  unsigned long output = nibble_sort(input);
+  printf("Basic test: %s\n", output == expectation ? "PASS" : "FAIL");
+   
+//testing what it does if the input is already sorted
+  input =0xfeeeddba43210000;
+  output = nibble_sort(input);
+  printf("Already sorted test: %s\n", output == expectation ? "PASS" : "FAIL");
 }
 
 /*********************************************************************
@@ -341,6 +379,9 @@ int main()
   printf("\n");
   printf(testNibbleSort() == 0 ? "NibbleSort fails" : "NibbleSort succeeds"); 
   printf("\n");
+  
+  test_byte_sort();
+  test_nibble_sort();
   
   char *my_name = "Jonathan"; 
   Elt *my_name_list = name_list(my_name);

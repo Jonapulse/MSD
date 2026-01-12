@@ -1,0 +1,5 @@
+f = open("tracerouteoutput.txt")
+print(f)
+print(f.readline())
+print(f.readline())
+print(f.readline())
