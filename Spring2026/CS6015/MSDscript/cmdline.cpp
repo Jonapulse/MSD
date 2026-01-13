@@ -1,8 +1,6 @@
 #include <iostream>
 #include "cmdline.h"
 
-bool testsSeen = false;
-
 /**
  * Prints out text in response to arguments. Placeholder for later functionality (I think...)
  * 
@@ -12,29 +10,29 @@ bool testsSeen = false;
 void use_arguments(int argc, char* argv[]){
     if(argc == 1)
     {
-        std::cout << "No arguments. Send in arguments to test cmdline!";
+        std::cout << "No arguments. Send in arguments to test cmdline!\n";
         exit(0);
     }
+
+	bool testsSeen = false;
 
 	for(int i = 1 ; i < argc; i++){
 		if(strcmp(argv[i], "--help") == 0)
 		{
-			std::cout << "use --test pass tests, but only once or you'll fail!";
+			std::cout << "use --test pass tests, but only once or you'll fail!\n";
 			exit(0);
 		}
 		else if (strcmp(argv[i], "--test") == 0)
 		{
-			if(!testsSeen){
-				std::cout << "Tests passed\n";
-				testsSeen = true;
-			} else
-			{
+			if(testsSeen){
 				std::cerr << "Illegal use of --test more than once!\n";
 				exit(1);
 			}
+			std::cout << "Tests passed\n";
+			testsSeen = true;
 		} else
 		{
-			std::cerr << "Use of unknown arg: " << argv[i];
+			std::cerr << "Use of unknown arg: " << argv[i] << "\n";
 			exit(1);
 		}
 		
