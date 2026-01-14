@@ -52,10 +52,19 @@ def parse_ping_info(filename):
     ping_times = []
     for line in f:
         if "time=" in line:
-            time_val = line.find("time=")
+            ping_times.append(float(line[line.find("time=") + 5: line.find("ms") - 1]))
     f.close()
+    return ping_times
+
+def process_ping_info(ping_data):
+    baseline = min(ping_data)
+    sum = 0
+    for datum in ping_data:
+        sum += datum - baseline
+    average = sum / len(ping_data)
+    print(f"Average round drip queueing delay is {average:.3f}")
 
 #graph_hop_info(parse_trace_info("tracerouteoutput.txt"), parse_trace_info("traceroutoutput2.txt"))
-print_ping_info(parse_ping_info("ping_output.txt"))
+process_ping_info(parse_ping_info("ping_output.txt"))
 
 
