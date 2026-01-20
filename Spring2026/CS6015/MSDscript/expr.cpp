@@ -20,6 +20,11 @@ int Num::interp()
     return this->val;
 }
 
+bool Num::has_variable()
+{
+    return false;
+}
+
 Add::Add(Expr *lhs, Expr *rhs){
     this->lhs = lhs;
     this->rhs = rhs;
@@ -36,6 +41,11 @@ bool Add::Equals(Expr *e)
 
 int Add::interp(){
     return this->lhs->interp() + this->rhs->interp();
+}
+
+bool Add::has_variable()
+{
+    return this->lhs->has_variable() || this->rhs->has_variable();
 }
 
 Mult::Mult(Expr *lhs, Expr *rhs){
@@ -55,6 +65,11 @@ bool Mult::Equals(Expr *e)
 int Mult::interp()
 {
     return this->lhs->interp() * this->rhs->interp();
+}
+
+bool Mult::has_variable()
+{
+    return this->lhs->has_variable() || this->rhs->has_variable();
 }
 
 VarExpr::VarExpr(const std::string &name){
@@ -80,6 +95,10 @@ int VarExpr::interp()
     throw std::runtime_error("VarExpr does not support interp (at this stage in development)");
     return -1;
 }
+
+ bool VarExpr::has_variable(){
+    return true;
+ }
 
 //TESTING
 //
@@ -133,4 +152,9 @@ TEST_CASE("Expression interp"){
         CHECK( (new Mult(new Num(3), new Num(2)))->interp()==6 );
         CHECK( (new Add(new Add(new Num(10), new Num(15)),new Add(new Num(20),new Num(20))))->interp()==65);
     }
+}
+
+TEST_CASE("has_var"){
+    CHECK( (new Add(new VarExpr("x"), new Num(1)))->has_variable() == true );
+    CHECK( (new Mult(new Num(2), new Num(1)))->has_variable() == false );
 }

@@ -4,6 +4,7 @@ class Expr{
 public:
     virtual bool Equals(Expr* e) = 0;
     virtual int interp() = 0;
+    virtual bool has_variable() = 0;
 };
 
 class Num: public Expr{
@@ -14,6 +15,7 @@ public:
 
     bool Equals(Expr* e);
     int interp();
+    bool has_variable();
 };
 
 class Add: public Expr{
@@ -25,6 +27,7 @@ public:
 
     bool Equals(Expr* e);
     int interp();
+    bool has_variable();
 };
 
 class Mult: public Expr{
@@ -36,6 +39,7 @@ public:
 
     bool Equals(Expr* e);
     int interp();
+    bool has_variable();
 };
 
 class VarExpr: public Expr{
@@ -46,4 +50,5 @@ public:
 
     bool Equals(Expr *e);
     int interp();
+    bool has_variable();
 };
