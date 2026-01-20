@@ -1,5 +1,7 @@
 #include <iostream>
 #include "cmdline.h"
+#define CATCH_CONFIG_RUNNER
+#include "catch.h"
 
 /**
  * Prints out text in response to arguments. Placeholder for later functionality (I think...)
@@ -28,8 +30,10 @@ void use_arguments(int argc, char* argv[]){
 				std::cerr << "Illegal use of --test more than once!\n";
 				exit(1);
 			}
-			std::cout << "Tests passed\n";
 			testsSeen = true;
+			if(Catch::Session().run(1, argv) != 0){
+				exit(1);
+			}
 		} else
 		{
 			std::cerr << "Use of unknown arg: " << argv[i] << "\n";

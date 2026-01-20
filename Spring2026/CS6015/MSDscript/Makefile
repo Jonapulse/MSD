@@ -1,7 +1,7 @@
-OBJS = main.o cmdline.o
+OBJS = main.o cmdline.o expr.o
 CXX = g++
 CXXFLAGS = -g
-HEADERS = cmdline.h
+HEADERS = cmdline.h expr.h
 
 all: main
 
@@ -11,6 +11,8 @@ main: $(OBJS)
 main.o: main.cpp $(HEADERS)
 
 cmdline.o: cmdline.cpp cmdline.h
+
+expr.o: expr.cpp expr.h
 
 help: main
 	./main --help
