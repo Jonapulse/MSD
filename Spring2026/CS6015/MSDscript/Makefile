@@ -3,10 +3,10 @@ CXX = g++
 CXXFLAGS = -g
 HEADERS = cmdline.h expr.h
 
-all: main
+all: msdscript
 
-main: $(OBJS)
-	$(CXX) $(CXXFLAGS) -o main $(OBJS)
+msdscript: $(OBJS)
+	$(CXX) $(CXXFLAGS) -o msdscript $(OBJS)
 
 main.o: main.cpp $(HEADERS)
 
