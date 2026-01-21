@@ -25,6 +25,13 @@ bool Num::has_variable()
     return false;
 }
 
+/**
+ * Returns itself, as number values do not change in substitution
+ */
+Expr* Num::subst(std::string name, Expr* substitution){
+    return this;
+}
+
 Add::Add(Expr *lhs, Expr *rhs){
     this->lhs = lhs;
     this->rhs = rhs;
@@ -46,6 +53,10 @@ int Add::interp(){
 bool Add::has_variable()
 {
     return this->lhs->has_variable() || this->rhs->has_variable();
+}
+
+Expr* Add::subst(std::string name, Expr* substitution){
+    return new Add(lhs->subst(name, substitution), rhs->subst(name, substitution));
 }
 
 Mult::Mult(Expr *lhs, Expr *rhs){
@@ -72,6 +83,10 @@ bool Mult::has_variable()
     return this->lhs->has_variable() || this->rhs->has_variable();
 }
 
+Expr* Mult::subst(std::string name, Expr* substitution){
+    return new Mult(lhs->subst(name, substitution), rhs->subst(name, substitution));
+}
+
 VarExpr::VarExpr(const std::string &name){
     this->name = name;
 }
@@ -96,9 +111,16 @@ int VarExpr::interp()
     return -1;
 }
 
- bool VarExpr::has_variable(){
+bool VarExpr::has_variable(){
     return true;
- }
+}
+
+Expr* VarExpr::subst(std::string name, Expr* substitution){
+    if(this->name == name)
+        return substitution;
+    else
+        return this;
+}
 
 //TESTING
 //
@@ -157,4 +179,14 @@ TEST_CASE("Expression interp"){
 TEST_CASE("has_var"){
     CHECK( (new Add(new VarExpr("x"), new Num(1)))->has_variable() == true );
     CHECK( (new Mult(new Num(2), new Num(1)))->has_variable() == false );
+}
+
+TEST_CASE("substitution")
+{
+    CHECK( (new Add(new VarExpr("x"), new Num(7)))
+       ->subst("x", new VarExpr("y"))
+       ->Equals(new Add(new VarExpr("y"), new Num(7))) );
+    CHECK( (new VarExpr("x"))
+       ->subst("x", new Add(new VarExpr("y"),new Num(7)))
+       ->Equals(new Add(new VarExpr("y"),new Num(7))) );
 }
