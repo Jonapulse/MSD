@@ -32,3 +32,4 @@
 ## Compiler and Submission detritus we don't want recorded
 *.o
 *.zip
+*.dYSM
