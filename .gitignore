@@ -28,3 +28,7 @@
 
 ## obnoxious file that has thumbnails and stuff
 .DS_Store
+
+## Compiler and Submission detritus we don't want recorded
+*.o
+*.zip
