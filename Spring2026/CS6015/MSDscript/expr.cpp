@@ -9,6 +9,27 @@ std::string Expr::to_string() {
     return st.str();
 }
 
+/**
+ * For Num and Add, printExpr prints them without considering
+ * parentheses or precence
+ */
+void Expr::pretty_print(std::ostream& ot){
+    this->printExpr(ot);
+}
+
+/**
+ * Default return of lowest precedence: "none".
+ */
+precedence_t Expr::pretty_print_at(){
+    return prec_none;
+}
+
+std::string Expr::to_pretty_string() {
+    std::stringstream st("");
+    this->pretty_print(st);
+    return st.str();
+}
+
 Num::Num(int val){
     this->val = val;
 }
@@ -74,6 +95,32 @@ void Add::printExpr(std::ostream& ot){
     ot << "(" << lhs->to_string() << "+" << rhs->to_string() << ")";
 }
 
+/**
+ * explain how this precedence works.
+ */
+void Add::pretty_print(std::ostream& ot){
+    // bool parenLeft = lhs->pretty_print_at() < this->pretty_print_at();
+    // bool parenRight = rhs->pretty_print_at() < this->pretty_print_at();
+    // if(parenLeft)
+    //     ot << "( ";
+    lhs->pretty_print(ot);
+    // if(parenLeft)
+    //     ot << " )";
+    ot << " + ";
+    // if(parenRight)
+    //     ot << "( ";
+    rhs->pretty_print(ot);
+    // if(parenRight)
+    //     ot << " )";
+}
+
+/**
+ * Returns precedence higher than 'none', but lower than 'mult'
+ */
+precedence_t Add::pretty_print_at(){
+    return prec_add;
+}
+
 Mult::Mult(Expr *lhs, Expr *rhs){
     this->lhs = lhs;
     this->rhs = rhs;
@@ -104,6 +151,32 @@ Expr* Mult::subst(const std::string &name, Expr* substitution){
 
 void Mult::printExpr(std::ostream& ot){
     ot << "(" << lhs->to_string() << "*" << rhs->to_string() << ")";
+}
+
+/**
+ * explain how this precedence works.
+ */
+void Mult::pretty_print(std::ostream& ot){
+    bool parenLHS = lhs->pretty_print_at() == 1;
+    bool parenRHS = rhs->pretty_print_at() == 1;
+    if(parenLHS)
+        ot << "(";
+    lhs->pretty_print(ot);
+    if(parenLHS)
+        ot << ")";
+    ot << " * ";
+    if(parenRHS)
+        ot << "(";
+    rhs->pretty_print(ot);
+    if(parenRHS)
+        ot << ")";
+}
+
+/**
+ * Returns precedence higher than 'none', but lower than 'mult'
+ */
+precedence_t Mult::pretty_print_at(){
+    return prec_mult;
 }
 
 VarExpr::VarExpr(const std::string &name){
@@ -229,4 +302,12 @@ TEST_CASE("to_string")
 
     CHECK((new Add(new Num(3), new Mult(new VarExpr("x"), new Num(4))))->to_string() == "(3+(x*4))");
     CHECK((new Mult(new Num(3), new Add(new VarExpr("x"), new Num(4))))->to_string() == "(3*(x+4))");
+}
+
+TEST_CASE("pretty_print")
+{
+    CHECK ( (new Mult(new Num(1), new Add(new Num(2), new Num(3))))->to_pretty_string() ==  "1 * (2 + 3)" );
+    CHECK ( (new Mult(new Mult(new Num(8), new Num(1)), new VarExpr("y")))->to_pretty_string() ==  "(8 * 1) * y" );
+    CHECK ( (new Mult(new Add(new Num(3), new Num(5)), new Mult(new Num(6), new Num(1))))->to_pretty_string() ==  "(3 + 5) * 6 * 1" );
+    CHECK ( (new Mult(new Mult(new Num(7), new Num(7)), new Add(new Num(9), new Num(2))) )->to_pretty_string() ==  "(7 * 7) * (9 + 2)" );
 }

@@ -1,5 +1,11 @@
 #include <string>
 
+typedef enum {
+  prec_none,      // = 0
+  prec_add,       // = 1
+  prec_mult       // = 2
+} precedence_t;
+
 class Expr{
 public:
     virtual bool Equals(Expr* e) = 0;
@@ -8,6 +14,9 @@ public:
     virtual Expr* subst(const std::string &name, Expr* substitution) = 0;
     virtual void printExpr(std::ostream& ot) = 0;
     virtual std::string to_string();
+    virtual void pretty_print(std::ostream& ot);
+    virtual precedence_t pretty_print_at();
+    virtual std::string to_pretty_string();
 };
 
 class Num: public Expr{
@@ -35,6 +44,8 @@ public:
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    precedence_t pretty_print_at();
 };
 
 class Mult: public Expr{
@@ -49,6 +60,8 @@ public:
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    precedence_t pretty_print_at();
 };
 
 class VarExpr: public Expr{
