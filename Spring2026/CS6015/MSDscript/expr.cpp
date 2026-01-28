@@ -28,7 +28,7 @@ bool Num::has_variable()
 /**
  * Returns itself, as number values do not change in substitution
  */
-Expr* Num::subst(std::string name, Expr* substitution){
+Expr* Num::subst(const std::string &name, Expr* substitution){
     return this;
 }
 
@@ -43,19 +43,19 @@ bool Add::Equals(Expr *e)
     Add *c = dynamic_cast<Add*>(e);
     if(c == nullptr)
         return false;
-    return this->lhs->Equals(c->lhs) && this->rhs->Equals(c->rhs);
+    return lhs->Equals(c->lhs) && rhs->Equals(c->rhs);
 }
 
 int Add::interp(){
-    return this->lhs->interp() + this->rhs->interp();
+    return lhs->interp() + rhs->interp();
 }
 
 bool Add::has_variable()
 {
-    return this->lhs->has_variable() || this->rhs->has_variable();
+    return lhs->has_variable() || rhs->has_variable();
 }
 
-Expr* Add::subst(std::string name, Expr* substitution){
+Expr* Add::subst(const std::string &name, Expr* substitution){
     return new Add(lhs->subst(name, substitution), rhs->subst(name, substitution));
 }
 
@@ -75,15 +75,15 @@ bool Mult::Equals(Expr *e)
 
 int Mult::interp()
 {
-    return this->lhs->interp() * this->rhs->interp();
+    return lhs->interp() * rhs->interp();
 }
 
 bool Mult::has_variable()
 {
-    return this->lhs->has_variable() || this->rhs->has_variable();
+    return lhs->has_variable() || rhs->has_variable();
 }
 
-Expr* Mult::subst(std::string name, Expr* substitution){
+Expr* Mult::subst(const std::string &name, Expr* substitution){
     return new Mult(lhs->subst(name, substitution), rhs->subst(name, substitution));
 }
 
@@ -108,14 +108,13 @@ bool VarExpr::Equals(Expr *e)
 int VarExpr::interp()
 {
     throw std::runtime_error("VarExpr does not support interp (at this stage in development)");
-    return -1;
 }
 
 bool VarExpr::has_variable(){
     return true;
 }
 
-Expr* VarExpr::subst(std::string name, Expr* substitution){
+Expr* VarExpr::subst(const std::string &name, Expr* substitution){
     if(this->name == name)
         return substitution;
     else
@@ -189,4 +188,7 @@ TEST_CASE("substitution")
     CHECK( (new VarExpr("x"))
        ->subst("x", new Add(new VarExpr("y"),new Num(7)))
        ->Equals(new Add(new VarExpr("y"),new Num(7))) );
+    CHECK( (new Add(new VarExpr("x"), new Num(5)))
+        ->subst("x", new Num(3))
+        ->interp() == 10);
 }

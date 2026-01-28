@@ -33,3 +33,6 @@
 *.o
 *.zip
 *.dYSM
+
+## Specific execs to ignore
+msdscript
