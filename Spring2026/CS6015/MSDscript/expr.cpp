@@ -1,6 +1,13 @@
 #include "expr.h"
 #include "catch.h"
 #include <stdexcept>
+#include <sstream>
+
+std::string Expr::to_string() {
+    std::stringstream st("");
+    this->printExpr(st);
+    return st.str();
+}
 
 Num::Num(int val){
     this->val = val;
@@ -32,6 +39,10 @@ Expr* Num::subst(const std::string &name, Expr* substitution){
     return this;
 }
 
+void Num::printExpr(std::ostream& ot){
+    ot << std::to_string(val);
+}
+
 Add::Add(Expr *lhs, Expr *rhs){
     this->lhs = lhs;
     this->rhs = rhs;
@@ -57,6 +68,10 @@ bool Add::has_variable()
 
 Expr* Add::subst(const std::string &name, Expr* substitution){
     return new Add(lhs->subst(name, substitution), rhs->subst(name, substitution));
+}
+
+void Add::printExpr(std::ostream& ot){
+    ot << "(" << lhs->to_string() << "+" << rhs->to_string() << ")";
 }
 
 Mult::Mult(Expr *lhs, Expr *rhs){
@@ -85,6 +100,10 @@ bool Mult::has_variable()
 
 Expr* Mult::subst(const std::string &name, Expr* substitution){
     return new Mult(lhs->subst(name, substitution), rhs->subst(name, substitution));
+}
+
+void Mult::printExpr(std::ostream& ot){
+    ot << "(" << lhs->to_string() << "*" << rhs->to_string() << ")";
 }
 
 VarExpr::VarExpr(const std::string &name){
@@ -119,6 +138,10 @@ Expr* VarExpr::subst(const std::string &name, Expr* substitution){
         return substitution;
     else
         return this;
+}
+
+void VarExpr::printExpr(std::ostream& ot){
+    ot << name;
 }
 
 //TESTING
@@ -190,5 +213,20 @@ TEST_CASE("substitution")
        ->Equals(new Add(new VarExpr("y"),new Num(7))) );
     CHECK( (new Add(new VarExpr("x"), new Num(5)))
         ->subst("x", new Num(3))
-        ->interp() == 10);
+        ->interp() == 8);
+    CHECK( (new Mult(new VarExpr("x"), new VarExpr("y")))
+        ->subst("x", new Num(3))
+        ->subst("y", new Num(4))
+        ->interp() == 12);
+}
+
+TEST_CASE("to_string")
+{
+    CHECK((new Num(3))->to_string() == "3");
+    CHECK((new VarExpr("x"))->to_string() == "x");
+    CHECK((new Add(new Num(3), new Num(4)))->to_string() == "(3+4)");
+    CHECK((new Mult(new Num(3), new Num(4)))->to_string() == "(3*4)");
+
+    CHECK((new Add(new Num(3), new Mult(new VarExpr("x"), new Num(4))))->to_string() == "(3+(x*4))");
+    CHECK((new Mult(new Num(3), new Add(new VarExpr("x"), new Num(4))))->to_string() == "(3*(x+4))");
 }
