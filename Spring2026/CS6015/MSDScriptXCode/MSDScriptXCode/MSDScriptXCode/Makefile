@@ -19,8 +19,8 @@ help: main
 
 clean: 
 	rm -f *.o main *~ a.out
-
-test: msdscript
+	
+test: $(OBJS)
 	./msdscript --test
 
-.PHONY: clean test
+.PHONY: clean
