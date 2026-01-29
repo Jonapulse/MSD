@@ -20,4 +20,7 @@ help: main
 clean: 
 	rm -f *.o main *~ a.out
 
-.PHONY: clean
+test: msdscript
+	./msdscript --test
+
+.PHONY: clean test

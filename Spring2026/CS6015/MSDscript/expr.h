@@ -1,11 +1,22 @@
 #include <string>
 
+typedef enum {
+  prec_none,      // = 0
+  prec_add,       // = 1
+  prec_mult       // = 2
+} precedence_t;
+
 class Expr{
 public:
     virtual bool Equals(Expr* e) = 0;
     virtual int interp() = 0;
     virtual bool has_variable() = 0;
-    virtual Expr* subst(std::string name, Expr* substitution) = 0;
+    virtual Expr* subst(const std::string &name, Expr* substitution) = 0;
+    virtual void printExpr(std::ostream& ot) = 0;
+    virtual std::string to_string();
+    virtual void pretty_print(std::ostream& ot);
+    virtual precedence_t pretty_print_at();
+    virtual std::string to_pretty_string();
 };
 
 class Num: public Expr{
@@ -17,7 +28,8 @@ public:
     bool Equals(Expr* e);
     int interp();
     bool has_variable();
-    Expr* subst(std::string name, Expr* substitution);
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
 };
 
 class Add: public Expr{
@@ -30,7 +42,10 @@ public:
     bool Equals(Expr* e);
     int interp();
     bool has_variable();
-    Expr* subst(std::string name, Expr* substitution);
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    precedence_t pretty_print_at();
 };
 
 class Mult: public Expr{
@@ -43,17 +58,21 @@ public:
     bool Equals(Expr* e);
     int interp();
     bool has_variable();
-    Expr* subst(std::string name, Expr* substitution);
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    precedence_t pretty_print_at();
 };
 
-class VarExpr: public Expr{
+class Var: public Expr{
 public:
     std::string name;
 
-    VarExpr(const std::string &name);
+    Var(const std::string &name);
 
     bool Equals(Expr *e);
     int interp();
     bool has_variable();
-    Expr* subst(std::string name, Expr* substitution);
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
 };
