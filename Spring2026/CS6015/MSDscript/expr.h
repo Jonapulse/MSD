@@ -16,6 +16,7 @@ typedef enum {
 /**
  * \brief Expression class, supporting interpret grammar
  * 〈expr〉 = 〈number〉
+ * |(〈expr〉)
  * | 〈expr〉 + 〈expr〉
  * | 〈expr〉 * 〈expr〉
  * | 〈variable〉
@@ -30,7 +31,7 @@ public:
     virtual void printExpr(std::ostream& ot) = 0;
     virtual std::string to_string();
     virtual void pretty_print(std::ostream& ot);
-    virtual precedence_t pretty_print_at();
+    virtual void pretty_print_at(std::ostream& ot, precedence_t prec);
     virtual std::string to_pretty_string();
 };
 
@@ -63,7 +64,7 @@ public:
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    precedence_t pretty_print_at();
+    void pretty_print_at(std::ostream& ot, precedence_t prec);
 };
 
 class Mult: public Expr{
@@ -79,7 +80,7 @@ public:
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    precedence_t pretty_print_at();
+    void pretty_print_at(std::ostream& ot, precedence_t prec);
 };
 
 class Var: public Expr{

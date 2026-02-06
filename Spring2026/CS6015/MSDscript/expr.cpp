@@ -15,17 +15,17 @@ std::string Expr::to_string() {
 }
 
 /**
- * \brief For Num and Add, printExpr prints them without considering parentheses or precence
+ * \brief For Num and Add (default), printExpr prints them without considering parentheses or precence
  */
 void Expr::pretty_print(std::ostream& ot){
     this->printExpr(ot);
 }
 
 /**
- * \brief Default return of lowest precedence: "none".
+ * \brief For num and Add (default), printExpr prints them without considering parentheses or precence
  */
-precedence_t Expr::pretty_print_at(){
-    return prec_none;
+void Expr::pretty_print_at(std::ostream& ot, precedence_t prec){
+    return this->printExpr(ot);
 }
 
 std::string Expr::to_pretty_string() {
@@ -103,26 +103,21 @@ void Add::printExpr(std::ostream& ot){
  * explain how this precedence works.
  */
 void Add::pretty_print(std::ostream& ot){
-    // bool parenLeft = lhs->pretty_print_at() < this->pretty_print_at();
-    // bool parenRight = rhs->pretty_print_at() < this->pretty_print_at();
-    // if(parenLeft)
-    //     ot << "( ";
-    lhs->pretty_print(ot);
-    // if(parenLeft)
-    //     ot << " )";
-    ot << " + ";
-    // if(parenRight)
-    //     ot << "( ";
-    rhs->pretty_print(ot);
-    // if(parenRight)
-    //     ot << " )";
+    pretty_print_at(ot, prec_none);
 }
 
 /**
  * \brief Returns precedence higher than 'none', but lower than 'mult'
  */
-precedence_t Add::pretty_print_at(){
-    return prec_add;
+void Add::pretty_print_at(std::ostream &ot, precedence_t prec){
+    bool doParen = prec >= prec_add;
+    if(doParen)
+        ot << "(";
+    lhs->pretty_print_at(ot, prec_add);
+    ot << " + ";
+    rhs->pretty_print_at(ot, prec_none);
+    if(doParen)
+        ot << ")";
 }
 
 Mult::Mult(Expr *lhs, Expr *rhs){
@@ -161,26 +156,21 @@ void Mult::printExpr(std::ostream& ot){
  * explain how this precedence works.
  */
 void Mult::pretty_print(std::ostream& ot){
-    bool parenLHS = lhs->pretty_print_at() == 1;
-    bool parenRHS = rhs->pretty_print_at() == 1;
-    if(parenLHS)
-        ot << "(";
-    lhs->pretty_print(ot);
-    if(parenLHS)
-        ot << ")";
-    ot << " * ";
-    if(parenRHS)
-        ot << "(";
-    rhs->pretty_print(ot);
-    if(parenRHS)
-        ot << ")";
+    pretty_print_at(ot, prec_none);
 }
 
 /**
- * \brief Returns precedence higher than 'none', but lower than 'mult'
+ * \brief Adds parentheses if 
  */
-precedence_t Mult::pretty_print_at(){
-    return prec_mult;
+void Mult::pretty_print_at(std::ostream& ot, precedence_t prec){
+    bool doParen = prec >= prec_mult;
+    if(doParen)
+        ot << "(";
+    lhs->pretty_print_at(ot, prec_mult);
+    ot << " * ";
+    rhs->pretty_print_at(ot, prec_add);
+    if(doParen)
+        ot << ")";
 }
 
 Var::Var(const std::string &name){
