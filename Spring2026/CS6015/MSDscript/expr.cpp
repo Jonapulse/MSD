@@ -107,7 +107,7 @@ void Add::pretty_print(std::ostream& ot){
 }
 
 /**
- * \brief Returns precedence higher than 'none', but lower than 'mult'
+ * \brief Adds parentheses if prec is high enough, which for Add means it was called by an add or mult.
  */
 void Add::pretty_print_at(std::ostream &ot, precedence_t prec){
     bool doParen = prec >= prec_add;
@@ -160,7 +160,7 @@ void Mult::pretty_print(std::ostream& ot){
 }
 
 /**
- * \brief Adds parentheses if 
+ * \brief Adds parentheses if precedence is high enough, which for mult means it was called by a mult.
  */
 void Mult::pretty_print_at(std::ostream& ot, precedence_t prec){
     bool doParen = prec >= prec_mult;
@@ -208,6 +208,31 @@ Expr* Var::subst(const std::string &name, Expr* substitution){
 
 void Var::printExpr(std::ostream& ot){
     ot << name;
+}
+
+Let::Let(const std::string &name, Expr* lhs, Expr* rhs)
+{
+    this->name = name;
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+bool Let::Equals(Expr *e)
+{
+    //dynamic cast, check for null
+    Let *c = dynamic_cast<Let*>(e);
+    if(c == nullptr)
+        return false;
+    
+    return this->name == c->name && this->lhs->Equals(c->lhs) && this->rhs->Equals(c->rhs);
+}
+
+int Let::interp(){
+    rhs->subst(name, lhs)->interp();
+}
+
+bool Let::has_variable(){
+    return rhs->has_variable();
 }
 
 //TESTING
