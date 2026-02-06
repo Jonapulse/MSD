@@ -1,11 +1,26 @@
+/**
+ * \file expression.h
+ * \brief contains Expr "expression" class as well as Num, Var, Add, Mult, and Let subclasses
+ */
+
 #include <string>
 
+//Pretty print utility enum for writing parentheses
+//
 typedef enum {
   prec_none,      // = 0
   prec_add,       // = 1
   prec_mult       // = 2
 } precedence_t;
 
+/**
+ * \brief Expression class, supporting interpret grammar
+ * 〈expr〉 = 〈number〉
+ * | 〈expr〉 + 〈expr〉
+ * | 〈expr〉 * 〈expr〉
+ * | 〈variable〉
+ * | _let 〈variable〉 = 〈expr〉 _in 〈expr
+ */
 class Expr{
 public:
     virtual bool Equals(Expr* e) = 0;
@@ -19,6 +34,9 @@ public:
     virtual std::string to_pretty_string();
 };
 
+/**
+ * \brief Num extends Expr, intended for integer values
+ */
 class Num: public Expr{
 public:
     int val;

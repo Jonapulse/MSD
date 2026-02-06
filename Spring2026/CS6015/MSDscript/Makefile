@@ -23,4 +23,7 @@ clean:
 test: msdscript
 	./msdscript --test
 
+doc: msdscript
+	cd doc && doxygen
+
 .PHONY: clean test

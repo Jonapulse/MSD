@@ -1,3 +1,8 @@
+/**
+ * \file expression.h
+ * \brief contains Expr "expression" implementation as well as Num, Var, Add, Mult, and Let subclass implementations.
+ */
+
 #include "expr.h"
 #include "catch.h"
 #include <stdexcept>
@@ -10,15 +15,14 @@ std::string Expr::to_string() {
 }
 
 /**
- * For Num and Add, printExpr prints them without considering
- * parentheses or precence
+ * \brief For Num and Add, printExpr prints them without considering parentheses or precence
  */
 void Expr::pretty_print(std::ostream& ot){
     this->printExpr(ot);
 }
 
 /**
- * Default return of lowest precedence: "none".
+ * \brief Default return of lowest precedence: "none".
  */
 precedence_t Expr::pretty_print_at(){
     return prec_none;
@@ -54,7 +58,7 @@ bool Num::has_variable()
 }
 
 /**
- * Returns itself, as number values do not change in substitution
+ * \brief Returns itself, as number values do not change in substitution
  */
 Expr* Num::subst(const std::string &name, Expr* substitution){
     return this;
@@ -115,7 +119,7 @@ void Add::pretty_print(std::ostream& ot){
 }
 
 /**
- * Returns precedence higher than 'none', but lower than 'mult'
+ * \brief Returns precedence higher than 'none', but lower than 'mult'
  */
 precedence_t Add::pretty_print_at(){
     return prec_add;
@@ -173,7 +177,7 @@ void Mult::pretty_print(std::ostream& ot){
 }
 
 /**
- * Returns precedence higher than 'none', but lower than 'mult'
+ * \brief Returns precedence higher than 'none', but lower than 'mult'
  */
 precedence_t Mult::pretty_print_at(){
     return prec_mult;
@@ -194,8 +198,7 @@ bool Var::Equals(Expr *e)
 }
 
 /**
- * interp is not defined (at this developmen stage) for variables,
- * so we return an error
+ * \brief interp is not defined (at this developmen stage) for variables, so we return an error
  */
 int Var::interp()
 {
