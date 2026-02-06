@@ -200,8 +200,13 @@ vector<Command> getCommands( const vector<string> & tokens )
          if( cmdNumber > 0 ){
             // There are multiple commands.  Open a pipe and
             // connect the ends to the fd's for the commands!
+            
+            int fds[2];
+            pipe(fds);
+            //TODO: Set write end of earlier command
+            //TODO: Set read end of current command
 
-            assert( false );
+            //assert(false);
          }
 
          // Exec wants argv to have a nullptr at the end!
