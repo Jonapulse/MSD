@@ -209,7 +209,7 @@ Expr* Var::subst(const std::string &name, Expr* substitution){
 void Var::printExpr(std::ostream& ot){
     ot << name;
 }
-
+/*
 Let::Let(const std::string &name, Expr* lhs, Expr* rhs)
 {
     this->name = name;
@@ -234,6 +234,15 @@ int Let::interp(){
 bool Let::has_variable(){
     return rhs->has_variable();
 }
+
+//hmm wait up we talked about this in class. Do we only substitute rhs?
+Expr* Let::subst(const std::string &name, Expr* substitution){
+    if(this->name == name)
+        return substitution;
+    else
+        return this;
+}
+*/
 
 //TESTING
 //

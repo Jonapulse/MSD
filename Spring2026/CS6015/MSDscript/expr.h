@@ -103,6 +103,7 @@ public:
  * \property rhs - '5' from example. The 'value' expression. When substituting, x will be swapped with this expression.
  * \property lhs - 'x + 1' from example. The expression that rhs will be substituted into.
  */
+/*
 class Let: public Expr{
 public:
     std::string name;
@@ -119,3 +120,4 @@ public:
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec);
 };
+*/
