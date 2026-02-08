@@ -14,6 +14,9 @@ shelpers.o: shelpers.cpp shelpers.hpp
 
 jshell.o: jshell.cpp jshell.hpp
 
+run:
+	./jshell
+
 clean: 
 	rm -f *.o main *~ a.out
 

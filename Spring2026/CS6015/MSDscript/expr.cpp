@@ -209,12 +209,18 @@ Expr* Var::subst(const std::string &name, Expr* substitution){
 void Var::printExpr(std::ostream& ot){
     ot << name;
 }
-/*
-Let::Let(const std::string &name, Expr* lhs, Expr* rhs)
+
+/**
+ * \brief Let allows users to set values for variable names
+ * \param name - variable name
+ * \param rhs - the expression var 'name' will be replaced with
+ * \param lhs - the expression, which should contain var 'name', into which rhs will be inserted
+ */
+Let::Let(const std::string &name, Expr* rhs, Expr* lhs)
 {
     this->name = name;
-    this->lhs = lhs;
     this->rhs = rhs;
+    this->lhs = lhs;
 }
 
 bool Let::Equals(Expr *e)
@@ -228,21 +234,50 @@ bool Let::Equals(Expr *e)
 }
 
 int Let::interp(){
-    rhs->subst(name, lhs)->interp();
+    return lhs->subst(name, rhs)->interp();
 }
 
+/**
+ * TODO: Check how we're defining this. Does RHS need the variable to count?
+ */
 bool Let::has_variable(){
-    return rhs->has_variable();
+    return lhs->has_variable();
 }
 
-//hmm wait up we talked about this in class. Do we only substitute rhs?
+/**
+ * \brief for Let we only substitue the 'lhs', the expression following '_in'
+ * TODO: Check that I interpreted this correctly.
+ */
 Expr* Let::subst(const std::string &name, Expr* substitution){
-    if(this->name == name)
-        return substitution;
-    else
-        return this;
+    lhs = lhs->subst(name, substitution);
+    return this;
 }
-*/
+
+void Let::printExpr(std::ostream& ot){
+    ot << "(_let " << this->name << "=" << rhs->to_string() << " _in ("<< lhs->to_string() << "))";
+}
+
+/**
+ * explain how this precedence works.
+ */
+void Let::pretty_print(std::ostream& ot){
+    pretty_print_at(ot, prec_none);
+}
+
+/**
+ * \brief Adds parentheses if precedence is high enough, which for mult means it was called by a mult.
+ */
+void Let::pretty_print_at(std::ostream& ot, precedence_t prec){
+    bool doParen = prec >= prec_mult;
+    if(doParen)
+        ot << "(";
+    lhs->pretty_print_at(ot, prec_mult);
+    ot << " * ";
+    rhs->pretty_print_at(ot, prec_add);
+    if(doParen)
+        ot << ")";
+}
+
 
 //TESTING
 //
@@ -270,6 +305,15 @@ TEST_CASE( "Expression Equality") {
         CHECK_FALSE((new Var("a"))->Equals((new Var("b"))));
         CHECK_FALSE((new Var("a"))->Equals(new Num(2)));
     }
+
+    SECTION("Let tests"){
+        CHECK((new Let("x", new Add(new Var("x"), new Num(1)), new Num(5)))->
+        Equals(new Let("x", new Add(new Var("x"), new Num(1)), new Num(5))));
+        CHECK_FALSE((new Let("x", new Add(new Var("x"), new Num(1)), new Num(5)))->
+        Equals(new Let("x", new Add(new Var("x"), new Num(1)), new Num(6))));
+        CHECK_FALSE((new Let("x", new Add(new Var("x"), new Num(1)), new Num(5)))->
+        Equals(new Let("y", new Add(new Var("y"), new Num(1)), new Num(5))));
+    }
 }
 
 TEST_CASE("Expression interp"){
@@ -296,11 +340,17 @@ TEST_CASE("Expression interp"){
         CHECK( (new Mult(new Num(3), new Num(2)))->interp()==6 );
         CHECK( (new Add(new Add(new Num(10), new Num(15)),new Add(new Num(20),new Num(20))))->interp()==65);
     }
+
+    SECTION("Let tests"){
+        CHECK((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->interp() == 6);
+    }
 }
 
 TEST_CASE("has_var"){
-    CHECK( (new Add(new Var("x"), new Num(1)))->has_variable() == true );
-    CHECK( (new Mult(new Num(2), new Num(1)))->has_variable() == false );
+    CHECK( (new Add(new Var("x"), new Num(1)))->has_variable());
+    CHECK_FALSE( (new Mult(new Num(2), new Num(1)))->has_variable());
+  //  CHECK_FALSE((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->has_variable());
+  //  CHECK_FALSE((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->has_variable());
 }
 
 TEST_CASE("substitution")

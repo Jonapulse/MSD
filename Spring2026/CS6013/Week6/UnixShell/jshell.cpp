@@ -12,7 +12,9 @@ void runShell(){
         vector<Command> commands = getCommands(tokenize(command_str));
         for(Command comm : commands){
             int rc = fork();
-            if(rc != 0){//Child process switches to 
+            if(rc == 0){ 
+                //Child forks and executes
+                 //
                 if(comm.inputFd != STDIN_FILENO)
                     dup2(STDIN_FILENO, comm.inputFd);
                 if(comm.outputFd != STDOUT_FILENO)
@@ -21,11 +23,18 @@ void runShell(){
                 execvp(comm.execName.c_str(), const_cast<char**>(comm.argv.data()));
 
             }
-            else
+            else 
             {
+                //Parent waits for child to die
+                 //
                 int status;
                 waitpid(rc, &status, 0); 
-                //TODO: Check for errors 
+                if(status != 0)
+                {
+                    string errorStr = "Error while running " + comm.execName + " with status code " + to_string(status);
+                    perror(errorStr.c_str());
+                    //TODO: Clean up open file descriptors
+                }
             }
         }
     }
