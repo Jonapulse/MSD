@@ -238,10 +238,12 @@ int Let::interp(){
 }
 
 /**
- * TODO: Check how we're defining this. Does RHS need the variable to count?
+ * \brief
+ * Ask Nabil about this. return true if a variable would exist after evaluation, so if it's in rhs 
+ * or if lhs has a var that is not the named var...
  */
 bool Let::has_variable(){
-    return lhs->has_variable();
+    return rhs->has_variable();
 }
 
 /**
@@ -254,12 +256,9 @@ Expr* Let::subst(const std::string &name, Expr* substitution){
 }
 
 void Let::printExpr(std::ostream& ot){
-    ot << "(_let " << this->name << "=" << rhs->to_string() << " _in ("<< lhs->to_string() << "))";
+    ot << "(_let " << this->name << "=" << rhs->to_string() << " _in "<< lhs->to_string() << ")";
 }
 
-/**
- * explain how this precedence works.
- */
 void Let::pretty_print(std::ostream& ot){
     pretty_print_at(ot, prec_none);
 }
@@ -349,8 +348,8 @@ TEST_CASE("Expression interp"){
 TEST_CASE("has_var"){
     CHECK( (new Add(new Var("x"), new Num(1)))->has_variable());
     CHECK_FALSE( (new Mult(new Num(2), new Num(1)))->has_variable());
-  //  CHECK_FALSE((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->has_variable());
-  //  CHECK_FALSE((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->has_variable());
+    CHECK((new Let("x", new Add(new Var("x"), new Num(5)), new Add(new Var("x"), new Num(1))))->has_variable());
+    CHECK_FALSE((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->has_variable());
 }
 
 TEST_CASE("substitution")
@@ -379,6 +378,9 @@ TEST_CASE("to_string")
 
     CHECK((new Add(new Num(3), new Mult(new Var("x"), new Num(4))))->to_string() == "(3+(x*4))");
     CHECK((new Mult(new Num(3), new Add(new Var("x"), new Num(4))))->to_string() == "(3*(x+4))");
+    
+    CHECK((new Let("x", new Add(new Var("x"), new Num(5)), new Add(new Var("x"), new Num(1))))->to_string() == "(_let x=(x+5) _in (x+1))");
+    CHECK((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->to_string() == "(_let x=5 _in (x+1))");
 }
 
 TEST_CASE("pretty_print")
