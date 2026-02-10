@@ -24,7 +24,7 @@ void Expr::pretty_print(std::ostream& ot){
 /**
  * \brief For num and Add (default), printExpr prints them without considering parentheses or precence
  */
-void Expr::pretty_print_at(std::ostream& ot, precedence_t prec){
+void Expr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){
     return this->printExpr(ot);
 }
 
@@ -103,19 +103,19 @@ void Add::printExpr(std::ostream& ot){
  * explain how this precedence works.
  */
 void Add::pretty_print(std::ostream& ot){
-    pretty_print_at(ot, prec_none);
+    pretty_print_at(ot, prec_none, 0);
 }
 
 /**
  * \brief Adds parentheses if prec is high enough, which for Add means it was called by an add or mult.
  */
-void Add::pretty_print_at(std::ostream &ot, precedence_t prec){
+void Add::pretty_print_at(std::ostream &ot, precedence_t prec, int depth){
     bool doParen = prec >= prec_add;
     if(doParen)
         ot << "(";
-    lhs->pretty_print_at(ot, prec_add);
+    lhs->pretty_print_at(ot, prec_add, depth);
     ot << " + ";
-    rhs->pretty_print_at(ot, prec_none);
+    rhs->pretty_print_at(ot, prec_none, depth);
     if(doParen)
         ot << ")";
 }
@@ -156,19 +156,19 @@ void Mult::printExpr(std::ostream& ot){
  * explain how this precedence works.
  */
 void Mult::pretty_print(std::ostream& ot){
-    pretty_print_at(ot, prec_none);
+    pretty_print_at(ot, prec_none, 0);
 }
 
 /**
  * \brief Adds parentheses if precedence is high enough, which for mult means it was called by a mult.
  */
-void Mult::pretty_print_at(std::ostream& ot, precedence_t prec){
+void Mult::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){
     bool doParen = prec >= prec_mult;
     if(doParen)
         ot << "(";
-    lhs->pretty_print_at(ot, prec_mult);
+    lhs->pretty_print_at(ot, prec_mult, depth);
     ot << " * ";
-    rhs->pretty_print_at(ot, prec_add);
+    rhs->pretty_print_at(ot, prec_add, depth);
     if(doParen)
         ot << ")";
 }
@@ -260,19 +260,26 @@ void Let::printExpr(std::ostream& ot){
 }
 
 void Let::pretty_print(std::ostream& ot){
-    pretty_print_at(ot, prec_none);
+    pretty_print_at(ot, prec_none, 0);
 }
 
 /**
  * \brief Adds parentheses if precedence is high enough, which for mult means it was called by a mult.
+ * \param depth -> '_in' is preceded by an in-line, then depth * 6 spaces to align with its _let if nested.
  */
-void Let::pretty_print_at(std::ostream& ot, precedence_t prec){
-    bool doParen = prec >= prec_mult;
+void Let::pretty_print_at(std::ostream& ot, precedence_t prec, int depth = 0){
+    bool doParen = prec >= prec_let;
+    
+    std::string spacing = "";
+    for(int i = 0; i < depth; i++)
+        spacing += "      ";
+
     if(doParen)
         ot << "(";
-    lhs->pretty_print_at(ot, prec_mult);
-    ot << " * ";
-    rhs->pretty_print_at(ot, prec_add);
+    ot << "_let " << name << " = ";
+    rhs->pretty_print_at(ot, prec_let, depth);
+    ot << '\n' << spacing << "_in  ";
+    lhs->pretty_print_at(ot, prec_let, depth + 1);
     if(doParen)
         ot << ")";
 }
@@ -388,5 +395,8 @@ TEST_CASE("pretty_print")
     CHECK ( (new Mult(new Num(1), new Add(new Num(2), new Num(3))))->to_pretty_string() ==  "1 * (2 + 3)" );
     CHECK ( (new Mult(new Mult(new Num(8), new Num(1)), new Var("y")))->to_pretty_string() ==  "(8 * 1) * y" );
     CHECK ( (new Mult(new Add(new Num(3), new Num(5)), new Mult(new Num(6), new Num(1))))->to_pretty_string() ==  "(3 + 5) * 6 * 1" );
-    CHECK ( (new Mult(new Mult(new Num(7), new Num(7)), new Add(new Num(9), new Num(2))) )->to_pretty_string() ==  "(7 * 7) * (9 + 2)" );
+    CHECK ( (new Mult(new Mult(new Num(7), new Num(7)), new Add(new Num(9), new Num(2))))->to_pretty_string() ==  "(7 * 7) * (9 + 2)" );
+
+    CHECK ( (new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))->to_pretty_string()
+        == "_let x = 5\n_in  (_let y = 3\n      _in  y + 2) + x");
 }

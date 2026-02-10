@@ -9,8 +9,9 @@
 //
 typedef enum {
   prec_none,      // = 0
-  prec_add,       // = 1
-  prec_mult       // = 2
+  prec_let,       // = 1
+  prec_add,       // = 2
+  prec_mult       // = 3
 } precedence_t;
 
 /**
@@ -31,7 +32,7 @@ public:
     virtual void printExpr(std::ostream& ot) = 0;
     virtual std::string to_string();
     virtual void pretty_print(std::ostream& ot);
-    virtual void pretty_print_at(std::ostream& ot, precedence_t prec);
+    virtual void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
     virtual std::string to_pretty_string();
 };
 
@@ -64,7 +65,7 @@ public:
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
 
 class Mult: public Expr{
@@ -80,7 +81,7 @@ public:
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
 
 class Var: public Expr{
@@ -117,5 +118,5 @@ public:
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };

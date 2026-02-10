@@ -45,22 +45,4 @@
       "configureAll": false
     }
   ]
-  /*
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug jshell",
-            "type": "cppdbg",
-            "request": "launch",
-
-            "program": "${workspaceFolder}/jshell",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "stopAtEntry": false,
-
-            "MIMode": "lldb",
-
-            "preLaunchTask": "Build"
-        }
-    ]*/
 }
