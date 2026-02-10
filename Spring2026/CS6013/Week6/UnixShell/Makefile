@@ -15,9 +15,9 @@ shelpers.o: shelpers.cpp shelpers.hpp
 jshell.o: jshell.cpp jshell.hpp
 
 run:
-	./jshell
+	cd $(CURDIR) && ./jshell
 
 clean: 
-	rm -f *.o main *~ a.out
+	rm -f *.o jshell *~ a.out
 
 .PHONY: clean test
