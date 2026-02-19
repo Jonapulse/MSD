@@ -1,0 +1,129 @@
+\doxysection{Add Class Reference}
+\hypertarget{class_add}{}\label{class_add}\index{Add@{Add}}
+Inheritance diagram for Add:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_add}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_add_a6b2c4c7be3fada06bedad4e4e4688a60}\label{class_add_a6b2c4c7be3fada06bedad4e4e4688a60} 
+{\bfseries Add} (\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}lhs, \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}rhs)
+\item 
+bool \doxymbox{\hyperlink{class_add_a0cc517fabdf99b69106a775504df1d54}{Equals}} (\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}e)
+\item 
+int \doxymbox{\hyperlink{class_add_a63c445ae0ea8ecc0d0765378e630a06f}{interp}} ()
+\item 
+bool \doxymbox{\hyperlink{class_add_a882db0df18673599f4d1248e17fb24cb}{has\+\_\+variable}} ()
+\item 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_add_a203fc63565306d7c206fcf665f432912}{subst}} (const std::\+string \&name, \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}substitution)
+\item 
+void \doxymbox{\hyperlink{class_add_a6c82059801ec29c408a2a8d028027b55}{print\+Expr}} (std::\+ostream \&ot)
+\item 
+void \doxymbox{\hyperlink{class_add_a4efc16e2211ea3ac9f25e4d20f147ca9}{pretty\+\_\+print}} (std::\+ostream \&ot)
+\item 
+precedence\+\_\+t \doxymbox{\hyperlink{class_add_aba7704df20becccd84ebf686cea92583}{pretty\+\_\+print\+\_\+at}} ()
+\begin{DoxyCompactList}\small\item\em Returns precedence higher than \textquotesingle{}none\textquotesingle{}, but lower than \textquotesingle{}mult\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_expr}{Expr}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual std::\+string {\bfseries to\+\_\+string} ()
+\item 
+virtual std::\+string {\bfseries to\+\_\+pretty\+\_\+string} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_add_a15ee8d84bb8a04af294732ebe1a8a6c3}\label{class_add_a15ee8d84bb8a04af294732ebe1a8a6c3} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} {\bfseries lhs}
+\item 
+\Hypertarget{class_add_a887a4ac2c5459bddba95f4c376b66405}\label{class_add_a887a4ac2c5459bddba95f4c376b66405} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} {\bfseries rhs}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_add_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_add_a0cc517fabdf99b69106a775504df1d54}\index{Add@{Add}!Equals@{Equals}}
+\index{Equals@{Equals}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily \label{class_add_a0cc517fabdf99b69106a775504df1d54} 
+bool Add::\+\+Equals (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{e}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_add_a882db0df18673599f4d1248e17fb24cb}\index{Add@{Add}!has\_variable@{has\_variable}}
+\index{has\_variable@{has\_variable}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{has\_variable()}{has\_variable()}}
+{\footnotesize\ttfamily \label{class_add_a882db0df18673599f4d1248e17fb24cb} 
+bool Add::\+has\+\_\+variable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_add_a63c445ae0ea8ecc0d0765378e630a06f}\index{Add@{Add}!interp@{interp}}
+\index{interp@{interp}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{interp()}{interp()}}
+{\footnotesize\ttfamily \label{class_add_a63c445ae0ea8ecc0d0765378e630a06f} 
+int Add::\+interp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_add_a4efc16e2211ea3ac9f25e4d20f147ca9}\index{Add@{Add}!pretty\_print@{pretty\_print}}
+\index{pretty\_print@{pretty\_print}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{pretty\_print()}{pretty\_print()}}
+{\footnotesize\ttfamily \label{class_add_a4efc16e2211ea3ac9f25e4d20f147ca9} 
+void Add::\+pretty\+\_\+print (\begin{DoxyParamCaption}\item[{std::\+ostream \&}]{ot}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+explain how this precedence works. 
+
+Reimplemented from \doxymbox{\hyperlink{class_expr_a747e1f67ac65a4dd86458a03c9caa282}{Expr}}.
+
+\Hypertarget{class_add_aba7704df20becccd84ebf686cea92583}\index{Add@{Add}!pretty\_print\_at@{pretty\_print\_at}}
+\index{pretty\_print\_at@{pretty\_print\_at}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{pretty\_print\_at()}{pretty\_print\_at()}}
+{\footnotesize\ttfamily \label{class_add_aba7704df20becccd84ebf686cea92583} 
+precedence\+\_\+t Add::\+pretty\+\_\+print\+\_\+at (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Returns precedence higher than \textquotesingle{}none\textquotesingle{}, but lower than \textquotesingle{}mult\textquotesingle{}. 
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_expr_afaf94c3fc8ab78babc2e856eae7b0038}{Expr}}.
+
+\Hypertarget{class_add_a6c82059801ec29c408a2a8d028027b55}\index{Add@{Add}!printExpr@{printExpr}}
+\index{printExpr@{printExpr}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{printExpr()}{printExpr()}}
+{\footnotesize\ttfamily \label{class_add_a6c82059801ec29c408a2a8d028027b55} 
+void Add::\+print\+Expr (\begin{DoxyParamCaption}\item[{std::\+ostream \&}]{ot}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_add_a203fc63565306d7c206fcf665f432912}\index{Add@{Add}!subst@{subst}}
+\index{subst@{subst}!Add@{Add}}
+\doxysubsubsection{\texorpdfstring{subst()}{subst()}}
+{\footnotesize\ttfamily \label{class_add_a203fc63565306d7c206fcf665f432912} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} Add::\+subst (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{name}{, }\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{substitution}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+/\+\+Users/\+jonapulse/\+\+MSD/\+\+Spring2026/\+\+CS6015/\+\+MSDscript/\+expr.\+h\item 
+/\+\+Users/\+jonapulse/\+\+MSD/\+\+Spring2026/\+\+CS6015/\+\+MSDscript/\+expr.\+cpp\end{DoxyCompactItemize}

@@ -12,11 +12,7 @@ int main(int argc, char* argv[]){
 	//TEMP: Getting parsing working
 
 
-	//Expr *e = parse_str("   123");
-	//Expr *e = parse_str("123*432");
-	//Expr *e = parse_str("123+123");
-	Expr *e = parse_str("123 + 345 * 325 * 4444 + 322");
-	//Expr *e = parse_expr(std::cin);
+	Expr *e = parse_str(" -53");
 	e->printExpr(std::cout);
 	std::cout << "\n";
 	std::cout << "Value: " << e->interp() << '\n';

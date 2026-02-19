@@ -1,0 +1,129 @@
+\doxysection{Mult Class Reference}
+\hypertarget{class_mult}{}\label{class_mult}\index{Mult@{Mult}}
+Inheritance diagram for Mult:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_mult}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mult_ace9998f1dc023823e04c15bb359ea79c}\label{class_mult_ace9998f1dc023823e04c15bb359ea79c} 
+{\bfseries Mult} (\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}lhs, \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}rhs)
+\item 
+bool \doxymbox{\hyperlink{class_mult_a2fac9c4128d7b69a3ac559689bf7fa80}{Equals}} (\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}e)
+\item 
+int \doxymbox{\hyperlink{class_mult_a7d3fba024174b294a7e1c145485b9d38}{interp}} ()
+\item 
+bool \doxymbox{\hyperlink{class_mult_ab53cc8634d4ebad5aaa2dc818c0de598}{has\+\_\+variable}} ()
+\item 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_mult_a2af2d3ae30d3294eab1e764590fffc65}{subst}} (const std::\+string \&name, \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}substitution)
+\item 
+void \doxymbox{\hyperlink{class_mult_a9f25245c369aeee2fa56639c60096da8}{print\+Expr}} (std::\+ostream \&ot)
+\item 
+void \doxymbox{\hyperlink{class_mult_ae7de9bfa32065d033f5fd3dce9f54bb3}{pretty\+\_\+print}} (std::\+ostream \&ot)
+\item 
+precedence\+\_\+t \doxymbox{\hyperlink{class_mult_a13e9554497d8c6e8d6966248b706f3e0}{pretty\+\_\+print\+\_\+at}} ()
+\begin{DoxyCompactList}\small\item\em Returns precedence higher than \textquotesingle{}none\textquotesingle{}, but lower than \textquotesingle{}mult\textquotesingle{}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_expr}{Expr}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual std::\+string {\bfseries to\+\_\+string} ()
+\item 
+virtual std::\+string {\bfseries to\+\_\+pretty\+\_\+string} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mult_a9e2acda98ce8c008004b39f1f76e7eab}\label{class_mult_a9e2acda98ce8c008004b39f1f76e7eab} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} {\bfseries lhs}
+\item 
+\Hypertarget{class_mult_abc649b82c60b2531ceeff3a5d7a552b0}\label{class_mult_abc649b82c60b2531ceeff3a5d7a552b0} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} {\bfseries rhs}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_mult_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_mult_a2fac9c4128d7b69a3ac559689bf7fa80}\index{Mult@{Mult}!Equals@{Equals}}
+\index{Equals@{Equals}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily \label{class_mult_a2fac9c4128d7b69a3ac559689bf7fa80} 
+bool Mult::\+\+Equals (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{e}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_mult_ab53cc8634d4ebad5aaa2dc818c0de598}\index{Mult@{Mult}!has\_variable@{has\_variable}}
+\index{has\_variable@{has\_variable}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{has\_variable()}{has\_variable()}}
+{\footnotesize\ttfamily \label{class_mult_ab53cc8634d4ebad5aaa2dc818c0de598} 
+bool Mult::\+has\+\_\+variable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_mult_a7d3fba024174b294a7e1c145485b9d38}\index{Mult@{Mult}!interp@{interp}}
+\index{interp@{interp}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{interp()}{interp()}}
+{\footnotesize\ttfamily \label{class_mult_a7d3fba024174b294a7e1c145485b9d38} 
+int Mult::\+interp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_mult_ae7de9bfa32065d033f5fd3dce9f54bb3}\index{Mult@{Mult}!pretty\_print@{pretty\_print}}
+\index{pretty\_print@{pretty\_print}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{pretty\_print()}{pretty\_print()}}
+{\footnotesize\ttfamily \label{class_mult_ae7de9bfa32065d033f5fd3dce9f54bb3} 
+void Mult::\+pretty\+\_\+print (\begin{DoxyParamCaption}\item[{std::\+ostream \&}]{ot}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+explain how this precedence works. 
+
+Reimplemented from \doxymbox{\hyperlink{class_expr_a747e1f67ac65a4dd86458a03c9caa282}{Expr}}.
+
+\Hypertarget{class_mult_a13e9554497d8c6e8d6966248b706f3e0}\index{Mult@{Mult}!pretty\_print\_at@{pretty\_print\_at}}
+\index{pretty\_print\_at@{pretty\_print\_at}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{pretty\_print\_at()}{pretty\_print\_at()}}
+{\footnotesize\ttfamily \label{class_mult_a13e9554497d8c6e8d6966248b706f3e0} 
+precedence\+\_\+t Mult::\+pretty\+\_\+print\+\_\+at (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Returns precedence higher than \textquotesingle{}none\textquotesingle{}, but lower than \textquotesingle{}mult\textquotesingle{}. 
+
+
+
+Reimplemented from \doxymbox{\hyperlink{class_expr_afaf94c3fc8ab78babc2e856eae7b0038}{Expr}}.
+
+\Hypertarget{class_mult_a9f25245c369aeee2fa56639c60096da8}\index{Mult@{Mult}!printExpr@{printExpr}}
+\index{printExpr@{printExpr}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{printExpr()}{printExpr()}}
+{\footnotesize\ttfamily \label{class_mult_a9f25245c369aeee2fa56639c60096da8} 
+void Mult::\+print\+Expr (\begin{DoxyParamCaption}\item[{std::\+ostream \&}]{ot}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_mult_a2af2d3ae30d3294eab1e764590fffc65}\index{Mult@{Mult}!subst@{subst}}
+\index{subst@{subst}!Mult@{Mult}}
+\doxysubsubsection{\texorpdfstring{subst()}{subst()}}
+{\footnotesize\ttfamily \label{class_mult_a2af2d3ae30d3294eab1e764590fffc65} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} Mult::\+subst (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{name}{, }\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{substitution}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+/\+\+Users/\+jonapulse/\+\+MSD/\+\+Spring2026/\+\+CS6015/\+\+MSDscript/\+expr.\+h\item 
+/\+\+Users/\+jonapulse/\+\+MSD/\+\+Spring2026/\+\+CS6015/\+\+MSDscript/\+expr.\+cpp\end{DoxyCompactItemize}

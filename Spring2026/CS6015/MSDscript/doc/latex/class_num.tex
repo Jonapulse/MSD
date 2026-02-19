@@ -1,0 +1,118 @@
+\doxysection{Num Class Reference}
+\hypertarget{class_num}{}\label{class_num}\index{Num@{Num}}
+
+
+\doxylink{class_num}{Num} extends \doxylink{class_expr}{Expr}, intended for integer values.  
+
+
+
+
+{\ttfamily \+\#include $<$expr.\+h$>$}
+
+Inheritance diagram for Num:\+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_num}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_num_a9fce58e650a99ae50f4140ed9c87ec9f}\label{class_num_a9fce58e650a99ae50f4140ed9c87ec9f} 
+{\bfseries Num} (int val)
+\item 
+bool \doxymbox{\hyperlink{class_num_a4f49a048fc58ac97669cd6e176737cb0}{Equals}} (\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}e)
+\item 
+int \doxymbox{\hyperlink{class_num_a24f8a1c7ccad82bf7ed1080b59cda6dd}{interp}} ()
+\item 
+bool \doxymbox{\hyperlink{class_num_ad0ce114704933a1ebe4629848d3e2d6d}{has\+\_\+variable}} ()
+\item 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} \doxymbox{\hyperlink{class_num_a59aa39c6e0115fa6fa56f784c7a4a703}{subst}} (const std::\+string \&name, \doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}substitution)
+\begin{DoxyCompactList}\small\item\em Returns itself, as number values do not change in substitution. \end{DoxyCompactList}\item 
+void \doxymbox{\hyperlink{class_num_a630dee45a8b7a9988359d8af4b053554}{print\+Expr}} (std::\+ostream \&ot)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \doxymbox{\hyperlink{class_expr}{Expr}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual std::\+string {\bfseries to\+\_\+string} ()
+\item 
+virtual void \doxymbox{\hyperlink{class_expr_a747e1f67ac65a4dd86458a03c9caa282}{pretty\+\_\+print}} (std::\+ostream \&ot)
+\begin{DoxyCompactList}\small\item\em For \doxylink{class_num}{Num} and \doxylink{class_add}{Add}, print\+Expr prints them without considering parentheses or precence. \end{DoxyCompactList}\item 
+virtual precedence\+\_\+t \doxymbox{\hyperlink{class_expr_afaf94c3fc8ab78babc2e856eae7b0038}{pretty\+\_\+print\+\_\+at}} ()
+\begin{DoxyCompactList}\small\item\em Default return of lowest precedence:\+ "{}none"{}. \end{DoxyCompactList}\item 
+virtual std::\+string {\bfseries to\+\_\+pretty\+\_\+string} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_num_ab0654582066deb3adbbd64cf7190a7b7}\label{class_num_ab0654582066deb3adbbd64cf7190a7b7} 
+int {\bfseries val}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_num}{Num} extends \doxylink{class_expr}{Expr}, intended for integer values. 
+
+\label{doc-func-members}
+\Hypertarget{class_num_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_num_a4f49a048fc58ac97669cd6e176737cb0}\index{Num@{Num}!Equals@{Equals}}
+\index{Equals@{Equals}!Num@{Num}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily \label{class_num_a4f49a048fc58ac97669cd6e176737cb0} 
+bool Num::\+\+Equals (\begin{DoxyParamCaption}\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{e}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_num_ad0ce114704933a1ebe4629848d3e2d6d}\index{Num@{Num}!has\_variable@{has\_variable}}
+\index{has\_variable@{has\_variable}!Num@{Num}}
+\doxysubsubsection{\texorpdfstring{has\_variable()}{has\_variable()}}
+{\footnotesize\ttfamily \label{class_num_ad0ce114704933a1ebe4629848d3e2d6d} 
+bool Num::\+has\+\_\+variable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_num_a24f8a1c7ccad82bf7ed1080b59cda6dd}\index{Num@{Num}!interp@{interp}}
+\index{interp@{interp}!Num@{Num}}
+\doxysubsubsection{\texorpdfstring{interp()}{interp()}}
+{\footnotesize\ttfamily \label{class_num_a24f8a1c7ccad82bf7ed1080b59cda6dd} 
+int Num::\+interp (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_num_a630dee45a8b7a9988359d8af4b053554}\index{Num@{Num}!printExpr@{printExpr}}
+\index{printExpr@{printExpr}!Num@{Num}}
+\doxysubsubsection{\texorpdfstring{printExpr()}{printExpr()}}
+{\footnotesize\ttfamily \label{class_num_a630dee45a8b7a9988359d8af4b053554} 
+void Num::\+print\+Expr (\begin{DoxyParamCaption}\item[{std::\+ostream \&}]{ot}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+\Hypertarget{class_num_a59aa39c6e0115fa6fa56f784c7a4a703}\index{Num@{Num}!subst@{subst}}
+\index{subst@{subst}!Num@{Num}}
+\doxysubsubsection{\texorpdfstring{subst()}{subst()}}
+{\footnotesize\ttfamily \label{class_num_a59aa39c6e0115fa6fa56f784c7a4a703} 
+\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*} Num::\+subst (\begin{DoxyParamCaption}\item[{const std::\+string \&}]{name}{, }\item[{\doxymbox{\hyperlink{class_expr}{Expr}} \texorpdfstring{$\ast$}{*}}]{substitution}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Returns itself, as number values do not change in substitution. 
+
+
+
+Implements \doxymbox{\hyperlink{class_expr}{Expr}}.
+
+
+
+The documentation for this class was generated from the following files:\+\begin{DoxyCompactItemize}
+\item 
+/\+\+Users/\+jonapulse/\+\+MSD/\+\+Spring2026/\+\+CS6015/\+\+MSDscript/\+expr.\+h\item 
+/\+\+Users/\+jonapulse/\+\+MSD/\+\+Spring2026/\+\+CS6015/\+\+MSDscript/\+expr.\+cpp\end{DoxyCompactItemize}

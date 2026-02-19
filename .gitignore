@@ -35,4 +35,4 @@
 *.dYSM
 
 ## Specific execs to ignore
-msdscript
+MSDScript/msdscript
