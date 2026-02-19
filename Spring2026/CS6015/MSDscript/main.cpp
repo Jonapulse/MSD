@@ -1,5 +1,6 @@
-#include "cmdline.h"
 #include <iostream>
+#include "cmdline.h"
+#include "parse.hpp"
 
 /**
 * \mainpage MSDScript
@@ -8,6 +9,13 @@
 */
 
 int main(int argc, char* argv[]){
-	use_arguments(argc, argv);
+	//TEMP: Getting parsing working
+
+	Expr *e = parse_expr(std::cin);
+	e->printExpr(std::cout);
+	std::cout << "\n";
+	std::cout << "Value: " << e->interp() << '\n';
+	
+	//use_arguments(argc, argv);
 	return 0;
 }

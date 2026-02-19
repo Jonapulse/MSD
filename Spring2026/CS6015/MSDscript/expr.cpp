@@ -234,7 +234,7 @@ bool Let::Equals(Expr *e)
 }
 
 int Let::interp(){
-    return lhs->subst(name, rhs)->interp();
+    return lhs->subst(name, new Num(rhs->interp()))->interp();
 }
 
 /**
@@ -396,6 +396,8 @@ TEST_CASE("pretty_print")
     CHECK ( (new Mult(new Mult(new Num(8), new Num(1)), new Var("y")))->to_pretty_string() ==  "(8 * 1) * y" );
     CHECK ( (new Mult(new Add(new Num(3), new Num(5)), new Mult(new Num(6), new Num(1))))->to_pretty_string() ==  "(3 + 5) * 6 * 1" );
     CHECK ( (new Mult(new Mult(new Num(7), new Num(7)), new Add(new Num(9), new Num(2))))->to_pretty_string() ==  "(7 * 7) * (9 + 2)" );
+
+    CHECK ( (new Mult(new Mult(new Num(5), new Num(2)), new Num(8)))->to_pretty_string() == "(5 * 2) * 8");
 
     CHECK ( (new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))->to_pretty_string()
         == "_let x = 5\n_in  (_let y = 3\n      _in  y + 2) + x");
