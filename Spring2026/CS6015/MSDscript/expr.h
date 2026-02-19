@@ -4,6 +4,8 @@
  */
 
 #include <string>
+#include <stdexcept>
+#include <sstream>
 
 //Pretty print utility enum for writing parentheses
 //

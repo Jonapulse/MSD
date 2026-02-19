@@ -1,4 +1,10 @@
 #include "parse.hpp"
+#include "catch.h"
+
+/**
+ * \file parse.cpp
+ * \brief parses input streams into expressions
+ */
 
 Expr *parse_expr(std::istream &in)
 {
@@ -87,7 +93,7 @@ Expr *parse_num(std::istream &in) {
 
     if(negative)
         n *= -1;
-        
+
     return new Num(n);
 }
 
@@ -113,5 +119,43 @@ static void skip_whitespace(std::istream &in)
             in.get();
         else
             break;
+    }
+}
+
+//TESTING for parse.cpp
+//
+TEST_CASE( "Parse Input") {
+    SECTION("Number parsing"){
+        CHECK("123" == parse_str("123")->to_string());
+        CHECK("-321" == parse_str("-321")->to_string());
+    }
+    SECTION("Add parsing"){
+        //Test group A with adds
+        CHECK("(123+456)" == parse_str("123+456")->to_string());
+        CHECK("(1+(2+(3+(4+5))))" == parse_str("1+2+3+4+5")->to_string()); //Should right-associate
+        CHECK("1 + 2 + 3 + 4 + 5" == parse_str("1+2+3+4+5")->to_pretty_string());
+    }
+    SECTION("Mult parsing"){
+        //Test group A with mults
+        CHECK("(123*456)" == parse_str("123*456")->to_string());
+        CHECK("(1*(2*(3*(4*5))))" == parse_str("1*2*3*4*5")->to_string()); //Should right-associate
+        CHECK("1 * 2 * 3 * 4 * 5" == parse_str("1*2*3*4*5")->to_pretty_string());
+    }
+    SECTION("Mixed Add/Mult parsing"){
+        //Test group A alternating adds/mults
+        CHECK("(123+456)" == parse_str("123+456")->to_string());
+        CHECK("(1+((2*3)+(4*5)))" == parse_str("1+2*3+4*5")->to_string()); //Should right-associate
+        CHECK("1 * 2 + 3 * 4 + 5" == parse_str("1*2+3*4+5")->to_pretty_string());
+    }
+    SECTION("Paren parsing")
+    {
+        CHECK("123 * (4 + 5)" == parse_str("((123 * (4 + (5))))")->to_pretty_string());
+        CHECK("(123 + 4) * 5" == parse_str("((123 + 4) * 5)))")->to_pretty_string());
+    }
+    SECTION("Var parsing"){
+
+    }
+    SECTION("Keyword parsing"){
+        //Starting with
     }
 }

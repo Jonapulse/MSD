@@ -1,12 +1,16 @@
 
 #ifndef parse_hpp
+#define parse_hpp
 #include "expr.h"
 #include <iostream>
 #include <sstream>
 #include <assert.h>
-#define parse_hpp
-
 #include <stdio.h>
+
+/**
+ * \file parse.hpp
+ * \brief parses input streams into expressions
+ */
 
 #endif
 

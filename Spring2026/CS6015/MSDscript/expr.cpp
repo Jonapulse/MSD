@@ -5,8 +5,6 @@
 
 #include "expr.h"
 #include "catch.h"
-#include <stdexcept>
-#include <sstream>
 
 std::string Expr::to_string() {
     std::stringstream st("");
@@ -285,7 +283,7 @@ void Let::pretty_print_at(std::ostream& ot, precedence_t prec, int depth = 0){
 }
 
 
-//TESTING
+//TESTING for expr.cpp
 //
 TEST_CASE( "Expression Equality") {
     SECTION("Num tests"){
