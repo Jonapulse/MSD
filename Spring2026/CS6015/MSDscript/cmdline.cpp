@@ -14,7 +14,7 @@
  * \param int argc - number of arguments
  * \param int argc - list of arguments as char*s
  */
-void use_arguments(int argc, char* argv[]){
+run_mode_t use_arguments(int argc, char* argv[]){
     if(argc == 1)
     {
         std::cout << "No arguments. Send in arguments to test cmdline!\n";
@@ -39,11 +39,26 @@ void use_arguments(int argc, char* argv[]){
 			if(Catch::Session().run(1, argv) != 0){
 				exit(1);
 			}
-		} else
+			return run_mode_t::do_nothing;
+		}
+		else if(strcmp(argv[i], "--interp") == 0)
+		{
+			return run_mode_t::do_interp;
+		} 
+		else if(strcmp(argv[i], "--print") == 0)
+		{
+			return run_mode_t::do_print;
+		} 
+		else if(strcmp(argv[i], "--pretty-print") == 0)
+		{
+			return run_mode_t::do_pretty_print;
+		} 
+		else
 		{
 			std::cerr << "Use of unknown arg: " << argv[i] << "\n";
 			exit(1);
 		}
-		
 	}
+
+	return run_mode_t::do_nothing;//We shouldn't arrive here
 }

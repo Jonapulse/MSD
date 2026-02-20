@@ -9,12 +9,34 @@
 */
 
 int main(int argc, char* argv[]){
-	//TEMP: Getting parsing working
-	// Expr *e = parse_str("_let x = 5   _in   x +  1");
-	// e->printExpr(std::cout);
-	// std::cout << "\n";
-	// std::cout << "Value: " << e->interp() << '\n';
-	
-	use_arguments(argc, argv);
+	run_mode_t run_mode = use_arguments(argc, argv);
+	switch(run_mode)
+	{
+		case(run_mode_t::do_interp):
+		{ //Braces included for scoping repeated var names
+			std::cout << "Write an expression to interpret: ";
+			Expr* parsedExpr = parse_expr(std::cin);
+			std::cout << parsedExpr->interp() << '\n';
+		}
+			break;
+		case(run_mode_t::do_print):
+		{
+			std::cout << "Write an expression to print: ";
+			Expr* parsedExpr = parse_expr(std::cin);
+			parsedExpr->printExpr(std::cout);
+			std::cout <<"\n";
+		}
+			break;
+		case(run_mode_t::do_pretty_print):
+		{
+			std::cout << "Write an expression to pretty print: ";
+			Expr* parsedExpr = parse_expr(std::cin);
+			parsedExpr->pretty_print(std::cout);
+			std::cout <<"\n";
+		}
+			break;
+		case(run_mode_t::do_nothing):
+			break;
+	}
 	return 0;
 }
