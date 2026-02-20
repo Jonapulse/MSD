@@ -58,13 +58,12 @@ Expr *parse_multicand(std::istream &in)
 	//Simple Pseudocode for what we'll do for var and keyword...
 	else if (isalpha(c))
 	{
-		//parse_var(c); 
-        assert(false); //TODO: implement this. 
+		return parse_var(in); 
 	}
 	else if (c == '_')
 	{
-		//parse_keyword(c); (also parse_let but that's probably part of parse_keyword)
-        assert(false); //TODO: implement this
+        consume(in, '_');
+		return parse_keyword(in);
 	} 
 	//...and back to what we already had
 	else { 
@@ -97,6 +96,70 @@ Expr *parse_num(std::istream &in) {
     return new Num(n);
 }
 
+Expr* parse_var(std::istream &in)
+{
+    return new Var(parse_word(in));
+}
+
+Expr* parse_keyword(std::istream &in){
+    std::string keyword = parse_word(in);
+    if(keyword == "let")
+    {
+        skip_whitespace(in);
+        std::string name = parse_word(in);
+        Expr* rhs;
+        Expr* lhs;
+
+        //Parse rhs after "="
+        skip_whitespace(in);
+        int c = in.peek();
+        if(c == '=')
+        {
+            consume(in, c);
+            rhs = parse_expr(in);
+        }
+        else 
+            throw std::runtime_error("_let not followed \"=\"");
+
+        //Parse lhs after "_in"
+        skip_whitespace(in);
+        c = in.peek();
+        if(c == '_'){
+            consume(in, c);
+            std::string inKeyword = parse_word(in);
+            if(inKeyword != "in")
+                throw std::runtime_error("_let not followed by _in");
+            lhs = parse_expr(in);
+        }
+        else
+            throw std::runtime_error("_let not followed by _in");
+
+        return new Let(name, rhs, lhs);
+    } 
+    else
+    {
+        throw std::runtime_error("Invalid keyword: " + keyword);
+    }
+}
+
+std::string parse_word(std::istream &in){
+    std::string word = "";
+    while(1){
+        int c = in.peek();
+        if(isalpha(c))
+        {
+            consume(in, c);
+            word += char(c);
+        }
+        else 
+        break;
+    }
+    return word;
+}
+
+/**
+ * This is a helper function for testing
+ */
 Expr* parse_str(std::string str)
 {
     std::stringstream st(str);
@@ -151,11 +214,16 @@ TEST_CASE( "Parse Input") {
     {
         CHECK("123 * (4 + 5)" == parse_str("((123 * (4 + (5))))")->to_pretty_string());
         CHECK("(123 + 4) * 5" == parse_str("((123 + 4) * 5)))")->to_pretty_string());
+        CHECK_THROWS_WITH(parse_str("((5 + 3)"), "missing close parenthesis");
+        //TODO: Check missing open paren?
     }
     SECTION("Var parsing"){
-
+        CHECK("3 + x" == parse_str("3 + x")->to_pretty_string());
+        CHECK_FALSE("3 + y" == parse_str("3 + x")->to_pretty_string());
     }
     SECTION("Keyword parsing"){
-        //Starting with
+        //Let
+        CHECK("(_let x=5 _in (x+1))" == parse_str("_let x = 5   _in   x +  1")->to_string());
+        CHECK_THROWS_WITH(parse_str("_conquer)"), "Invalid keyword: conquer");
     }
 }

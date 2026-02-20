@@ -9,8 +9,8 @@
 */
 
 int main(int argc, char* argv[]){
-	// //TEMP: Getting parsing working
-	// Expr *e = parse_str(" -53");
+	//TEMP: Getting parsing working
+	// Expr *e = parse_str("_let x = 5   _in   x +  1");
 	// e->printExpr(std::cout);
 	// std::cout << "\n";
 	// std::cout << "Value: " << e->interp() << '\n';

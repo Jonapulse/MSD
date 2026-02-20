@@ -112,7 +112,7 @@ public:
     Expr *lhs;
     Expr *rhs; 
 
-    Let(const std::string &name, Expr* lhs, Expr* rhs);
+    Let(const std::string &name, Expr* rhs, Expr* lhs);
 
     bool Equals(Expr *e);
     int interp();
