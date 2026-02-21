@@ -27,7 +27,6 @@ public class Network {
 
     public static void sendDistanceMessage(Message message) throws InterruptedException {
             messageQueue.put(message);
-
     }
 
 

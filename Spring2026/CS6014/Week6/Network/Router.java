@@ -1,6 +1,7 @@
 package msd.benjones;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Router {
@@ -13,14 +14,35 @@ public class Router {
     }
 
     public void onInit() throws InterruptedException {
-
-		//TODO: IMPLEMENT ME
-		//As soon as the network is online,
-		//fill in your initial distance table and broadcast it to your neighbors
+        distances =  new HashMap<>();
+        for (Router router : Network.getRouters()) {
+            distances.put(router, (router == this) ? 0 : Integer.MAX_VALUE);
+        }
+        HashSet<Neighbor> neighbors = Network.getNeighbors(this);
+        for (Neighbor neighbor : neighbors) {
+            distances.put(neighbor.router, neighbor.cost);
+        }
+        for(Neighbor neighbor : neighbors) {
+            Network.sendDistanceMessage(new Message(this, neighbor.router, distances));
+        }
     }
 
     public void onDistanceMessage(Message message) throws InterruptedException {
-		//update your distance table and broadcast it to your neighbors if it changed
+        boolean changed = false;
+        int distanceToNeighbor = this.distances.get(message.sender);
+        for(Router targetRouter : message.distances.keySet()) {
+            int distanceFromNeighbor = message.distances.get(targetRouter);
+            int distanceThroughNeighbor = distanceToNeighbor + distanceFromNeighbor;
+            if(distanceFromNeighbor < Integer.MAX_VALUE && distanceThroughNeighbor < this.distances.get(targetRouter)) {
+                this.distances.put(targetRouter, distanceThroughNeighbor);
+                changed = true;
+            }
+        }
+        if(changed) {
+            for(Neighbor neighbor : Network.getNeighbors(this)) {
+                Network.sendDistanceMessage(new Message(this, neighbor.router, distances));
+            }
+        }
     }
 
 
