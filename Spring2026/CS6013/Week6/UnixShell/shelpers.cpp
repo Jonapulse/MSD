@@ -177,7 +177,7 @@ vector<Command> getCommands( const vector<string> & tokens )
       command.background = false;
 	
       for( int j = first + 1; j < last; ++j ) {
-
+         
          if( tokens[j] == ">" || tokens[j] == "<" ) {
             // Handle I/O redirection tokens
             //
@@ -185,7 +185,33 @@ vector<Command> getCommands( const vector<string> & tokens )
             // (all others get input from a pipe)
             // Only the LAST command can have output redirection!
          
-            assert( false );
+            if(tokens[j] == ">") 
+            {
+               //> must be last command
+               if(cmdNumber != commands.size() - 1)
+               {
+                  error = true;
+                  break;
+               }
+
+               string fileName = tokens[j + 1]; //TODO: Do we need to check for more tokens? 
+               command.outputFd = open(fileName.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+               //Skip processing the final token, as we've already used it
+               break;
+            } else { // == "<"
+               
+               //< must be first command
+               if(cmdNumber != 0)
+               {
+                  error = true;
+                  break;
+               }
+
+               //So return an empty vector
+               string fileName = tokens[j + 1]; //TODO: Do we need to check for more tokens? 
+               command.inputFd = open(fileName.c_str(), O_RDONLY);
+            }
          }
          else if( tokens[j] == "&" ){
             // Fill this in if you choose to do the optional "background command" part.
@@ -232,6 +258,9 @@ vector<Command> getCommands( const vector<string> & tokens )
       // of this, a "command" name can be blank (the default for a command struct that has not
       // yet been filled in).  (Note, it has not been filled in yet because the processing
       // has not gotten to it when the error (in a previous command) occurred.
+
+      //TODO: handle the 2 errors you flag from file redirection
+      //... this will involve recording the files you opened and closing them.
 
       assert(false);
    }

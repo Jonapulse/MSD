@@ -1,3 +1,3 @@
 #include <string>
 
-void runShell();
+void runShell(std::string test_str);

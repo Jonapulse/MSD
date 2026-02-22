@@ -3,11 +3,14 @@
 #include <vector>
 using namespace std;
 
-void runShell(){
+void runShell(string test_str = ""){
     while(true){
         cout << "(>'-')> ";
         string command_str;
-        getline(cin, command_str);
+        if(test_str == "")
+            getline(cin, command_str);
+        else 
+            command_str = test_str;
 
         vector<string> tokens = tokenize(command_str);
         vector<Command> commands = getCommands(tokens);
@@ -48,6 +51,8 @@ void runShell(){
                 //TODO: clean up open file descriptors
             }
         }
+        if(test_str != "")
+            break;
     }
 }
 
