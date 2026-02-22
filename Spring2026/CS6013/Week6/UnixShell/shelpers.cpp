@@ -224,8 +224,7 @@ vector<Command> getCommands( const vector<string> & tokens )
             }
          }
          else if( tokens[j] == "&" ){
-            // Fill this in if you choose to do the optional "background command" part.
-            assert(false);
+            command.background = true;
          }
          else {
             // Otherwise this is a normal command line argument! Add to argv.

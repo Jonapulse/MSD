@@ -15,7 +15,6 @@
 
 int main(int argc, char const *argv[])
 {
-    //runShell("echo hello world > someFile");
-    runShell("");
+    runShell();
     return 0;
 }

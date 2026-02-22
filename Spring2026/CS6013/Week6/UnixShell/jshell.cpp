@@ -3,14 +3,11 @@
 #include <vector>
 using namespace std;
 
-void runShell(string test_str = ""){
+void runShell(){
     while(true){
         cout << "(>'-')> ";
         string command_str;
-        if(test_str == "")
-            getline(cin, command_str);
-        else 
-            command_str = test_str;
+        getline(cin, command_str);
 
         vector<string> tokens = tokenize(command_str);
         vector<Command> commands = getCommands(tokens);
@@ -55,14 +52,16 @@ void runShell(string test_str = ""){
             }
             else 
             {
-                //Parent waits for child to die
-                 //
-                int status;
-                pid_t terminated_pid = waitpid(rc, &status, 0); 
-                if(terminated_pid == -1)
-                {
-                    perror("waitPid failed");
-                    exit(EXIT_FAILURE);
+                if(!comm.background){
+                    //Parent waits for child to die
+                    //
+                    int status;
+                    pid_t terminated_pid = waitpid(rc, &status, 0); 
+                    if(terminated_pid == -1)
+                    {
+                        perror("waitPid failed");
+                        exit(EXIT_FAILURE);
+                    }
                 }
 
                 if(comm.inputFd != STDIN_FILENO)
@@ -71,8 +70,6 @@ void runShell(string test_str = ""){
                     close(comm.outputFd);
             }
         }
-        if(test_str != "")
-            break;
     }
 }
 
