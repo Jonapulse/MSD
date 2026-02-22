@@ -153,6 +153,7 @@ vector<Command> getCommands( const vector<string> & tokens )
    int last = find( tokens.begin(), tokens.end(), "|" ) - tokens.begin();
 
    bool error = false;
+   vector<int> openFDsForError;
 
    for( int cmdNumber = 0; cmdNumber < commands.size(); ++cmdNumber ){
       const string & token = tokens[ first ];
@@ -190,12 +191,20 @@ vector<Command> getCommands( const vector<string> & tokens )
                //> must be last command
                if(cmdNumber != commands.size() - 1)
                {
+                  perror("output redirection must be last command");
                   error = true;
                   break;
                }
 
                string fileName = tokens[j + 1]; //TODO: Do we need to check for more tokens? 
-               command.outputFd = open(fileName.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+               int openedFD = open(fileName.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+               if(openedFD == -1)
+               {
+                  perror("failed to open requested file");
+                  error = true;
+               }
+               command.outputFd = openedFD;
+               openFDsForError.push_back(openedFD);
 
                //Skip processing the final token, as we've already used it
                break;
@@ -209,8 +218,9 @@ vector<Command> getCommands( const vector<string> & tokens )
                }
 
                //So return an empty vector
-               string fileName = tokens[j + 1]; //TODO: Do we need to check for more tokens? 
+               string fileName = tokens[j + 1]; 
                command.inputFd = open(fileName.c_str(), O_RDONLY);
+               openFDsForError.push_back(command.outputFd);
             }
          }
          else if( tokens[j] == "&" ){
@@ -231,10 +241,26 @@ vector<Command> getCommands( const vector<string> & tokens )
             
             int fds[2];
             pipe(fds);
-            //TODO: Set write end of earlier command
-            //TODO: Set read end of current command
+            if(fds[0] == -1 || fds[1] == -1)
+            {
+               perror("piping returns with error codes");
+               error = true;
+               if(fds[0] != -1){
+                  openFDsForError.push_back(fds[0]);
+               }
+               if(fds[1] != -1){
+                  openFDsForError.push_back(fds[1]);
+               }
+            }
+            else{
 
-            //assert(false);
+               //Have the previous command write to our pipe
+               commands[cmdNumber - 1].outputFd = fds[1];
+               //And this command read from it
+               command.inputFd = fds[0];
+               openFDsForError.push_back(fds[1]);
+               openFDsForError.push_back(fds[0]);
+            }
          }
 
          // Exec wants argv to have a nullptr at the end!
@@ -259,10 +285,10 @@ vector<Command> getCommands( const vector<string> & tokens )
       // yet been filled in).  (Note, it has not been filled in yet because the processing
       // has not gotten to it when the error (in a previous command) occurred.
 
-      //TODO: handle the 2 errors you flag from file redirection
-      //... this will involve recording the files you opened and closing them.
-
-      assert(false);
+      for(int openfd : openFDsForError)
+      {
+         close(openfd);
+      }
    }
 
    return commands;
