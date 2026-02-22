@@ -27,11 +27,11 @@ void runShell(string test_str = ""){
                  //
                 if(comm.inputFd != STDIN_FILENO){
                     dup2(comm.inputFd, STDIN_FILENO);
-                    close(comm.inputFd); //You haven't tested dup and close yet. This is what ai summary told you to do for a different request.
+                    close(comm.inputFd); 
                 }
                 if(comm.outputFd != STDOUT_FILENO){
                     dup2(comm.outputFd, STDOUT_FILENO);
-                    close(comm.outputFd); //You haven't tested dup and close yet. This is what ai summary told you to do for a different request.
+                    close(comm.outputFd);
                 }
 
                 execvp(comm.execName.c_str(), const_cast<char**>(comm.argv.data()));
@@ -48,7 +48,11 @@ void runShell(string test_str = ""){
                     perror("waitPid failed");
                     exit(EXIT_FAILURE);
                 }
-                //TODO: clean up open file descriptors
+
+                if(comm.inputFd != STDIN_FILENO)
+                    close(comm.inputFd);
+                if(comm.outputFd != STDOUT_FILENO)
+                    close(comm.outputFd);
             }
         }
         if(test_str != "")
