@@ -21,6 +21,22 @@ void runShell(string test_str = ""){
                 return;
             }
 
+            if(comm.execName == "cd"){
+                const char *path;
+                if(comm.argv.size() <= 3){ //[exec name, "cd", nullptr]
+                    path = getenv("HOME");
+                }
+                else{
+                    path = comm.argv[1];
+                }
+
+                if(chdir(path) != 0)
+                {
+                    perror("error changing directory");
+                }
+                continue;
+            }
+
             int rc = fork();
             if(rc == 0){ 
                 //Child forks and executes
