@@ -5,12 +5,14 @@
  */
 
 #include <iostream>
+#include <sstream>
 #include <stdlib.h>
 #include "exec.h"
 
 static std::string random_expr_string();
 std::string generateVarName();
 std::string generateNum();
+void print_differences(ExecResult prog1, ExecResult prog2);
 
 int main(int argc, char **argv) {
 
@@ -18,39 +20,55 @@ int main(int argc, char **argv) {
     srand(clock());
 
     if(argc == 2) {//For one argument, we compare the path's --interp and --print
-        const char * const interp_argv[] = { "msdscript", "--interp" };
-        const char * const print_argv[] = { "msdscript", "--print" };
+        const char * const interp_argv[] = {argv[1], "--interp" };
+        const char * const print_argv[] = {argv[1], "--print" };
+        int passCount = 0; 
         for (int i = 0; i < 100; i++) {
             std::string in = random_expr_string();
-            std::cout << "Trying"<< in << "\n";
-            
+        
             ExecResult interp_result = exec_program(2, interp_argv, in);
             ExecResult print_result = exec_program(2, print_argv, in);
 
             ExecResult interp_again_result = exec_program(2, interp_argv, print_result.out);
 
             if (interp_again_result.out != interp_result.out)
-                throw std::runtime_error("different result for printed");
-            
+                std::cout << "mismatch - a: " << interp_result.out << " vs " << interp_again_result.out << std::endl;
+            else if(interp_result.exit_code == 0)
+                passCount++;
         }
+        std::cout << "Self-test completed for " << argv[1] << " with " << passCount << " matching and returning with success exit code out of " << 100 << std::endl;
     } 
     else if (argc == 3)
     {
-        const char * const interp1_argv[] = { "msdscript", "--interp" };
-        const char * const interp2_argv[] = { "msdscript2", "--interp" };
+        const char * const interp1_argv[] = { argv[1], "--interp" };
+        const char * const interp2_argv[] = { argv[2], "--interp" };
+        int mismatchCount = 0;
         for (int i = 0; i < 100; i++) {
             std::string in = random_expr_string();
-            std::cout << "Trying"<< in << "\n";
             
             ExecResult interp1_result = exec_program(2, interp1_argv, in);
             ExecResult interp2_result = exec_program(2, interp2_argv, in);
 
-            if (interp1_result.out != interp2_result.out)
-            throw std::runtime_error("different results");
+            if(interp1_result.exit_code != interp2_result.exit_code){
+                mismatchCount++;
+                std::cout << "Exit Code mismatch for input " << in 
+                << "\n\tProg1: " << interp1_result.exit_code << " with err " << interp1_result.err 
+                << "\tProg2: " << interp2_result.exit_code << " with err " << interp2_result.err << '\n';
+            }
+            else
+            {
+                if(interp1_result.out != interp2_result.out){
+                    mismatchCount++;
+                    std::cout <<"Mismatch for input: " << in
+                    << "\n\tProg1: " << interp1_result.out
+                    << "\tProg2: " << interp2_result.out << '\n';
+                }
+            }
         }
+        std::cout << "Comparison of interp for " << argv[1] << " and " << argv[2] << " completed with " << mismatchCount << " mismatches." << std::endl;
     } else
     {
-        std::cout << "run_msdscript_test must run with 1 or 2 filepath args.";
+        std::cout << "run_msdscript_test must run with 1 or 2 filepath args." << '\n';
         return 1;
     }
 
@@ -82,7 +100,7 @@ std::string random_expr_string() {
     {
         bool doNum = rand() % 10 < 7;
         if(doNum){
-            return std::to_string(rand());
+            return generateNum();
         } else
         {
             return generateVarName();
@@ -96,11 +114,11 @@ std::string random_expr_string() {
 }
 
 /**
- * We're allowing any number. For more readable content limiting 1 digit is an option.
+ * 0 to 100 for readable numbers that probably won't break int max values
  */
 std::string generateNum()
 {
-    return std::to_string(rand());
+    return std::to_string(rand() % 100);
 }
 
 /**

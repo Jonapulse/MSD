@@ -1,0 +1,9 @@
+Mismatch for input: 65+_let brhwm=65_in brhwm+81*_let y=56_in y+51*30+43*7*98*22+26*_let y=69_in y*5
+	Prog1: 53283712
+	Prog2: 53420602
+
+Mismatch for input: _let x=15_in x+_let x=0_in x+65+55*94*43
+	Prog1: 222405
+	Prog2: 222390
+
+Comparison of interp for msdscript and testing/msdscript4 completed with 2 mismatches.

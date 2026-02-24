@@ -1,0 +1,45 @@
+Mismatch for input: _let hjm=18_in hjm*14
+	Prog1: 252
+	Prog2: 32
+
+Mismatch for input: _let x=54_in x*89*23
+	Prog1: 110538
+	Prog2: 166
+
+Mismatch for input: 88*82*_let x=27_in x*76+8+1+93
+	Prog1: 15543264
+	Prog2: 375
+
+Mismatch for input: _let y=23_in y+75*29
+	Prog1: 2198
+	Prog2: 127
+
+Mismatch for input: 92+0*_let x=10_in x+69
+	Prog1: 92
+	Prog2: 171
+
+Mismatch for input: _let y=22_in y+94*67
+	Prog1: 6320
+	Prog2: 183
+
+Mismatch for input: _let x=31_in x*_let x=93_in x*41
+	Prog1: 39401
+	Prog2: 165
+
+Mismatch for input: _let x=9_in x*_let x=67_in x+_let x=61_in x*16+4
+	Prog1: 1413
+	Prog2: 157
+
+Mismatch for input: _let x=14_in x*11
+	Prog1: 154
+	Prog2: 25
+
+Mismatch for input: 3*3
+	Prog1: 9
+	Prog2: 6
+
+Mismatch for input: _let x=48_in x*x
+	Prog1: 2304
+	Prog2: 96
+
+Comparison of interp for msdscript and testing/msdscript2 completed with 11 mismatches.

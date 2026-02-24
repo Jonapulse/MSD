@@ -15,21 +15,21 @@ int main(int argc, char* argv[]){
 		{
 			case(run_mode_t::do_interp):
 			{ //Braces included for scoping repeated var names
-				std::cout << "Write an expression to interpret: ";
+				// std::cout << "Write an expression to interpret: ";
 				Expr* parsedExpr = parse_expr(std::cin);
 				std::cout << parsedExpr->interp() << '\n';
 			}
 				break;
 			case(run_mode_t::do_print):
 			{
-				std::cout << "Write an expression to print: ";
+				// std::cout << "Write an expression to print: ";
 				Expr* parsedExpr = parse_expr(std::cin);
 				std::cout << parsedExpr->to_string() << '\n';
 			}
 				break;
 			case(run_mode_t::do_pretty_print):
 			{
-				std::cout << "Write an expression to pretty print: ";
+				// std::cout << "Write an expression to pretty print: ";
 				Expr* parsedExpr = parse_expr(std::cin);
 				std::cout << parsedExpr->to_pretty_string() << '\n';
 			}

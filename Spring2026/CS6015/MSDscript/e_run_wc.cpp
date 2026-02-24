@@ -10,6 +10,8 @@ int main (){
         std::cerr << "non-zero exit: " << wc_result.exit_code << "\n";
     if (wc_result.out != "       3\n")
         std::cerr << "bad wc result\n";
+
+    std::cout << "Exec ran with " << wc_result.exit_code << " and out: " << wc_result.out;
     
     return 0;
 }

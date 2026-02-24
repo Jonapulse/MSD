@@ -1,0 +1,13 @@
+Mismatch for input: 8*44*3*_let x=1_in x*57+_let x=23_in x*2
+	Prog1: 62304
+	Prog2: 108768
+
+Mismatch for input: _let x=91_in x*_let y=95_in y+_let y=29_in y+41+33*23
+	Prog1: 90090
+	Prog2: 84084
+
+Mismatch for input: 66+_let x=10_in x*_let wvfig=13_in wvfig*_let x=87_in x*x*76
+	Prog1: 988066
+	Prog2: 74781786
+
+Comparison of interp for msdscript and testing/msdscript6 completed with 3 mismatches.

@@ -1,0 +1,5 @@
+Mismatch for input: _let x=60_in x+_let x=29_in x+_let y=33_in y+y+_let x=90_in x+_let gvu=52_in gvu*66+_let y=12_in y*55
+	Prog1: 5493
+	Prog2: 4337
+
+Comparison of interp for msdscript and testing/msdscript7 completed with 1 mismatches.
