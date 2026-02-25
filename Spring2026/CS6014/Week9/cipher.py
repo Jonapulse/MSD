@@ -1,5 +1,9 @@
 import random
 
+##########################
+## (bad) block cipher   ##
+##########################
+
 #pw is a string
 def key_from_pw(pw):
     key = [0] * 8
@@ -69,13 +73,54 @@ def decrypt_message(ciphertext, sub_tables, key, num_rounds):
         plaintext += chr(c)
     return plaintext
 
+##########################
+##       RC4            ##
+##########################
+
+#There are much better ways than global vars to do this, but I've never seen professional 
+#python code and this is how I wrote it before consulting a robot, so... Next time.
+rc4Table = []
+rc4_i = 0
+rc4_j = 0
+
+#key is a string, typically 5 to 16 bytes
+def initializeRC4(key):
+    global rc4Table
+    rc4Table = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + rc4Table[i] + ord(key[i % len(key)])) % 256
+        rc4Table[i], rc4Table[j] = rc4Table[j], rc4Table[i]
+    rc4_i = 0
+    rc4_j = 0
+
+def next_byte():
+    global rc4Table, rc4_i, rc4_j 
+    rc4_i = (rc4_i + 1) % 256
+    rc4_j = (rc4_j + rc4Table[rc4_i]) % 256
+    rc4Table[rc4_i], rc4Table[rc4_j] = rc4Table[rc4_j], rc4Table[rc4_i]
+    return rc4Table[(rc4Table[rc4_i] + rc4Table[rc4_j]) % 256] 
+
+
+##########################
+##    running the HW    ##
+##########################
 def run():
-    key = key_from_pw("password123")
-    sub_tables = get_sub_table_of_tables()
-    message = "Hello Mr"
-    ciphertext = encrypt_message(message, sub_tables, key, 16)
-    print("Ciphertext is " + str(ciphertext))
-    decipheredtext = decrypt_message(ciphertext, sub_tables, key, 16)
-    print("Decyphered text is " + str(decipheredtext))
+
+    ###Bad block 
+    # key = key_from_pw("password123")
+    # sub_tables = get_sub_table_of_tables()
+    # message = "Hello Mr"
+    # ciphertext = encrypt_message(message, sub_tables, key, 16)
+    # print("Ciphertext is " + str(ciphertext))
+    # decipheredtext = decrypt_message(ciphertext, sub_tables, key, 16)
+    # print("Decyphered text is " + str(decipheredtext))
+
+    ##RC4
+    initializeRC4("Kablooey!")
+    for i in range(10):
+        print(next_byte())
+
+
 
 run()
