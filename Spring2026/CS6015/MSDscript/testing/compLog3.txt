@@ -1,1 +1,5 @@
-Comparison of interp for msdscript and testing/msdscript3 completed with 0 mismatches.
+Mismatch for input: _let x=85_in x+_let x=90_in x*_let y=15_in y*46*10+54+_let x=6_in x*y
+	Prog1: 699550
+	Prog2: 634045
+
+Comparison of interp for msdscript and testing/msdscript3 completed with 1 mismatches.

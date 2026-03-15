@@ -85,7 +85,7 @@ rc4_j = 0
 
 #key is a string, typically 5 to 16 bytes
 def initializeRC4(key):
-    global rc4Table
+    global rc4Table, rc4_i, rc4_j
     rc4Table = list(range(256))
     j = 0
     for i in range(256):
@@ -101,26 +101,73 @@ def next_byte():
     rc4Table[rc4_i], rc4Table[rc4_j] = rc4Table[rc4_j], rc4Table[rc4_i]
     return rc4Table[(rc4Table[rc4_i] + rc4Table[rc4_j]) % 256] 
 
+def encryptOrDecryptRC4(message, key):
+    initializeRC4(key)
+    rc4ByteStream = ""
+    for c in message:
+        rc4ByteStream += chr(next_byte())
+    return xorStrings(message, rc4ByteStream)
+
+#returns xored string the length of smaller string
+def xorStrings(s1, s2):
+    xored = ""
+    for i in range(min(len(s1), len(s2))):
+        xored += chr(ord(s1[i]) ^ ord(s2[i]))
+    return xored
 
 ##########################
 ##    running the HW    ##
 ##########################
 def run():
 
-    ###Bad block 
-    # key = key_from_pw("password123")
-    # sub_tables = get_sub_table_of_tables()
-    # message = "Hello Mr"
-    # ciphertext = encrypt_message(message, sub_tables, key, 16)
-    # print("Ciphertext is " + str(ciphertext))
-    # decipheredtext = decrypt_message(ciphertext, sub_tables, key, 16)
-    # print("Decyphered text is " + str(decipheredtext))
+    ##Bad block 
+    key = key_from_pw("password123")
+    sub_tables = get_sub_table_of_tables()
+    message = "Hello Mr"
+    ciphertext = encrypt_message(message, sub_tables, key, 16)
+    print("Ciphertext is " + ciphertext)
+    decipheredtext = decrypt_message(ciphertext, sub_tables, key, 16)
+    print("Decyphered text is " + decipheredtext)
+
+    # one-bit check
+    ciphertextbitflip = ciphertext[:4] + chr(ord(ciphertext[4]) ^ 128) + ciphertext[5:]
+    print(ciphertextbitflip)
+    print("Decyphered text with one bit flipped is " + decrypt_message(ciphertextbitflip, sub_tables, key, 16))
 
     ##RC4
-    initializeRC4("Kablooey!")
-    for i in range(10):
-        print(next_byte())
+    rc4Message = "Hello, how are you?"
+    print("RC4 time!\n\tMessage: \"" + rc4Message + "\"")
+    sharedKey = "Kablooey!"
+    rc4Ciphered = encryptOrDecryptRC4(rc4Message, sharedKey)
+    rc4Deciphered = encryptOrDecryptRC4(rc4Ciphered, sharedKey)
+    rc4DecipheredWrongKey = encryptOrDecryptRC4(rc4Ciphered, "fake")
+    print("\tIt encrypts to: \"" + rc4Ciphered + "\" which decrypts to \"" + rc4Deciphered 
+          + "\" or, with wrong key \"fake\": \"" + rc4DecipheredWrongKey + "\"")
+    
+    
+    ##RC4 - key re-use danger
+    zeroMask = ""
+    for i in range(len(rc4Message)):
+        zeroMask += chr(0)
+    rc4CipheredOneMask = encryptOrDecryptRC4(zeroMask, sharedKey)
+    print("Xoring with zeroes: " + xorStrings(zeroMask, rc4Message))
+    print("Xoring our ciphered onemask with same key message: \"" + xorStrings(rc4Ciphered, rc4CipheredOneMask))
+    # #Oh that is effective
 
-
+    ##RC4 - integrity attack
+    salaryString = "Your salary is $1000"
+    targetedAttack = ""
+    for i in range(16):
+        targetedAttack += chr(0)
+    targetedAttack += chr(8)
+    for i in range(3):
+        targetedAttack += chr(9)
+    print("Xoring with our attack: " + xorStrings(salaryString, targetedAttack))
+    newKey = "password123"
+    cipheredSalary = encryptOrDecryptRC4(salaryString, newKey)
+    attackedCipheredSalary = xorStrings(cipheredSalary, targetedAttack)
+    print("Decrypted message: " + encryptOrDecryptRC4(cipheredSalary, newKey) 
+          + "\nDecrypted attacked message: " + encryptOrDecryptRC4(attackedCipheredSalary, newKey))
+    #Well, dang.
 
 run()
