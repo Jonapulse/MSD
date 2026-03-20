@@ -1,0 +1,118 @@
+a.out:
+(__TEXT,__text) section
+_check_secret:
+0000000100000510	subq	$0x38, %rsp
+0000000100000514	movq	%rdi, 0x28(%rsp)
+0000000100000519	movl	%esi, 0x24(%rsp)
+000000010000051d	cmpl	$-0x1, 0x24(%rsp)
+0000000100000522	jne	0x10000053c
+0000000100000524	leaq	0x1e9(%rip), %rdi               ## literal pool for: "problem reading password.txt\n"
+000000010000052b	movb	$0x0, %al
+000000010000052d	callq	0x1000006e4                     ## symbol stub for: _printf
+0000000100000532	movl	$0x0, 0x34(%rsp)
+000000010000053a	jmp	0x10000059a
+000000010000053c	leaq	0x1ef(%rip), %rax               ## literal pool for: "superSecretPassword"
+0000000100000543	movq	%rax, 0x18(%rsp)
+0000000100000548	movslq	0x24(%rsp), %rax
+000000010000054d	movq	%rax, 0x8(%rsp)
+0000000100000552	movq	0x18(%rsp), %rdi
+0000000100000557	callq	0x1000006ea                     ## symbol stub for: _strlen
+000000010000055c	movq	0x8(%rsp), %rcx
+0000000100000561	movq	%rax, %rdx
+0000000100000564	xorl	%eax, %eax
+0000000100000566	cmpq	%rdx, %rcx
+0000000100000569	movb	%al, 0x17(%rsp)
+000000010000056d	jne	0x10000058d
+000000010000056f	movq	0x28(%rsp), %rdi
+0000000100000574	movq	0x18(%rsp), %rsi
+0000000100000579	movslq	0x24(%rsp), %rdx
+000000010000057e	callq	0x1000006f0                     ## symbol stub for: _memcmp
+0000000100000583	cmpl	$0x0, %eax
+0000000100000586	sete	%al
+0000000100000589	movb	%al, 0x17(%rsp)
+000000010000058d	movb	0x17(%rsp), %al
+0000000100000591	andb	$0x1, %al
+0000000100000593	movzbl	%al, %eax
+0000000100000596	movl	%eax, 0x34(%rsp)
+000000010000059a	movl	0x34(%rsp), %eax
+000000010000059e	addq	$0x38, %rsp
+00000001000005a2	retq
+00000001000005a3	nopw	%cs:(%rax,%rax)
+_check_secret1:
+00000001000005b0	subq	$0x18, %rsp
+00000001000005b4	movq	%rdi, 0x10(%rsp)
+00000001000005b9	movl	%esi, 0xc(%rsp)
+00000001000005bd	movq	0x10(%rsp), %rdi
+00000001000005c2	movl	0xc(%rsp), %esi
+00000001000005c6	callq	_check_secret
+00000001000005cb	addq	$0x18, %rsp
+00000001000005cf	retq
+_check_secret2:
+00000001000005d0	subq	$0x18, %rsp
+00000001000005d4	movq	%rdi, 0x10(%rsp)
+00000001000005d9	movl	%esi, 0xc(%rsp)
+00000001000005dd	movq	0x10(%rsp), %rdi
+00000001000005e2	movl	0xc(%rsp), %esi
+00000001000005e6	callq	_check_secret1
+00000001000005eb	addq	$0x18, %rsp
+00000001000005ef	retq
+_success:
+00000001000005f0	subq	$0x18, %rsp
+00000001000005f4	movq	_sh(%rip), %rax
+00000001000005fb	movq	%rax, (%rsp)
+00000001000005ff	movq	$0x0, 0x8(%rsp)
+0000000100000608	leaq	0x137(%rip), %rdi               ## literal pool for: "successful login!\n"
+000000010000060f	callq	0x1000006f6                     ## symbol stub for: _puts
+0000000100000614	movq	_sh(%rip), %rdi
+000000010000061b	movq	%rsp, %rsi
+000000010000061e	movq	0x9fb(%rip), %rax               ## literal pool symbol address: _environ
+0000000100000625	movq	(%rax), %rdx
+0000000100000628	callq	0x1000006fc                     ## symbol stub for: _execve
+000000010000062d	addq	$0x18, %rsp
+0000000100000631	retq
+0000000100000632	nopw	%cs:(%rax,%rax)
+_failure:
+0000000100000640	pushq	%rax
+0000000100000641	leaq	0x111(%rip), %rdi               ## literal pool for: "wrong password\n"
+0000000100000648	callq	0x1000006f6                     ## symbol stub for: _puts
+000000010000064d	popq	%rax
+000000010000064e	retq
+000000010000064f	nop
+_login:
+0000000100000650	subq	$0x38, %rsp
+0000000100000654	leaq	0x10e(%rip), %rdi               ## literal pool for: "password.txt"
+000000010000065b	xorl	%esi, %esi
+000000010000065d	movb	$0x0, %al
+000000010000065f	callq	0x100000702                     ## symbol stub for: _open
+0000000100000664	movl	%eax, 0xc(%rsp)
+0000000100000668	leaq	0x107(%rip), %rdi               ## literal pool for: "enter your password:\n"
+000000010000066f	movb	$0x0, %al
+0000000100000671	callq	0x1000006e4                     ## symbol stub for: _printf
+0000000100000676	movl	0xc(%rsp), %edi
+000000010000067a	leaq	0x10(%rsp), %rsi
+000000010000067f	movl	$0x3e8, %edx                    ## imm = 0x3E8
+0000000100000684	callq	0x100000708                     ## symbol stub for: _read
+0000000100000689	movl	%eax, 0x8(%rsp)
+000000010000068d	movl	0xc(%rsp), %edi
+0000000100000691	callq	0x10000070e                     ## symbol stub for: _close
+0000000100000696	leaq	0x10(%rsp), %rdi
+000000010000069b	movl	0x8(%rsp), %esi
+000000010000069f	callq	_check_secret2
+00000001000006a4	addq	$0x38, %rsp
+00000001000006a8	retq
+00000001000006a9	nopl	(%rax)
+_main:
+00000001000006b0	pushq	%rax
+00000001000006b1	movl	$0x0, 0x4(%rsp)
+00000001000006b9	callq	_login
+00000001000006be	movl	%eax, (%rsp)
+00000001000006c1	cmpl	$0x0, (%rsp)
+00000001000006c5	je	0x1000006ce
+00000001000006c7	callq	_success
+00000001000006cc	jmp	0x1000006d3
+00000001000006ce	callq	_failure
+00000001000006d3	leaq	0xb2(%rip), %rdi                ## literal pool for: "exiting in main\n"
+00000001000006da	callq	0x1000006f6                     ## symbol stub for: _puts
+00000001000006df	xorl	%eax, %eax
+00000001000006e1	popq	%rcx
+00000001000006e2	retq

