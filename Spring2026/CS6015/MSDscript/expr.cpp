@@ -34,7 +34,14 @@ std::string Expr::to_pretty_string() {
 }
 
 NumExpr::NumExpr(int val){
-    this->val = val;
+    this->val = new NumVal(val);
+}
+
+NumExpr::NumExpr(Val* val){
+    NumVal *c = dynamic_cast<NumVal*>(val);
+    if(c == nullptr)
+        throw std::runtime_error("Error: NumExpr initialized with non-NumVal Val");
+    this->val = c;
 }
 
 bool NumExpr::equals(Expr *e)
@@ -43,10 +50,10 @@ bool NumExpr::equals(Expr *e)
     NumExpr *c = dynamic_cast<NumExpr*>(e);
     if(c == nullptr)
         return false;
-    return this->val == c->val;
+    return this->val->equals(c->val);
 }
 
-int NumExpr::interp()
+Val* NumExpr::interp()
 {
     return this->val;
 }
@@ -64,7 +71,7 @@ Expr* NumExpr::subst(const std::string &name, Expr* substitution){
 }
 
 void NumExpr::printExpr(std::ostream& ot){
-    ot << std::to_string(val);
+    ot << val->to_string();
 }
 
 AddExpr::AddExpr(Expr *lhs, Expr *rhs){
@@ -81,8 +88,8 @@ bool AddExpr::equals(Expr *e)
     return lhs->equals(c->lhs) && rhs->equals(c->rhs);
 }
 
-int AddExpr::interp(){
-    return lhs->interp() + rhs->interp();
+Val* AddExpr::interp(){
+    return lhs->interp()->add_to(rhs->interp());
 }
 
 bool AddExpr::has_variable()
@@ -133,9 +140,9 @@ bool MultExpr::equals(Expr *e)
     return this->lhs->equals(c->lhs) && this->rhs->equals(c->rhs);
 }
 
-int MultExpr::interp()
+Val* MultExpr::interp()
 {
-    return lhs->interp() * rhs->interp();
+    return lhs->interp()->mult_with(rhs->interp());
 }
 
 bool MultExpr::has_variable()
@@ -189,7 +196,7 @@ bool VarExpr::equals(Expr *e)
 /**
  * \brief interp is not defined (at this developmen stage) for variables, so we return an error
  */
-int VarExpr::interp()
+Val* VarExpr::interp()
 {
     throw std::runtime_error("Error: VarExpr does not support interp (at this stage in development)");
 }
@@ -232,7 +239,7 @@ bool LetExpr::equals(Expr *e)
     return this->name == c->name && this->lhs->equals(c->lhs) && this->rhs->equals(c->rhs);
 }
 
-int LetExpr::interp(){
+Val* LetExpr::interp(){
     return lhs->subst(name, new NumExpr(rhs->interp()))->interp();
 }
 
@@ -324,18 +331,18 @@ TEST_CASE( "Expression Equality") {
 
 TEST_CASE("Expression interp"){
     SECTION("Num tests"){
-        CHECK((new NumExpr(10))->interp() == 10);
+        CHECK((new NumExpr(10))->interp()->equals(new NumVal(10)));
     }
 
     SECTION("Add tests"){
-        CHECK((new AddExpr(new NumExpr(3), new NumExpr(5)))->interp() == 8);
-        CHECK((new AddExpr(new AddExpr(new NumExpr(1),new NumExpr(2)), new NumExpr(3)))->interp() == 6);
+        CHECK((new AddExpr(new NumExpr(3), new NumExpr(5)))->interp()->equals(new NumVal(8)));
+        CHECK((new AddExpr(new AddExpr(new NumExpr(1),new NumExpr(2)), new NumExpr(3)))->interp()->equals(new NumVal(6)));
     }
 
     SECTION("Mult tests")
     {
-        CHECK((new MultExpr(new NumExpr(3), new NumExpr(5)))->interp() == 15);
-        CHECK((new MultExpr(new MultExpr(new NumExpr(2),new NumExpr(3)), new NumExpr(3)))->interp() == 18);
+        CHECK((new MultExpr(new NumExpr(3), new NumExpr(5)))->interp()->equals(new NumVal(15)));
+        CHECK((new MultExpr(new MultExpr(new NumExpr(2),new NumExpr(3)), new NumExpr(3)))->interp()->equals(new NumVal(18)));
     }
 
     SECTION("VarExpr tests"){
@@ -343,15 +350,15 @@ TEST_CASE("Expression interp"){
     }
 
     SECTION("Assignment tests"){
-        CHECK( (new MultExpr(new NumExpr(3), new NumExpr(2)))->interp()==6 );
-        CHECK( (new AddExpr(new AddExpr(new NumExpr(10), new NumExpr(15)),new AddExpr(new NumExpr(20),new NumExpr(20))))->interp()==65);
+        CHECK( (new MultExpr(new NumExpr(3), new NumExpr(2)))->interp()->equals(new NumVal(6)));
+        CHECK( (new AddExpr(new AddExpr(new NumExpr(10), new NumExpr(15)),new AddExpr(new NumExpr(20),new NumExpr(20))))->interp()->equals(new NumVal(65)));
     }
 
     SECTION("Let tests"){
-        CHECK((new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp() == 6);
+        CHECK((new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp()->equals(new NumVal(6)));
 
         //nested Let
-        CHECK((new LetExpr("x", new NumExpr(10), new AddExpr(new VarExpr("x"), new LetExpr("x", new NumExpr(13), new AddExpr(new VarExpr("x"), new NumExpr(5))))))->interp() == 28);
+        CHECK((new LetExpr("x", new NumExpr(10), new AddExpr(new VarExpr("x"), new LetExpr("x", new NumExpr(13), new AddExpr(new VarExpr("x"), new NumExpr(5))))))->interp()->equals(new NumVal(28)));
     }
 }
 
@@ -372,11 +379,11 @@ TEST_CASE("substitution")
        ->equals(new AddExpr(new VarExpr("y"),new NumExpr(7))) );
     CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(5)))
         ->subst("x", new NumExpr(3))
-        ->interp() == 8);
+        ->interp()->equals(new NumVal(8)));
     CHECK( (new MultExpr(new VarExpr("x"), new VarExpr("y")))
         ->subst("x", new NumExpr(3))
         ->subst("y", new NumExpr(4))
-        ->interp() == 12);
+        ->interp()->equals(new NumVal(12)));
 }
 
 TEST_CASE("to_string")

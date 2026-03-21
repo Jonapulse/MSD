@@ -3,6 +3,7 @@
  * \brief contains implementations for Val "Value" class as well as Number,... subclasses
  */
 #include "val.h"
+#include "expr.h"
 #include "catch.h"
  
 NumVal::NumVal(int val){
@@ -30,6 +31,10 @@ Val* NumVal::mult_with(Val* rhs){
     return new NumVal(this->val * c->val);
 }
 
+Expr* NumVal::to_expr(){
+    return new NumExpr(this->val);
+}
+
 std::string NumVal::to_string(){
     return std::to_string(this->val);
 }
@@ -47,6 +52,11 @@ TEST_CASE("NumVal"){
     SECTION("Mult_With")
     {
         CHECK(((new NumVal(3))->mult_with(new NumVal(5)))->equals(new NumVal(15)));
+    }
+
+    SECTION("to_expr")
+    {
+        CHECK((new NumVal(3))->to_expr()->equals(new NumExpr(3)));
     }
 
     SECTION("to_string")

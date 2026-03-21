@@ -16,7 +16,7 @@ typedef enum {
   prec_mult       // = 3
 } precedence_t;
 
-//To reference Val without full #include
+//Referencing Val without full #include
 //
 class Val;
 
@@ -32,7 +32,7 @@ class Val;
 class Expr{
 public:
     virtual bool equals(Expr* e) = 0;
-    virtual int interp() = 0;
+    virtual Val* interp() = 0;
     virtual bool has_variable() = 0;
     virtual Expr* subst(const std::string &name, Expr* substitution) = 0;
     virtual void printExpr(std::ostream& ot) = 0;
@@ -47,17 +47,21 @@ public:
  */
 class NumExpr: public Expr{
 public:
-    int val;
+    Val* val;
 
     NumExpr(int val);
+    NumExpr(Val* val);
 
     bool equals(Expr* e);
-    int interp();
+    Val* interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
 };
 
+/**
+ * \brief Add represents two expressions being added
+ */
 class AddExpr: public Expr{
 public:
     Expr *lhs;
@@ -66,7 +70,7 @@ public:
     AddExpr(Expr *lhs, Expr *rhs);
 
     bool equals(Expr* e);
-    int interp();
+    Val* interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
@@ -74,6 +78,9 @@ public:
     void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
 
+/**
+ * \brief Mult represents two expressions being multiplied
+ */
 class MultExpr: public Expr{
 public: 
     Expr *lhs;
@@ -82,7 +89,7 @@ public:
     MultExpr(Expr *lhs, Expr *rhs);
 
     bool equals(Expr* e);
-    int interp();
+    Val* interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
@@ -97,7 +104,7 @@ public:
     VarExpr(const std::string &name);
 
     bool equals(Expr *e);
-    int interp();
+    Val* interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
@@ -119,7 +126,7 @@ public:
     LetExpr(const std::string &name, Expr* rhs, Expr* lhs);
 
     bool equals(Expr *e);
-    int interp();
+    Val* interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
