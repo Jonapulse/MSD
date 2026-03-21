@@ -1,1 +1,7 @@
-Comparison of interp for msdscript and testing/msdscript6 completed with 0 mismatches.
+Exit Code mismatch for input _let y=99_in y*_let x=51_in x+_let acysf=76_in acysf*30*49+1*92+y*_let xr=6_in xr*x
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input _let y=61_in y+_let x=27_in x*50
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Comparison of interp for msdscript and testing/msdscript6 completed with 2 mismatches.

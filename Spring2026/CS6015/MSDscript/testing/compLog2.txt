@@ -1,45 +1,75 @@
-Mismatch for input: 92+_let x=83_in x+54*78
-	Prog1: 4387
-	Prog2: 307
+Mismatch for input: 9*45
+	Prog1: 405
+	Prog2: 54
 
-Mismatch for input: 7*90
-	Prog1: 630
-	Prog2: 97
+Mismatch for input: _let cuzez=74_in cuzez*61
+	Prog1: 4514
+	Prog2: 135
 
-Mismatch for input: _let x=9_in x+94*24+11*73*29
-	Prog1: 25552
-	Prog2: 240
+Mismatch for input: _let pu=61_in pu*59+92*49
+	Prog1: 8107
+	Prog2: 261
 
-Mismatch for input: 19*15+64+_let x=79_in x*35
-	Prog1: 3114
-	Prog2: 212
+Mismatch for input: _let x=99_in x*19*_let x=21_in x+94
+	Prog1: 216315
+	Prog2: 233
 
-Mismatch for input: 93*_let x=40_in x*9
-	Prog1: 33480
-	Prog2: 142
+Mismatch for input: 0+59+49*73
+	Prog1: 3636
+	Prog2: 181
 
-Mismatch for input: 66*12
-	Prog1: 792
-	Prog2: 78
+Mismatch for input: 2*6
+	Prog1: 12
+	Prog2: 8
 
-Mismatch for input: _let x=70_in x*95*_let y=94_in y*40*79+6*95+14+66*y
-	Prog1: 2020456200
-	Prog2: 653
+Mismatch for input: 20+_let x=63_in x*38
+	Prog1: 2414
+	Prog2: 121
 
-Mismatch for input: 67*66+58*93
-	Prog1: 9816
-	Prog2: 284
+Mismatch for input: _let y=17_in y*86
+	Prog1: 1462
+	Prog2: 103
 
-Mismatch for input: 64*29
-	Prog1: 1856
-	Prog2: 93
+Mismatch for input: _let x=12_in x*65+11
+	Prog1: 791
+	Prog2: 88
 
-Mismatch for input: _let x=72_in x+43*61
-	Prog1: 2695
-	Prog2: 176
+Exit Code mismatch for input _let y=95_in y*_let x=77_in x*80*4+14+_let x=34_in x*67
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 3*44
+	Prog1: 132
+	Prog2: 47
 
-Mismatch for input: _let r=51_in r*42
-	Prog1: 2142
-	Prog2: 93
+Mismatch for input: _let y=30_in y*80+90*73
+	Prog1: 8970
+	Prog2: 273
 
-Comparison of interp for msdscript and testing/msdscript2 completed with 11 mismatches.
+Exit Code mismatch for input _let l=17_in l+_let x=12_in x+19+74*_let y=36_in y+y+55*15+y*46
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: _let x=86_in x*20*10+27+x
+	Prog1: 17313
+	Prog2: 229
+
+Mismatch for input: 8*96+65*57*85
+	Prog1: 315693
+	Prog2: 311
+
+Mismatch for input: _let x=96_in x*38
+	Prog1: 3648
+	Prog2: 134
+
+Mismatch for input: _let y=95_in y*y*92*50
+	Prog1: 41515000
+	Prog2: 332
+
+Mismatch for input: 30*_let x=6_in x*62+x*x
+	Prog1: 12240
+	Prog2: 110
+
+Mismatch for input: _let y=91_in y*15+_let y=68_in y+64+88*47
+	Prog1: 5633
+	Prog2: 373
+
+Comparison of interp for msdscript and testing/msdscript2 completed with 19 mismatches.

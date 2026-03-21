@@ -1,5 +1,5 @@
 /**
- * \file expression.h
+ * \file expression.cpp
  * \brief contains Expr "expression" implementation as well as Num, Var, Add, Mult, and Let subclass implementations.
  */
 
@@ -237,8 +237,6 @@ int Let::interp(){
 
 /**
  * \brief
- * Ask Nabil about this. return true if a variable would exist after evaluation, so if it's in rhs 
- * or if lhs has a var that is not the named var...
  */
 bool Let::has_variable(){
     return rhs->has_variable();
@@ -246,11 +244,14 @@ bool Let::has_variable(){
 
 /**
  * \brief for Let we only substitue the 'lhs', the expression following '_in'
- * TODO: Check that I interpreted this correctly.
+ * if substituting name that would overwrite rhs, we stop.
+ * Nested Let expressions sharing variable names will substitue deeper nested names first.
  */
 Expr* Let::subst(const std::string &name, Expr* substitution){
-    lhs = lhs->subst(name, substitution);
-    return this;
+    //End substitution if the substituting name matches Let's name
+    if(this->name == name)
+        return this;
+    return lhs->subst(name, substitution);
 }
 
 void Let::printExpr(std::ostream& ot){
@@ -347,6 +348,12 @@ TEST_CASE("Expression interp"){
 
     SECTION("Let tests"){
         CHECK((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->interp() == 6);
+
+        //nested Let
+        Expr* nestedLet = new Let("x", new Num(10), new Add(new Var("x"), new Let("x", new Num(13), new Add(new Var("x"), new Num(5)))));
+        int nlinterped = nestedLet->interp();
+        CHECK(nlinterped == 28);
+
     }
 }
 

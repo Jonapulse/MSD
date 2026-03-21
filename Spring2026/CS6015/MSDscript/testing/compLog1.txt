@@ -1,301 +1,302 @@
-Mismatch for input: 4
-	Prog1: 4
-	Prog2: 
-Exit Code mismatch for input x+19
+Exit Code mismatch for input 10+91*_let x=46_in x*_let x=58_in x+_let y=89_in y+60*92+75+9+_let kozp=45_in kozp+17+71+x+x*5+76*bufug*x*94*57*64*59*10*uwnmf+x+y+x
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 21
-	Prog1: 21
+Mismatch for input: 59
+	Prog1: 59
 	Prog2: 
-Mismatch for input: 39
-	Prog1: 39
-	Prog2: 
-Exit Code mismatch for input 92+y*50
+Exit Code mismatch for input 80*_let y=52_in y+_let a=90_in a*46+73*_let y=24_in y+71+20
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Exit Code mismatch for input br
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input x*69
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 18
-	Prog1: 18
+Mismatch for input: 84
+	Prog1: 84
 	Prog2: 
-Exit Code mismatch for input orxh
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 53
-	Prog1: 53
-	Prog2: 
-Mismatch for input: 85
-	Prog1: 85
-	Prog2: 
-Mismatch for input: 99+5
-	Prog1: 104
-	Prog2: 
-Exit Code mismatch for input y
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 87
-	Prog1: 87
-	Prog2: 
-Mismatch for input: _let y=97_in y+_let x=0_in x*y
-	Prog1: 97
-	Prog2: 
-Mismatch for input: 15*99
-	Prog1: 1485
-	Prog2: 
-Mismatch for input: 32
-	Prog1: 32
-	Prog2: 
-Exit Code mismatch for input 36+_let y=99_in y*3+_let tcfka=73_in tcfka+x+_let y=13_in y*45+y+_let y=0_in y+94+85+x+_let y=45_in y*0+20
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input dn+y
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: _let axzf=14_in axzf*_let y=15_in y+77
-	Prog1: 1288
-	Prog2: 
-Mismatch for input: 5*_let gxs=40_in gxs+91+_let nhzcb=73_in nhzcb+6*8+_let x=78_in x+46
-	Prog1: 1880
-	Prog2: 
-Mismatch for input: 27+38
+Mismatch for input: 65
 	Prog1: 65
 	Prog2: 
-Exit Code mismatch for input 87*x
+Exit Code mismatch for input s*73+95*_let y=57_in y*_let y=64_in y+x+x+gk+40
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Exit Code mismatch for input _let bllv=69_in bllv*18*jna+70+2
+Exit Code mismatch for input nfv
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 97
-	Prog1: 97
+Mismatch for input: 20+39
+	Prog1: 59
 	Prog2: 
-Mismatch for input: 50*70
-	Prog1: 3500
+Mismatch for input: 96
+	Prog1: 96
 	Prog2: 
-Exit Code mismatch for input 31*_let aqjnt=77_in aqjnt*y
+Exit Code mismatch for input 69*y*48+38+89+51+15
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 64
-	Prog1: 64
+Mismatch for input: 33
+	Prog1: 33
 	Prog2: 
-Mismatch for input: 89+53+47
-	Prog1: 189
+Mismatch for input: 10+46
+	Prog1: 56
 	Prog2: 
-Mismatch for input: 92
-	Prog1: 92
-	Prog2: 
-Mismatch for input: 1
-	Prog1: 1
-	Prog2: 
-Mismatch for input: 23*36
-	Prog1: 828
-	Prog2: 
-Mismatch for input: 36+6
-	Prog1: 42
-	Prog2: 
-Mismatch for input: 36
-	Prog1: 36
-	Prog2: 
-Mismatch for input: 25
-	Prog1: 25
-	Prog2: 
-Mismatch for input: 3
-	Prog1: 3
-	Prog2: 
-Exit Code mismatch for input _let y=54_in y+14+46+_let io=31_in io*62+75+41+62+22*qgzsn*33+22*61
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 18
-	Prog1: 18
-	Prog2: 
-Exit Code mismatch for input 53+y+18
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input alq
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 75
-	Prog1: 75
-	Prog2: 
-Mismatch for input: 71
-	Prog1: 71
-	Prog2: 
-Mismatch for input: 93
-	Prog1: 93
-	Prog2: 
-Mismatch for input: 38
-	Prog1: 38
-	Prog2: 
-Mismatch for input: 51
-	Prog1: 51
-	Prog2: 
-Exit Code mismatch for input _let y=89_in y*_let y=94_in y+x
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input 4+x
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 71
-	Prog1: 71
-	Prog2: 
-Exit Code mismatch for input y*y+j
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 58
-	Prog1: 58
-	Prog2: 
-Mismatch for input: 57
-	Prog1: 57
-	Prog2: 
-Mismatch for input: 39
-	Prog1: 39
-	Prog2: 
-Exit Code mismatch for input _let r=77_in r*y+81
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: _let y=83_in y+y
-	Prog1: 166
-	Prog2: 
-Mismatch for input: 71
-	Prog1: 71
-	Prog2: 
-Mismatch for input: 92
-	Prog1: 92
-	Prog2: 
-Mismatch for input: 64
-	Prog1: 64
-	Prog2: 
-Exit Code mismatch for input y*46*47+_let y=28_in y*y+_let y=19_in y*x*34*y*67+45+y+x*_let x=20_in x*y*65
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input uenuv
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input 55+_let x=43_in x*je*x*_let y=67_in y+bx*_let y=55_in y+30*40+10+48+62
+Exit Code mismatch for input x+27
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
 Mismatch for input: 43
 	Prog1: 43
 	Prog2: 
-Mismatch for input: 76
-	Prog1: 76
+Mismatch for input: 21
+	Prog1: 21
 	Prog2: 
-Mismatch for input: 61
-	Prog1: 61
-	Prog2: 
-Exit Code mismatch for input p
+Exit Code mismatch for input x+24
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 80
-	Prog1: 80
-	Prog2: 
-Mismatch for input: 28*32
-	Prog1: 896
-	Prog2: 
-Mismatch for input: 51
-	Prog1: 51
-	Prog2: 
-Mismatch for input: 70
-	Prog1: 70
-	Prog2: 
-Exit Code mismatch for input _let tqk=66_in tqk*0*_let y=22_in y+71+x+81*0
+Exit Code mismatch for input _let ro=94_in ro*x
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Exit Code mismatch for input _let x=74_in x*24+x+y
+Exit Code mismatch for input y*74
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 30
-	Prog1: 30
+Mismatch for input: 75
+	Prog1: 75
 	Prog2: 
-Exit Code mismatch for input y*30+_let x=42_in x*38
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 80
-	Prog1: 80
+Mismatch for input: 7+88
+	Prog1: 95
 	Prog2: 
-Exit Code mismatch for input _let x=44_in x*1*87+37+14*8*23+y*_let x=63_in x+38*bpvv
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Exit Code mismatch for input _let x=77_in x*lib+50*_let vic=64_in vic*12+1
-	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
-	Prog2: 0 with err 
-Mismatch for input: 84
-	Prog1: 84
-	Prog2: 
-Mismatch for input: 64
-	Prog1: 64
-	Prog2: 
-Mismatch for input: 61
-	Prog1: 61
-	Prog2: 
-Mismatch for input: _let y=21_in y*47
-	Prog1: 987
-	Prog2: 
-Mismatch for input: _let x=99_in x+_let y=27_in y+11+y*78*5+88
-	Prog1: 10755
-	Prog2: 
-Mismatch for input: 35
-	Prog1: 35
-	Prog2: 
-Mismatch for input: _let x=28_in x+_let y=99_in y+79
-	Prog1: 206
-	Prog2: 
-Mismatch for input: 2
-	Prog1: 2
-	Prog2: 
-Mismatch for input: 36
-	Prog1: 36
-	Prog2: 
-Mismatch for input: 28
-	Prog1: 28
+Mismatch for input: 82
+	Prog1: 82
 	Prog2: 
 Exit Code mismatch for input y
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 84
-	Prog1: 84
+Exit Code mismatch for input 93+mu+88*_let x=93_in x+x
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 23
+	Prog1: 23
+	Prog2: 
+Exit Code mismatch for input _let y=67_in y*x+y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 14
+	Prog1: 14
+	Prog2: 
+Exit Code mismatch for input _let y=14_in y+x
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 22
+	Prog1: 22
 	Prog2: 
 Mismatch for input: 68
 	Prog1: 68
 	Prog2: 
+Mismatch for input: 97
+	Prog1: 97
+	Prog2: 
+Mismatch for input: 97
+	Prog1: 97
+	Prog2: 
 Exit Code mismatch for input y
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Exit Code mismatch for input ec
+Mismatch for input: 11+_let x=59_in x+5+88+4
+	Prog1: 167
+	Prog2: 
+Mismatch for input: 56
+	Prog1: 56
+	Prog2: 
+Mismatch for input: _let x=89_in x*23
+	Prog1: 2047
+	Prog2: 
+Exit Code mismatch for input y
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
+Mismatch for input: 28
+	Prog1: 28
+	Prog2: 
+Mismatch for input: 34
+	Prog1: 34
+	Prog2: 
+Exit Code mismatch for input y*ebx
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 60
+	Prog1: 60
+	Prog2: 
+Mismatch for input: 98
+	Prog1: 98
+	Prog2: 
+Exit Code mismatch for input ecle+29
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input _let dl=34_in dl+y+pujv
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 23
+	Prog1: 23
+	Prog2: 
+Mismatch for input: 19
+	Prog1: 19
+	Prog2: 
 Exit Code mismatch for input x
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 85
-	Prog1: 85
-	Prog2: 
-Exit Code mismatch for input 96+y
+Exit Code mismatch for input _let fpi=36_in fpi*64+34+_let vjvox=74_in vjvox+80+x
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 26
-	Prog1: 26
+Mismatch for input: 52
+	Prog1: 52
 	Prog2: 
-Mismatch for input: 99+_let oc=43_in oc+86*73
-	Prog1: 6420
+Mismatch for input: 71
+	Prog1: 71
 	Prog2: 
-Mismatch for input: _let y=53_in y*18
-	Prog1: 954
+Exit Code mismatch for input y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 22
+	Prog1: 22
 	Prog2: 
+Mismatch for input: 2
+	Prog1: 2
+	Prog2: 
+Mismatch for input: 34
+	Prog1: 34
+	Prog2: 
+Mismatch for input: 61
+	Prog1: 61
+	Prog2: 
+Mismatch for input: 25
+	Prog1: 25
+	Prog2: 
+Mismatch for input: 42
+	Prog1: 42
+	Prog2: 
+Mismatch for input: 11
+	Prog1: 11
+	Prog2: 
+Exit Code mismatch for input x
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 77+92
+	Prog1: 169
+	Prog2: 
+Exit Code mismatch for input x
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: _let x=47_in x*42
+	Prog1: 1974
+	Prog2: 
+Mismatch for input: 86
+	Prog1: 86
+	Prog2: 
+Mismatch for input: 69
+	Prog1: 69
+	Prog2: 
+Exit Code mismatch for input y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 83
+	Prog1: 83
+	Prog2: 
+Exit Code mismatch for input y+22*64+97+17+khk+44*67
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 52*3*76*6
+	Prog1: 71136
+	Prog2: 9275
+
 Mismatch for input: 88
 	Prog1: 88
 	Prog2: 
-Exit Code mismatch for input msfph
+Exit Code mismatch for input x
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Exit Code mismatch for input z
+Mismatch for input: 96
+	Prog1: 96
+	Prog2: 
+Mismatch for input: 65
+	Prog1: 65
+	Prog2: 
+Mismatch for input: 18
+	Prog1: 18
+	Prog2: 
+Mismatch for input: 84+96
+	Prog1: 180
+	Prog2: 
+Exit Code mismatch for input _let y=40_in y+p
 	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
 	Prog2: 0 with err 
-Mismatch for input: 6
-	Prog1: 6
+Mismatch for input: 59
+	Prog1: 59
+	Prog2: 
+Mismatch for input: 62
+	Prog1: 62
+	Prog2: 
+Mismatch for input: _let x=28_in x+x
+	Prog1: 56
+	Prog2: 
+Mismatch for input: _let y=52_in y+75
+	Prog1: 127
+	Prog2: 
+Exit Code mismatch for input y*46
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 7
+	Prog1: 7
+	Prog2: 
+Mismatch for input: 26
+	Prog1: 26
+	Prog2: 
+Mismatch for input: 87
+	Prog1: 87
+	Prog2: 
+Exit Code mismatch for input _let x=5_in x+sc*_let x=24_in x*y*51+56
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 41
+	Prog1: 41
+	Prog2: 
+Mismatch for input: 50
+	Prog1: 50
+	Prog2: 
+Exit Code mismatch for input _let eeff=75_in eeff*y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 59
+	Prog1: 59
+	Prog2: 
+Mismatch for input: _let x=24_in x+90*x*9*81+73
+	Prog1: 1574737
+	Prog2: 
+Exit Code mismatch for input psa
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input _let y=45_in y+43*x+28
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 40
+	Prog1: 40
+	Prog2: 
+Exit Code mismatch for input _let x=97_in x+y
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: _let x=93_in x+x
+	Prog1: 186
+	Prog2: 
+Exit Code mismatch for input k
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: _let y=39_in y+41+82+y
+	Prog1: 201
+	Prog2: 
+Exit Code mismatch for input ahilb*_let y=33_in y*x*56*42+x*14+_let ejp=71_in ejp*56+90
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Mismatch for input: 53
+	Prog1: 53
+	Prog2: 
+Mismatch for input: 19
+	Prog1: 19
 	Prog2: 
 Comparison of interp for msdscript and testing/msdscript1 completed with 100 mismatches.

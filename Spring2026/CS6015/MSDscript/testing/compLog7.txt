@@ -1,13 +1,10 @@
-Mismatch for input: _let x=72_in x*71*_let x=93_in x*47*43*x+51*1*94*56*82
-	Prog1: -1410182400
-	Prog2: 28213912
-
-Mismatch for input: _let te=99_in te+_let x=97_in x*52+_let zdsi=26_in zdsi*70+x+69+_let x=94_in x+84
-	Prog1: 7310
-	Prog2: 7307
-
-Mismatch for input: _let x=10_in x+_let x=13_in x+54+95+20+45
-	Prog1: 234
-	Prog2: 237
-
+Exit Code mismatch for input _let y=35_in y+_let x=35_in x*2*6*11
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input 70+_let xocgp=18_in xocgp*_let y=76_in y*82+74*24
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
+Exit Code mismatch for input 30+_let x=9_in x*x*_let fmbd=26_in fmbd+0+41+79*_let y=48_in y+63
+	Prog1: 1 with err VarExpr does not support interp (at this stage in development)
+	Prog2: 0 with err 
 Comparison of interp for msdscript and testing/msdscript7 completed with 3 mismatches.
