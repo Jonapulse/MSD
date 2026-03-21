@@ -16,6 +16,10 @@ typedef enum {
   prec_mult       // = 3
 } precedence_t;
 
+//To reference Val without full #include
+//
+class Val;
+
 /**
  * \brief Expression class, supporting interpret grammar
  * 〈expr〉 = 〈number〉
@@ -27,7 +31,7 @@ typedef enum {
  */
 class Expr{
 public:
-    virtual bool Equals(Expr* e) = 0;
+    virtual bool equals(Expr* e) = 0;
     virtual int interp() = 0;
     virtual bool has_variable() = 0;
     virtual Expr* subst(const std::string &name, Expr* substitution) = 0;
@@ -41,27 +45,27 @@ public:
 /**
  * \brief Num extends Expr, intended for integer values
  */
-class Num: public Expr{
+class NumExpr: public Expr{
 public:
     int val;
 
-    Num(int val);
+    NumExpr(int val);
 
-    bool Equals(Expr* e);
+    bool equals(Expr* e);
     int interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
 };
 
-class Add: public Expr{
+class AddExpr: public Expr{
 public:
     Expr *lhs;
     Expr *rhs;
 
-    Add(Expr *lhs, Expr *rhs);
+    AddExpr(Expr *lhs, Expr *rhs);
 
-    bool Equals(Expr* e);
+    bool equals(Expr* e);
     int interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
@@ -70,14 +74,14 @@ public:
     void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
 
-class Mult: public Expr{
+class MultExpr: public Expr{
 public: 
     Expr *lhs;
     Expr *rhs;
 
-    Mult(Expr *lhs, Expr *rhs);
+    MultExpr(Expr *lhs, Expr *rhs);
 
-    bool Equals(Expr* e);
+    bool equals(Expr* e);
     int interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
@@ -86,13 +90,13 @@ public:
     void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
 
-class Var: public Expr{
+class VarExpr: public Expr{
 public:
     std::string name;
 
-    Var(const std::string &name);
+    VarExpr(const std::string &name);
 
-    bool Equals(Expr *e);
+    bool equals(Expr *e);
     int interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
@@ -106,15 +110,15 @@ public:
  * \property rhs - '5' from example. The 'value' expression. When substituting, x will be swapped with this expression.
  * \property lhs - 'x + 1' from example. The expression that rhs will be substituted into.
  */
-class Let: public Expr{
+class LetExpr: public Expr{
 public:
     std::string name;
     Expr *lhs;
     Expr *rhs; 
 
-    Let(const std::string &name, Expr* rhs, Expr* lhs);
+    LetExpr(const std::string &name, Expr* rhs, Expr* lhs);
 
-    bool Equals(Expr *e);
+    bool equals(Expr *e);
     int interp();
     bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);

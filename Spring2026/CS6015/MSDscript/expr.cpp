@@ -4,6 +4,7 @@
  */
 
 #include "expr.h"
+#include "val.h"
 #include "catch.h"
 
 std::string Expr::to_string() {
@@ -32,25 +33,25 @@ std::string Expr::to_pretty_string() {
     return st.str();
 }
 
-Num::Num(int val){
+NumExpr::NumExpr(int val){
     this->val = val;
 }
 
-bool Num::Equals(Expr *e)
+bool NumExpr::equals(Expr *e)
 {
     //dynamic cast, check for null
-    Num *c = dynamic_cast<Num*>(e);
+    NumExpr *c = dynamic_cast<NumExpr*>(e);
     if(c == nullptr)
         return false;
     return this->val == c->val;
 }
 
-int Num::interp()
+int NumExpr::interp()
 {
     return this->val;
 }
 
-bool Num::has_variable()
+bool NumExpr::has_variable()
 {
     return false;
 }
@@ -58,56 +59,56 @@ bool Num::has_variable()
 /**
  * \brief Returns itself, as number values do not change in substitution
  */
-Expr* Num::subst(const std::string &name, Expr* substitution){
+Expr* NumExpr::subst(const std::string &name, Expr* substitution){
     return this;
 }
 
-void Num::printExpr(std::ostream& ot){
+void NumExpr::printExpr(std::ostream& ot){
     ot << std::to_string(val);
 }
 
-Add::Add(Expr *lhs, Expr *rhs){
+AddExpr::AddExpr(Expr *lhs, Expr *rhs){
     this->lhs = lhs;
     this->rhs = rhs;
 }
 
-bool Add::Equals(Expr *e)
+bool AddExpr::equals(Expr *e)
 {
     //dynamic cast, check for null
-    Add *c = dynamic_cast<Add*>(e);
+    AddExpr *c = dynamic_cast<AddExpr*>(e);
     if(c == nullptr)
         return false;
-    return lhs->Equals(c->lhs) && rhs->Equals(c->rhs);
+    return lhs->equals(c->lhs) && rhs->equals(c->rhs);
 }
 
-int Add::interp(){
+int AddExpr::interp(){
     return lhs->interp() + rhs->interp();
 }
 
-bool Add::has_variable()
+bool AddExpr::has_variable()
 {
     return lhs->has_variable() || rhs->has_variable();
 }
 
-Expr* Add::subst(const std::string &name, Expr* substitution){
-    return new Add(lhs->subst(name, substitution), rhs->subst(name, substitution));
+Expr* AddExpr::subst(const std::string &name, Expr* substitution){
+    return new AddExpr(lhs->subst(name, substitution), rhs->subst(name, substitution));
 }
 
-void Add::printExpr(std::ostream& ot){
+void AddExpr::printExpr(std::ostream& ot){
     ot << "(" << lhs->to_string() << "+" << rhs->to_string() << ")";
 }
 
 /**
  * explain how this precedence works.
  */
-void Add::pretty_print(std::ostream& ot){
+void AddExpr::pretty_print(std::ostream& ot){
     pretty_print_at(ot, prec_none, 0);
 }
 
 /**
  * \brief Adds parentheses if prec is high enough, which for Add means it was called by an add or mult.
  */
-void Add::pretty_print_at(std::ostream &ot, precedence_t prec, int depth){
+void AddExpr::pretty_print_at(std::ostream &ot, precedence_t prec, int depth){
     bool doParen = prec >= prec_add;
     if(doParen)
         ot << "(";
@@ -118,49 +119,49 @@ void Add::pretty_print_at(std::ostream &ot, precedence_t prec, int depth){
         ot << ")";
 }
 
-Mult::Mult(Expr *lhs, Expr *rhs){
+MultExpr::MultExpr(Expr *lhs, Expr *rhs){
     this->lhs = lhs;
     this->rhs = rhs;
 }
 
-bool Mult::Equals(Expr *e)
+bool MultExpr::equals(Expr *e)
 {
     //dynamic cast, check for null
-    Mult *c = dynamic_cast<Mult*>(e);
+    MultExpr *c = dynamic_cast<MultExpr*>(e);
     if(c == nullptr)
         return false;
-    return this->lhs->Equals(c->lhs) && this->rhs->Equals(c->rhs);
+    return this->lhs->equals(c->lhs) && this->rhs->equals(c->rhs);
 }
 
-int Mult::interp()
+int MultExpr::interp()
 {
     return lhs->interp() * rhs->interp();
 }
 
-bool Mult::has_variable()
+bool MultExpr::has_variable()
 {
     return lhs->has_variable() || rhs->has_variable();
 }
 
-Expr* Mult::subst(const std::string &name, Expr* substitution){
-    return new Mult(lhs->subst(name, substitution), rhs->subst(name, substitution));
+Expr* MultExpr::subst(const std::string &name, Expr* substitution){
+    return new MultExpr(lhs->subst(name, substitution), rhs->subst(name, substitution));
 }
 
-void Mult::printExpr(std::ostream& ot){
+void MultExpr::printExpr(std::ostream& ot){
     ot << "(" << lhs->to_string() << "*" << rhs->to_string() << ")";
 }
 
 /**
  * explain how this precedence works.
  */
-void Mult::pretty_print(std::ostream& ot){
+void MultExpr::pretty_print(std::ostream& ot){
     pretty_print_at(ot, prec_none, 0);
 }
 
 /**
  * \brief Adds parentheses if precedence is high enough, which for mult means it was called by a mult.
  */
-void Mult::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){
+void MultExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){
     bool doParen = prec >= prec_mult;
     if(doParen)
         ot << "(";
@@ -171,14 +172,14 @@ void Mult::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){
         ot << ")";
 }
 
-Var::Var(const std::string &name){
+VarExpr::VarExpr(const std::string &name){
     this->name = name;
 }
 
-bool Var::Equals(Expr *e)
+bool VarExpr::equals(Expr *e)
 {
     //dynamic cast, check for null
-    Var *c = dynamic_cast<Var*>(e);
+    VarExpr *c = dynamic_cast<VarExpr*>(e);
     if(c == nullptr)
         return false;
     
@@ -188,23 +189,23 @@ bool Var::Equals(Expr *e)
 /**
  * \brief interp is not defined (at this developmen stage) for variables, so we return an error
  */
-int Var::interp()
+int VarExpr::interp()
 {
-    throw std::runtime_error("VarExpr does not support interp (at this stage in development)");
+    throw std::runtime_error("Error: VarExpr does not support interp (at this stage in development)");
 }
 
-bool Var::has_variable(){
+bool VarExpr::has_variable(){
     return true;
 }
 
-Expr* Var::subst(const std::string &name, Expr* substitution){
+Expr* VarExpr::subst(const std::string &name, Expr* substitution){
     if(this->name == name)
         return substitution;
     else
         return this;
 }
 
-void Var::printExpr(std::ostream& ot){
+void VarExpr::printExpr(std::ostream& ot){
     ot << name;
 }
 
@@ -214,31 +215,31 @@ void Var::printExpr(std::ostream& ot){
  * \param rhs - the expression var 'name' will be replaced with
  * \param lhs - the expression, which should contain var 'name', into which rhs will be inserted
  */
-Let::Let(const std::string &name, Expr* rhs, Expr* lhs)
+LetExpr::LetExpr(const std::string &name, Expr* rhs, Expr* lhs)
 {
     this->name = name;
     this->rhs = rhs;
     this->lhs = lhs;
 }
 
-bool Let::Equals(Expr *e)
+bool LetExpr::equals(Expr *e)
 {
     //dynamic cast, check for null
-    Let *c = dynamic_cast<Let*>(e);
+    LetExpr *c = dynamic_cast<LetExpr*>(e);
     if(c == nullptr)
         return false;
     
-    return this->name == c->name && this->lhs->Equals(c->lhs) && this->rhs->Equals(c->rhs);
+    return this->name == c->name && this->lhs->equals(c->lhs) && this->rhs->equals(c->rhs);
 }
 
-int Let::interp(){
-    return lhs->subst(name, new Num(rhs->interp()))->interp();
+int LetExpr::interp(){
+    return lhs->subst(name, new NumExpr(rhs->interp()))->interp();
 }
 
 /**
  * \brief
  */
-bool Let::has_variable(){
+bool LetExpr::has_variable(){
     return rhs->has_variable();
 }
 
@@ -247,18 +248,18 @@ bool Let::has_variable(){
  * if substituting name that would overwrite rhs, we stop.
  * Nested Let expressions sharing variable names will substitue deeper nested names first.
  */
-Expr* Let::subst(const std::string &name, Expr* substitution){
+Expr* LetExpr::subst(const std::string &name, Expr* substitution){
     //End substitution if the substituting name matches Let's name
     if(this->name == name)
         return this;
     return lhs->subst(name, substitution);
 }
 
-void Let::printExpr(std::ostream& ot){
+void LetExpr::printExpr(std::ostream& ot){
     ot << "(_let " << this->name << "=" << rhs->to_string() << " _in "<< lhs->to_string() << ")";
 }
 
-void Let::pretty_print(std::ostream& ot){
+void LetExpr::pretty_print(std::ostream& ot){
     pretty_print_at(ot, prec_none, 0);
 }
 
@@ -266,7 +267,7 @@ void Let::pretty_print(std::ostream& ot){
  * \brief Adds parentheses if precedence is high enough, which for mult means it was called by a mult.
  * \param depth -> '_in' is preceded by an in-line, then depth * 6 spaces to align with its _let if nested.
  */
-void Let::pretty_print_at(std::ostream& ot, precedence_t prec, int depth = 0){
+void LetExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth = 0){
     bool doParen = prec >= prec_let;
     
     std::string spacing = "";
@@ -288,122 +289,119 @@ void Let::pretty_print_at(std::ostream& ot, precedence_t prec, int depth = 0){
 //
 TEST_CASE( "Expression Equality") {
     SECTION("Num tests"){
-        CHECK((new Num(10))->Equals(new Num(10)));
-        CHECK_FALSE((new Num(10))->Equals(new Num(5)));
-        CHECK_FALSE((new Num(10))->Equals(new Var("a")));
+        CHECK((new NumExpr(10))->equals(new NumExpr(10)));
+        CHECK_FALSE((new NumExpr(10))->equals(new NumExpr(5)));
+        CHECK_FALSE((new NumExpr(10))->equals(new VarExpr("a")));
     }
     
     SECTION("Add tests"){
-        CHECK((new Add(new Num(2), new Num(3)))->Equals(new Add(new Num(2), new Num(3))));
-        CHECK_FALSE((new Add(new Num(2), new Num(3)))->Equals(new Add(new Num(3), new Num(2))));
-        CHECK_FALSE((new Var("a"))->Equals(new Num(2)));
+        CHECK((new AddExpr(new NumExpr(2), new NumExpr(3)))->equals(new AddExpr(new NumExpr(2), new NumExpr(3))));
+        CHECK_FALSE((new AddExpr(new NumExpr(2), new NumExpr(3)))->equals(new AddExpr(new NumExpr(3), new NumExpr(2))));
+        CHECK_FALSE((new VarExpr("a"))->equals(new NumExpr(2)));
     }
     
     SECTION("Mult tests"){
-        CHECK((new Mult(new Num(2), new Num(3)))->Equals(new Mult(new Num(2), new Num(3))));
-        CHECK_FALSE((new Mult(new Num(2), new Num(3)))->Equals(new Mult(new Num(3), new Num(2))));
-        CHECK_FALSE((new Var("a"))->Equals(new Num(2)));
+        CHECK((new MultExpr(new NumExpr(2), new NumExpr(3)))->equals(new MultExpr(new NumExpr(2), new NumExpr(3))));
+        CHECK_FALSE((new MultExpr(new NumExpr(2), new NumExpr(3)))->equals(new MultExpr(new NumExpr(3), new NumExpr(2))));
+        CHECK_FALSE((new VarExpr("a"))->equals(new NumExpr(2)));
     }
 
     SECTION("VarExpr tests"){
-        CHECK((new Var("a"))->Equals((new Var("a"))));
-        CHECK_FALSE((new Var("a"))->Equals((new Var("b"))));
-        CHECK_FALSE((new Var("a"))->Equals(new Num(2)));
+        CHECK((new VarExpr("a"))->equals((new VarExpr("a"))));
+        CHECK_FALSE((new VarExpr("a"))->equals((new VarExpr("b"))));
+        CHECK_FALSE((new VarExpr("a"))->equals(new NumExpr(2)));
     }
 
     SECTION("Let tests"){
-        CHECK((new Let("x", new Add(new Var("x"), new Num(1)), new Num(5)))->
-        Equals(new Let("x", new Add(new Var("x"), new Num(1)), new Num(5))));
-        CHECK_FALSE((new Let("x", new Add(new Var("x"), new Num(1)), new Num(5)))->
-        Equals(new Let("x", new Add(new Var("x"), new Num(1)), new Num(6))));
-        CHECK_FALSE((new Let("x", new Add(new Var("x"), new Num(1)), new Num(5)))->
-        Equals(new Let("y", new Add(new Var("y"), new Num(1)), new Num(5))));
+        CHECK((new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1)), new NumExpr(5)))->
+        equals(new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1)), new NumExpr(5))));
+        CHECK_FALSE((new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1)), new NumExpr(5)))->
+        equals(new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1)), new NumExpr(6))));
+        CHECK_FALSE((new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1)), new NumExpr(5)))->
+        equals(new LetExpr("y", new AddExpr(new VarExpr("y"), new NumExpr(1)), new NumExpr(5))));
     }
 }
 
 TEST_CASE("Expression interp"){
     SECTION("Num tests"){
-        CHECK((new Num(10))->interp() == 10);
+        CHECK((new NumExpr(10))->interp() == 10);
     }
 
     SECTION("Add tests"){
-        CHECK((new Add(new Num(3), new Num(5)))->interp() == 8);
-        CHECK((new Add(new Add(new Num(1),new Num(2)), new Num(3)))->interp() == 6);
+        CHECK((new AddExpr(new NumExpr(3), new NumExpr(5)))->interp() == 8);
+        CHECK((new AddExpr(new AddExpr(new NumExpr(1),new NumExpr(2)), new NumExpr(3)))->interp() == 6);
     }
 
     SECTION("Mult tests")
     {
-        CHECK((new Mult(new Num(3), new Num(5)))->interp() == 15);
-        CHECK((new Mult(new Mult(new Num(2),new Num(3)), new Num(3)))->interp() == 18);
+        CHECK((new MultExpr(new NumExpr(3), new NumExpr(5)))->interp() == 15);
+        CHECK((new MultExpr(new MultExpr(new NumExpr(2),new NumExpr(3)), new NumExpr(3)))->interp() == 18);
     }
 
     SECTION("VarExpr tests"){
-        CHECK_THROWS_WITH( (new Var("x"))->interp(), "VarExpr does not support interp (at this stage in development)" );
+        CHECK_THROWS_WITH( (new VarExpr("x"))->interp(), "Error: VarExpr does not support interp (at this stage in development)" );
     }
 
     SECTION("Assignment tests"){
-        CHECK( (new Mult(new Num(3), new Num(2)))->interp()==6 );
-        CHECK( (new Add(new Add(new Num(10), new Num(15)),new Add(new Num(20),new Num(20))))->interp()==65);
+        CHECK( (new MultExpr(new NumExpr(3), new NumExpr(2)))->interp()==6 );
+        CHECK( (new AddExpr(new AddExpr(new NumExpr(10), new NumExpr(15)),new AddExpr(new NumExpr(20),new NumExpr(20))))->interp()==65);
     }
 
     SECTION("Let tests"){
-        CHECK((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->interp() == 6);
+        CHECK((new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp() == 6);
 
         //nested Let
-        Expr* nestedLet = new Let("x", new Num(10), new Add(new Var("x"), new Let("x", new Num(13), new Add(new Var("x"), new Num(5)))));
-        int nlinterped = nestedLet->interp();
-        CHECK(nlinterped == 28);
-
+        CHECK((new LetExpr("x", new NumExpr(10), new AddExpr(new VarExpr("x"), new LetExpr("x", new NumExpr(13), new AddExpr(new VarExpr("x"), new NumExpr(5))))))->interp() == 28);
     }
 }
 
 TEST_CASE("has_var"){
-    CHECK( (new Add(new Var("x"), new Num(1)))->has_variable());
-    CHECK_FALSE( (new Mult(new Num(2), new Num(1)))->has_variable());
-    CHECK((new Let("x", new Add(new Var("x"), new Num(5)), new Add(new Var("x"), new Num(1))))->has_variable());
-    CHECK_FALSE((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->has_variable());
+    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(1)))->has_variable());
+    CHECK_FALSE( (new MultExpr(new NumExpr(2), new NumExpr(1)))->has_variable());
+    CHECK((new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(5)), new AddExpr(new VarExpr("x"), new NumExpr(1))))->has_variable());
+    CHECK_FALSE((new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->has_variable());
 }
 
 TEST_CASE("substitution")
 {
-    CHECK( (new Add(new Var("x"), new Num(7)))
-       ->subst("x", new Var("y"))
-       ->Equals(new Add(new Var("y"), new Num(7))) );
-    CHECK( (new Var("x"))
-       ->subst("x", new Add(new Var("y"),new Num(7)))
-       ->Equals(new Add(new Var("y"),new Num(7))) );
-    CHECK( (new Add(new Var("x"), new Num(5)))
-        ->subst("x", new Num(3))
+    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(7)))
+       ->subst("x", new VarExpr("y"))
+       ->equals(new AddExpr(new VarExpr("y"), new NumExpr(7))) );
+    CHECK( (new VarExpr("x"))
+       ->subst("x", new AddExpr(new VarExpr("y"),new NumExpr(7)))
+       ->equals(new AddExpr(new VarExpr("y"),new NumExpr(7))) );
+    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(5)))
+        ->subst("x", new NumExpr(3))
         ->interp() == 8);
-    CHECK( (new Mult(new Var("x"), new Var("y")))
-        ->subst("x", new Num(3))
-        ->subst("y", new Num(4))
+    CHECK( (new MultExpr(new VarExpr("x"), new VarExpr("y")))
+        ->subst("x", new NumExpr(3))
+        ->subst("y", new NumExpr(4))
         ->interp() == 12);
 }
 
 TEST_CASE("to_string")
 {
-    CHECK((new Num(3))->to_string() == "3");
-    CHECK((new Var("x"))->to_string() == "x");
-    CHECK((new Add(new Num(3), new Num(4)))->to_string() == "(3+4)");
-    CHECK((new Mult(new Num(3), new Num(4)))->to_string() == "(3*4)");
+    CHECK((new NumExpr(3))->to_string() == "3");
+    CHECK((new VarExpr("x"))->to_string() == "x");
+    CHECK((new AddExpr(new NumExpr(3), new NumExpr(4)))->to_string() == "(3+4)");
+    CHECK((new MultExpr(new NumExpr(3), new NumExpr(4)))->to_string() == "(3*4)");
 
-    CHECK((new Add(new Num(3), new Mult(new Var("x"), new Num(4))))->to_string() == "(3+(x*4))");
-    CHECK((new Mult(new Num(3), new Add(new Var("x"), new Num(4))))->to_string() == "(3*(x+4))");
+    CHECK((new AddExpr(new NumExpr(3), new MultExpr(new VarExpr("x"), new NumExpr(4))))->to_string() == "(3+(x*4))");
+    CHECK((new MultExpr(new NumExpr(3), new AddExpr(new VarExpr("x"), new NumExpr(4))))->to_string() == "(3*(x+4))");
     
-    CHECK((new Let("x", new Add(new Var("x"), new Num(5)), new Add(new Var("x"), new Num(1))))->to_string() == "(_let x=(x+5) _in (x+1))");
-    CHECK((new Let("x", new Num(5), new Add(new Var("x"), new Num(1))))->to_string() == "(_let x=5 _in (x+1))");
+    CHECK((new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(5)), new AddExpr(new VarExpr("x"), new NumExpr(1))))->to_string() == "(_let x=(x+5) _in (x+1))");
+    CHECK((new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->to_string() == "(_let x=5 _in (x+1))");
 }
 
 TEST_CASE("pretty_print")
 {
-    CHECK ( (new Mult(new Num(1), new Add(new Num(2), new Num(3))))->to_pretty_string() ==  "1 * (2 + 3)" );
-    CHECK ( (new Mult(new Mult(new Num(8), new Num(1)), new Var("y")))->to_pretty_string() ==  "(8 * 1) * y" );
-    CHECK ( (new Mult(new Add(new Num(3), new Num(5)), new Mult(new Num(6), new Num(1))))->to_pretty_string() ==  "(3 + 5) * 6 * 1" );
-    CHECK ( (new Mult(new Mult(new Num(7), new Num(7)), new Add(new Num(9), new Num(2))))->to_pretty_string() ==  "(7 * 7) * (9 + 2)" );
+    CHECK ( (new MultExpr(new NumExpr(1), new AddExpr(new NumExpr(2), new NumExpr(3))))->to_pretty_string() ==  "1 * (2 + 3)" );
+    CHECK ( (new MultExpr(new MultExpr(new NumExpr(8), new NumExpr(1)), new VarExpr("y")))->to_pretty_string() ==  "(8 * 1) * y" );
+    CHECK ( (new MultExpr(new AddExpr(new NumExpr(3), new NumExpr(5)), new MultExpr(new NumExpr(6), new NumExpr(1))))->to_pretty_string() ==  "(3 + 5) * 6 * 1" );
+    CHECK ( (new MultExpr(new MultExpr(new NumExpr(7), new NumExpr(7)), new AddExpr(new NumExpr(9), new NumExpr(2))))->to_pretty_string() ==  "(7 * 7) * (9 + 2)" );
 
-    CHECK ( (new Mult(new Mult(new Num(5), new Num(2)), new Num(8)))->to_pretty_string() == "(5 * 2) * 8");
+    CHECK ( (new MultExpr(new MultExpr(new NumExpr(5), new NumExpr(2)), new NumExpr(8)))->to_pretty_string() == "(5 * 2) * 8");
 
-    CHECK ( (new Let("x", new Num(5), new Add(new Let("y", new Num(3), new Add(new Var("y"), new Num(2))), new Var("x"))))->to_pretty_string()
+    CHECK ( (new LetExpr("x", new NumExpr(5), new AddExpr(new LetExpr("y", new NumExpr(3), new AddExpr(new VarExpr("y"), new NumExpr(2))), new VarExpr("x"))))->to_pretty_string()
         == "_let x = 5\n_in  (_let y = 3\n      _in  y + 2) + x");
 }

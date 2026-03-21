@@ -16,7 +16,7 @@ Expr *parse_expr(std::istream &in)
     if(c == '+'){
         consume(in, '+');
         Expr* rhs = parse_expr(in);
-        return new Add(e, rhs);
+        return new AddExpr(e, rhs);
     } else {
         return e;
     }
@@ -33,7 +33,7 @@ Expr *parse_addend(std::istream &in)
     if (c == '*'){
         consume(in, '*');
         Expr* rhs = parse_addend(in);
-        return new Mult(e, rhs);
+        return new MultExpr(e, rhs);
     } else {
         return e;
     }
@@ -93,12 +93,12 @@ Expr *parse_num(std::istream &in) {
     if(negative)
         n *= -1;
 
-    return new Num(n);
+    return new NumExpr(n);
 }
 
 Expr* parse_var(std::istream &in)
 {
-    return new Var(parse_word(in));
+    return new VarExpr(parse_word(in));
 }
 
 Expr* parse_keyword(std::istream &in){
@@ -134,7 +134,7 @@ Expr* parse_keyword(std::istream &in){
         else
             throw std::runtime_error("_let not followed by _in");
 
-        return new Let(name, rhs, lhs);
+        return new LetExpr(name, rhs, lhs);
     } 
     else
     {
