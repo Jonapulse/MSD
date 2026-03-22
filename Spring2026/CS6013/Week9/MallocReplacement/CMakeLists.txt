@@ -11,19 +11,30 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-# Your main library (exclude main.cpp so tests can link to it)
 add_library(hashtable_lib
         src/HashTable.cpp
         src/HashTable.h
 )
 
+add_library(mymalloc_lib
+    src/MyMalloc.cpp
+    src/MyMalloc.h
+)
+
 add_executable(MallocReplacement src/main.cpp)
-target_link_libraries(MallocReplacement hashtable_lib)
+target_link_libraries(MallocReplacement hashtable_lib mymalloc_lib)
 
 add_executable(HashTableTests tests/HashTableTest.cpp)
 target_link_libraries(HashTableTests
         hashtable_lib
         GTest::gtest_main
+)
+
+add_executable(MyMallocTests tests/MyMallocTest.cpp)
+target_link_libraries(MyMallocTests
+    mymalloc_lib
+    hashtable_lib
+    GTest::gtest_main
 )
 
 include(GoogleTest)

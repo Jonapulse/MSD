@@ -5,15 +5,20 @@
 #ifndef MALLOCREPLACEMENT_MYMEMORY_H
 #define MALLOCREPLACEMENT_MYMEMORY_H
 
+#include "HashTable.h"
+#include <vector>
 
-class MyMemory {
+class MyMalloc {
 public:
     void* allocate(int bytesToAllocate);
     void deallocate(void* ptr);
 
-    MyMemory();
-    ~MyMemory();
-};
+    MyMalloc();
+    ~MyMalloc();
+private:
+    HashTable* ptrSizes;
+    std::vector<void*> pages;
 
+};
 
 #endif //MALLOCREPLACEMENT_MYMEMORY_H
