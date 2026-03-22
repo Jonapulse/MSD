@@ -3,7 +3,6 @@
 //////////////////////////////////////////
 
 #include "MyMalloc.h"
-
 #include <stdexcept>
 #include <sys/mman.h>
 
@@ -22,4 +21,14 @@ void* MyMalloc::allocate(int bytesToAllocate) {
         throw std::runtime_error("mmap failed");
     ptrSizes->insert(ptr, bytesToAllocate);
     return ptr;
+}
+
+/**
+ *
+ * @param ptr
+ */
+void MyMalloc::deallocate(void* ptr) {
+    int size = ptrSizes->get(ptr);
+    ptrSizes->remove(ptr);
+    munmap(ptr, size);
 }

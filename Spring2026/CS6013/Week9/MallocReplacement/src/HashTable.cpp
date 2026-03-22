@@ -4,14 +4,19 @@
 //////////////////////////////////////////
 
 #include "HashTable.h"
-#include <cstdint>
 #include <stdexcept>
+#include <sys/mman.h>
 
 HashTable::HashTable() {
     size = 0;
     capacity = INITIAL_CAPACITY;
-    table.resize(capacity, {nullptr, 0, false, true});
+    table = allocateTable(capacity);
 }
+
+HashTable::~HashTable() {
+    freeTable(table, capacity);
+}
+
 
 void HashTable::insert(void *key, int value) {
     if ((float)(size + 1) / capacity > RESIZE_FRACTION)
@@ -54,6 +59,33 @@ int HashTable::get(void* key) {
     return table[index].value;
 }
 
+/**
+ * Creates a table in memory using mmap.
+ * REHASHING HANDLED IN GROW
+ * @param cap - size (# of HashEntries)
+ * @return ptr to table
+ */
+HashTable::HashEntry* HashTable::allocateTable(int cap) {
+    HashEntry* ptr = (HashEntry*) mmap(nullptr, cap, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (ptr == MAP_FAILED)
+        throw std::runtime_error("mmap failed");
+    for (int i = 0; i < cap; i++) {
+        ptr[i] = {nullptr, 0, false, true};
+    }
+    return ptr;
+}
+
+/**
+* ASSIGNMENT QUESTION: What is a lazy delete from a hash table?
+ * When we delete entries we set their tombstone flag to 'true' but do not
+ * overwrite any data. This is lazy deletion - data's still there but ignored
+ * by the hashtable. It will not copy over on rehash.
+ * @param ptr
+ */
+void HashTable::freeTable(void* ptr, int cap) {
+    munmap(table, cap);
+}
+
 int HashTable::find(void* key) {
     int index = hashFunction(key);
     int startIndex = index;
@@ -73,17 +105,17 @@ int HashTable::find(void* key) {
  * grows the table and rehashes its values
  */
 void HashTable::grow() {
-    std::vector<HashEntry> forRehash;
-    for (int i = 0; i < capacity; i++) {
-        if (!table[i].empty)
-            forRehash.push_back(table[i]);
-    }
+    HashEntry* oldTable = table;
+    int oldCapacity = capacity;
     capacity *= GROW_FACTOR;
-    table.assign(capacity, {nullptr, 0, false, true});
+    table = allocateTable(capacity);
     size = 0;
-    for (HashEntry entry : forRehash) {
-        insert(entry.key, entry.value);
+    for (int i = 0; i < oldCapacity; i++) {
+        if (!oldTable[i].empty && !oldTable[i].tombstone) {
+            insert(oldTable[i].key, oldTable[i].value);
+        }
     }
+    freeTable(oldTable, oldCapacity);
 }
 
 int HashTable::hashFunction(void* key) {
