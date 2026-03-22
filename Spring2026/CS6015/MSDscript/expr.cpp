@@ -34,14 +34,7 @@ std::string Expr::to_pretty_string() {
 }
 
 NumExpr::NumExpr(int val){
-    this->val = new NumVal(val);
-}
-
-NumExpr::NumExpr(Val* val){
-    NumVal *c = dynamic_cast<NumVal*>(val);
-    if(c == nullptr)
-        throw std::runtime_error("Error: NumExpr initialized with non-NumVal Val");
-    this->val = c;
+    this->rep = new NumVal(val);
 }
 
 bool NumExpr::equals(Expr *e)
@@ -50,12 +43,12 @@ bool NumExpr::equals(Expr *e)
     NumExpr *c = dynamic_cast<NumExpr*>(e);
     if(c == nullptr)
         return false;
-    return this->val->equals(c->val);
+    return this->rep->equals(c->rep);
 }
 
 Val* NumExpr::interp()
 {
-    return this->val;
+    return this->rep;
 }
 
 bool NumExpr::has_variable()
@@ -71,7 +64,7 @@ Expr* NumExpr::subst(const std::string &name, Expr* substitution){
 }
 
 void NumExpr::printExpr(std::ostream& ot){
-    ot << val->to_string();
+    ot << rep->to_string();
 }
 
 AddExpr::AddExpr(Expr *lhs, Expr *rhs){
@@ -240,7 +233,7 @@ bool LetExpr::equals(Expr *e)
 }
 
 Val* LetExpr::interp(){
-    return lhs->subst(name, new NumExpr(rhs->interp()))->interp();
+    return lhs->subst(name, rhs->interp()->to_expr())->interp();
 }
 
 /**

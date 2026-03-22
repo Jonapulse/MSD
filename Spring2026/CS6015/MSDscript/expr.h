@@ -47,10 +47,9 @@ public:
  */
 class NumExpr: public Expr{
 public:
-    Val* val;
+    Val* rep;
 
-    NumExpr(int val);
-    NumExpr(Val* val);
+    NumExpr(int rep);
 
     bool equals(Expr* e);
     Val* interp();

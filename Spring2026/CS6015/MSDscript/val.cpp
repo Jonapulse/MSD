@@ -7,36 +7,36 @@
 #include "catch.h"
  
 NumVal::NumVal(int val){
-    this->val = val;
+    this->rep = val;
 }
 
 bool NumVal::equals(Val* e){
     NumVal *c = dynamic_cast<NumVal*>(e);
     if(c == nullptr)
         return false;
-    return this->val == c->val;
+    return this->rep == c->rep;
 }
 
 Val* NumVal::add_to(Val* rhs){
     NumVal *c = dynamic_cast<NumVal*>(rhs);
     if(c == nullptr)
         throw std::runtime_error("Error: NumVal cannot add_to non-NumVals.");
-    return new NumVal(this->val + c->val);
+    return new NumVal(this->rep + c->rep);
 }
 
 Val* NumVal::mult_with(Val* rhs){
     NumVal *c = dynamic_cast<NumVal*>(rhs);
     if(c == nullptr)
         throw std::runtime_error("Error: NumVal cannot mult_with non-NumVals.");
-    return new NumVal(this->val * c->val);
+    return new NumVal(this->rep * c->rep);
 }
 
 Expr* NumVal::to_expr(){
-    return new NumExpr(this->val);
+    return new NumExpr(this->rep);
 }
 
 std::string NumVal::to_string(){
-    return std::to_string(this->val);
+    return std::to_string(this->rep);
 }
 
 TEST_CASE("NumVal"){

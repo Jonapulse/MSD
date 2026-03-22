@@ -30,9 +30,9 @@ public:
  */
 class NumVal: public Val{
 public:
-    int val;
+    int rep;
 
-    NumVal(int val);
+    NumVal(int rep);
 
     bool equals(Val* e);
     Val* add_to(Val* rhs);
