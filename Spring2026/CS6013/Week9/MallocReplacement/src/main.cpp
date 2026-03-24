@@ -11,6 +11,10 @@ constexpr int TEST_N = 100000;
 constexpr int TEST_SIZE = 10000;
 
 int main(int argc, char** args){
+
+    //Running/discarding a 'dummy' test because 1st test has overhead I don't want in data
+    runTimingTest(1, true);
+
     int myMallocSmall = runTimingTest(0, true);
     int baseSmall = runTimingTest(0, false);
     int myMallocBig = runTimingTest(1, true);
@@ -27,7 +31,7 @@ int main(int argc, char** args){
         << "For " << TEST_N << " mixed values of size " << TEST_SIZE << " and ints:\n\t"
         <<"MyMalloc: " << myMallocMixed << "ms\n\tmalloc: " << baseMixed << "ms\n"
         << "For 1 int:\n\t"
-        <<"MyMalloc: " << myMallocMin << "micro-s\n\tmalloc: " << baseMin << "micro-s\n";
+        <<"MyMalloc: " << myMallocMin << " microseconds\n\tmalloc: " << baseMin << " microseconds\n";
 
 }
 
