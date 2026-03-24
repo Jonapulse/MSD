@@ -132,3 +132,49 @@ public:
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
+
+class BoolExpr: public Expr{
+public:
+    Val* rep;
+
+    BoolExpr(bool value);
+
+    bool equals(Expr* e);
+    Val* interp();
+    bool has_variable();
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+};
+
+class IfExpr: public Expr{
+public:
+    Expr* condition_arg;
+    Expr* if_arg;
+    Expr* else_arg;
+
+    IfExpr(Expr* condition_arg, Expr* if_arg, Expr* else_arg);
+
+    bool equals(Expr* e);
+    Val* interp();
+    bool has_variable();
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+};
+
+class EqExpr: public Expr{
+public:
+    Expr* lhs;
+    Expr* rhs;
+
+    EqExpr(Expr* lhs, Expr* rhs);
+
+    bool equals(Expr* e);
+    Val* interp();
+    bool has_variable();
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+};

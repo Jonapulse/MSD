@@ -6,8 +6,8 @@
 #include "expr.h"
 #include "catch.h"
  
-NumVal::NumVal(int val){
-    this->rep = val;
+NumVal::NumVal(int rep){
+    this->rep = rep;
 }
 
 bool NumVal::equals(Val* e){
@@ -35,8 +35,43 @@ Expr* NumVal::to_expr(){
     return new NumExpr(this->rep);
 }
 
+bool NumVal::is_true(){
+    throw std::runtime_error("Error: NumVal cannot call is_true()");
+}
+
 std::string NumVal::to_string(){
     return std::to_string(this->rep);
+}
+
+BoolVal::BoolVal(bool rep){
+    this->rep = rep;
+}
+
+bool BoolVal::equals(Val* e){
+    BoolVal *c = dynamic_cast<BoolVal*>(e);
+    if(c == nullptr)
+        return false;
+    return this->rep == c->rep;
+}
+
+Val* BoolVal::add_to(Val* e){
+    throw std::runtime_error("Error: BoolVal add_to invalid");
+}
+
+Val* BoolVal::mult_with(Val* e){
+    throw std::runtime_error("Error: BoolVal mult_with invalid");
+}
+
+Expr* BoolVal::to_expr(){
+    return new BoolExpr(this->rep);
+}
+
+std::string BoolVal::to_string(){
+    return rep ? "true" : "false";
+}
+
+bool BoolVal::is_true(){
+    return rep;
 }
 
 TEST_CASE("NumVal"){
@@ -62,5 +97,31 @@ TEST_CASE("NumVal"){
     SECTION("to_string")
     {
         CHECK((new NumVal(37))->to_string() == "37");
+    }
+}
+
+TEST_CASE("BoolVal"){
+    SECTION("Equals"){
+        CHECK((new BoolVal(true))->equals(new BoolVal(true)));
+        CHECK_FALSE((new BoolVal(true))->equals(new BoolVal(false)));
+    }
+
+    SECTION("Add_to"){
+        CHECK_THROWS(((new BoolVal(true))->add_to(new NumVal(5)))->equals(new NumVal(8)));
+    }
+
+    SECTION("Mult_With")
+    {
+        CHECK(((new NumVal(3))->mult_with(new NumVal(5)))->equals(new NumVal(15)));
+    }
+
+    SECTION("to_expr")
+    {
+        CHECK((new BoolVal(true))->to_expr()->equals(new BoolExpr(true)));
+    }
+
+    SECTION("to_string")
+    {
+        CHECK((new BoolVal(true))->to_string() == "true");
     }
 }

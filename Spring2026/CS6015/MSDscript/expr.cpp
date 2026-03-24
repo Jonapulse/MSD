@@ -284,9 +284,109 @@ void LetExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth = 0
         ot << ")";
 }
 
+BoolExpr::BoolExpr(bool value){
+    rep = new BoolVal(value);
+}
 
-//TESTING for expr.cpp
-//
+bool BoolExpr::equals(Expr* e){
+    //dynamic cast, check for null
+    BoolExpr *c = dynamic_cast<BoolExpr*>(e);
+    if(c == nullptr)
+        return false;
+    return rep->equals(c->rep);
+}
+
+Val* BoolExpr::interp(){
+    return rep;
+}
+
+/**
+ * \brief Returns itself, as boolean values do not change in substitution
+ */
+bool BoolExpr::has_variable(){
+    return false;
+}
+
+Expr* BoolExpr::subst(const std::string &name, Expr* substitution){
+    return this;
+}
+
+void BoolExpr::printExpr(std::ostream& ot){
+    ot << rep->to_string();
+}
+
+IfExpr::IfExpr(Expr* condition_arg, Expr* if_arg, Expr* else_arg){
+    this->condition_arg = condition_arg;
+    this->if_arg = if_arg;
+    this->else_arg = else_arg;
+}
+
+bool IfExpr::equals(Expr* e){
+    //dynamic cast, check for null
+    IfExpr *c = dynamic_cast<IfExpr*>(e);
+    if(c == nullptr)
+        return false;
+    return condition_arg->equals(c->condition_arg) && if_arg->equals(c->if_arg) && else_arg->equals(c->else_arg);
+}
+
+Val* IfExpr::interp(){
+    if(condition_arg->interp()->is_true())
+        return if_arg->interp();
+    else
+        return else_arg->interp();
+}
+
+bool IfExpr::has_variable(){
+    return condition_arg->has_variable() || if_arg->has_variable() || else_arg->has_variable();
+}
+
+Expr* IfExpr::subst(const std::string &name, Expr* substitution){
+    return new IfExpr(condition_arg->subst(name, substitution),
+        if_arg->subst(name, substitution),
+        else_arg->subst(name, substitution));
+}
+
+void IfExpr::printExpr(std::ostream& ot){}
+
+void IfExpr::pretty_print(std::ostream& ot){}
+
+void IfExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){}
+
+EqExpr::EqExpr(Expr* lhs, Expr* rhs){
+    this->lhs = lhs;
+    this->rhs = rhs;
+}
+
+bool EqExpr::equals(Expr* e){
+    //dynamic cast, check for null
+    EqExpr *c = dynamic_cast<EqExpr*>(e);
+    if(c == nullptr)
+        return false;
+    return lhs->equals(c->lhs) && rhs->equals(c->rhs);
+}
+
+Val* EqExpr::interp(){
+    return new BoolVal(lhs->interp()->equals(rhs->interp()));
+}
+
+bool EqExpr::has_variable(){
+    return lhs->has_variable() || rhs->has_variable();
+}
+
+Expr* EqExpr::subst(const std::string &name, Expr* substitution){
+    return new EqExpr(lhs->subst(name, substitution), rhs->subst(name, substitution));
+}
+
+void EqExpr::printExpr(std::ostream& ot){}
+
+void EqExpr::pretty_print(std::ostream& ot){}
+
+void EqExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){}
+
+
+////////////////////////////////////////
+// TESTING for expr.cpp
+////////////////////////////////////////
 TEST_CASE( "Expression Equality") {
     SECTION("Num tests"){
         CHECK((new NumExpr(10))->equals(new NumExpr(10)));
@@ -352,6 +452,21 @@ TEST_CASE("Expression interp"){
 
         //nested Let
         CHECK((new LetExpr("x", new NumExpr(10), new AddExpr(new VarExpr("x"), new LetExpr("x", new NumExpr(13), new AddExpr(new VarExpr("x"), new NumExpr(5))))))->interp()->equals(new NumVal(28)));
+    }
+
+    SECTION("Bool tests"){
+        CHECK((new BoolExpr(true))->interp()->is_true());
+        CHECK_FALSE((new BoolExpr(false))->interp()->is_true());
+    }
+
+    SECTION("If tests"){
+        CHECK((new IfExpr(new BoolExpr(true), new NumExpr(3), new NumExpr(4)))->interp()->equals(new NumVal(3)));
+        CHECK((new IfExpr(new BoolExpr(false), new NumExpr(3), new NumExpr(4)))->interp()->equals(new NumVal(4)));
+    }
+
+    SECTION("Equality tests"){
+        CHECK((new EqExpr(new NumExpr(3), new NumExpr(3)))->interp()->equals(new BoolVal(true)));
+        CHECK((new EqExpr(new NumExpr(3), new NumExpr(4)))->interp()->equals(new BoolVal(false)));
     }
 }
 

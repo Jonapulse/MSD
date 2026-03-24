@@ -12,7 +12,7 @@ class Expr;
 /**
  * \brief Value class, supporting interpreter grammar
  * 〈val〉 = 〈number〉
- *  | 〈boolean〉 
+ *          |〈boolean〉 
  */
 class Val
 {
@@ -22,11 +22,11 @@ public:
     virtual Val* mult_with(Val* rhs) = 0;
     virtual Expr* to_expr() = 0;
     virtual std::string to_string() = 0;
+    virtual bool is_true() = 0;
 };
 
 /**
  * \brief NumVal, representing integer values
- * 
  */
 class NumVal: public Val{
 public:
@@ -39,6 +39,24 @@ public:
     Val* mult_with(Val* rhs);
     Expr* to_expr();
     std::string to_string();
+    bool is_true(); //Will error when called on NumVal
 
     int to_int();
+};
+
+/**
+ * \brief NumVal, representing boolean values
+ */
+class BoolVal: public Val{
+public:
+    bool rep;
+
+    BoolVal(bool rep);
+
+    bool equals(Val* e);
+    Val* add_to(Val* rhs); //Will error when called on BoolVal
+    Val* mult_with(Val* rhs); //Will error when called on BoolVal
+    Expr* to_expr();
+    std::string to_string();
+    bool is_true();
 };
