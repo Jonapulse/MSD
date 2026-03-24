@@ -6,6 +6,7 @@ int runTimingTest(int type, bool useMyMalloc);
 void testManySmall(int n, bool useMyMalloc);
 void testManyBig(int n, int size, bool useMyMalloc);
 void testManyMixed(int n, int size, bool useMyMalloc);
+void testMin(bool useMyMalloc);
 constexpr int TEST_N = 100000;
 constexpr int TEST_SIZE = 10000;
 
@@ -16,21 +17,25 @@ int main(int argc, char** args){
     int baseBig = runTimingTest(1, false);
     int myMallocMixed = runTimingTest(2, true);
     int baseMixed = runTimingTest(2, false);
+    int myMallocMin = runTimingTest(3, true);
+    int baseMin = runTimingTest(3, false);
     std::cout << "Comparing timing of MyMalloc vs malloc/free\nFor "
         << TEST_N << " small values:\n\t"
         <<"MyMalloc: " << myMallocSmall << "ms\n\tmalloc: " << baseSmall << "ms\n"
         << "For " << TEST_N << " values of size " << TEST_SIZE << ":\n\t"
         <<"MyMalloc: " << myMallocBig << "ms\n\tmalloc: " << baseBig << "ms\n"
         << "For " << TEST_N << " mixed values of size " << TEST_SIZE << " and ints:\n\t"
-        <<"MyMalloc: " << myMallocMixed << "ms\n\tmalloc: " << baseMixed << "ms\n";
+        <<"MyMalloc: " << myMallocMixed << "ms\n\tmalloc: " << baseMixed << "ms\n"
+        << "For 1 int:\n\t"
+        <<"MyMalloc: " << myMallocMin << "micro-s\n\tmalloc: " << baseMin << "micro-s\n";
 
 }
 
 /**
- * Timing test utility function
- * @param type - 0: small, 1: big, 2: mixed
+ * Timing test wrapper
+ * @param type - 0: small, 1: big, 2: mixed, 3: minimum
  * @param useMyMalloc
- * @return duration in milliseconds
+ * @return duration in milliseconds (special case 3 returns microseconds)
  */
 int runTimingTest(int type, bool useMyMalloc) {
     auto start = std::chrono::high_resolution_clock::now();
@@ -44,11 +49,22 @@ int runTimingTest(int type, bool useMyMalloc) {
         case(2):
             testManyMixed(TEST_N, TEST_SIZE, useMyMalloc);
             break;
+        case(3):
+            testMin(useMyMalloc);
+            break;
     }
     auto end = std::chrono::high_resolution_clock::now();
-    return(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
+    if (type == 3) //Special case for 3, which needs microsecond resolution
+        return(std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
+    else
+        return(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
 }
 
+/**
+ * Allocates, assigns, checks, and deallocates n ints.
+ * @param n
+ * @param useMyMalloc
+ */
 void testManySmall(int n, bool useMyMalloc) {
     MyMalloc memoryManager;
     int** smallList;
@@ -77,6 +93,12 @@ void testManySmall(int n, bool useMyMalloc) {
         free(smallList);
 }
 
+/**
+ * Allocates, assigns, checks, and deallocates n variables of size 'size'
+ * @param n
+ * @param size
+ * @param useMyMalloc
+ */
 void testManyBig(int n, int size, bool useMyMalloc){
     MyMalloc memoryManager;
     void** bigList;
@@ -108,8 +130,11 @@ void testManyBig(int n, int size, bool useMyMalloc){
 }
 
 /**
- * Alternates between large allocations and int. For setting and
- * checking values, casts both to int.
+ * Alternates between large allocations and int while allocating, assigning,
+ * checking, and deallocating.
+*  @param n
+ * @param size
+ * @param useMyMalloc
  */
 void testManyMixed(int n, int size, bool useMyMalloc) {
     MyMalloc memoryManager;
@@ -139,4 +164,28 @@ void testManyMixed(int n, int size, bool useMyMalloc) {
         memoryManager.deallocate(bigList);
     else
         free(bigList);
+}
+
+/**
+ * minimum do-anything test
+ * @param useMyMalloc
+ */
+void testMin(bool useMyMalloc) {
+
+    int* num;
+    if (useMyMalloc) {
+        MyMalloc memoryManager;
+        num = (int*)memoryManager.allocate(sizeof(int));
+        *num = 3;
+        if (*num != 3)
+            throw std::runtime_error("variable did not keep assigned value: " + std::to_string(*num));
+        memoryManager.deallocate(num);
+    }
+    else {
+        num = (int*)malloc(sizeof(int));
+        *num = 3;
+        if (*num != 3)
+            throw std::runtime_error("variable did not keep assigned value: " + std::to_string(*num));
+        free(num);
+    }
 }
