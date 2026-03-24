@@ -4,6 +4,9 @@
 //////////////////////////////////////////
 
 #include "HashTable.h"
+
+#include <iostream>
+#include <ostream>
 #include <stdexcept>
 #include <sys/mman.h>
 
@@ -66,7 +69,11 @@ int HashTable::get(void* key) {
  * @return ptr to table
  */
 HashTable::HashEntry* HashTable::allocateTable(int cap) {
-    HashEntry* ptr = (HashEntry*) mmap(nullptr, cap, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    HashTable::HashEntry* ptr = (HashTable::HashEntry*) mmap(
+        nullptr, sizeof(HashEntry) * cap,
+        PROT_READ | PROT_WRITE,
+        MAP_PRIVATE | MAP_ANONYMOUS,
+        -1, 0);
     if (ptr == MAP_FAILED)
         throw std::runtime_error("mmap failed");
     for (int i = 0; i < cap; i++) {
@@ -83,7 +90,7 @@ HashTable::HashEntry* HashTable::allocateTable(int cap) {
  * @param ptr
  */
 void HashTable::freeTable(void* ptr, int cap) {
-    munmap(table, cap);
+    munmap(ptr, cap);
 }
 
 int HashTable::find(void* key) {
@@ -115,7 +122,7 @@ void HashTable::grow() {
             insert(oldTable[i].key, oldTable[i].value);
         }
     }
-    freeTable(oldTable, oldCapacity);
+    freeTable(oldTable, sizeof(HashEntry) * oldCapacity);
 }
 
 int HashTable::hashFunction(void* key) {
