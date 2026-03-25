@@ -2,6 +2,7 @@
 #ifndef parse_hpp
 #define parse_hpp
 #include "expr.h"
+#include "val.h"
 #include <iostream>
 #include <sstream>
 #include <assert.h>
@@ -15,8 +16,10 @@
 #endif
 
 Expr *parse_expr(std::istream &in);
+Expr *parse_comparg(std::istream &in);
 Expr *parse_addend(std::istream &in);
 Expr *parse_multicand(std::istream &in);
+Expr *parse_inner(std::istream &in);
 Expr *parse_num(std::istream &in);
 Expr* parse_var(std::istream &in);
 Expr* parse_keyword(std::istream &in);

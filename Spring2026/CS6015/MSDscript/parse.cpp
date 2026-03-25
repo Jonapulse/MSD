@@ -8,6 +8,26 @@
 
 Expr *parse_expr(std::istream &in)
 {
+    Expr* e = parse_comparg(in);
+
+    skip_whitespace(in);
+
+    int c = in.peek();
+    if(c == '='){
+        consume(in, '=');
+        if(in.peek() != '=')
+            throw std::runtime_error("Error: '=' not followed by 2nd '='");
+        consume(in, '=');
+        Expr* rhs = parse_expr(in);
+        return new EqExpr(e, rhs);
+    } else {
+        return e;
+    }
+
+}
+
+Expr *parse_comparg(std::istream &in)
+{
     Expr* e = parse_addend(in);
 
     skip_whitespace(in);
@@ -20,7 +40,6 @@ Expr *parse_expr(std::istream &in)
     } else {
         return e;
     }
-
 }
 
 Expr *parse_addend(std::istream &in)
@@ -41,6 +60,20 @@ Expr *parse_addend(std::istream &in)
 
 Expr *parse_multicand(std::istream &in)
 {
+    Expr* expr = parse_inner(in);
+
+    skip_whitespace(in);
+
+    while(in.peek() == '('){
+		consume(in, '(');
+		Expr* actual_arg = parse_expr(in);
+		consume(in, ')');
+		expr = new CallExpr(expr, actual_arg);
+	}
+	return expr;
+}
+
+Expr* parse_inner(std::istream &in){
     skip_whitespace(in);
 	
 	int c = in.peek();
@@ -55,7 +88,6 @@ Expr *parse_multicand(std::istream &in)
 			throw std::runtime_error("missing close parenthesis");
 		return e;
 	} 
-	//Simple Pseudocode for what we'll do for var and keyword...
 	else if (isalpha(c))
 	{
 		return parse_var(in); 
@@ -65,7 +97,6 @@ Expr *parse_multicand(std::istream &in)
         consume(in, '_');
 		return parse_keyword(in);
 	} 
-	//...and back to what we already had
 	else { 
 		consume(in, c);
 		throw std::runtime_error("invalid input");
@@ -73,7 +104,6 @@ Expr *parse_multicand(std::istream &in)
 }
 
 Expr *parse_num(std::istream &in) {
-    
     int n = 0;
     bool negative = in.peek() == '-';
     if(negative)
@@ -136,6 +166,57 @@ Expr* parse_keyword(std::istream &in){
 
         return new LetExpr(name, rhs, lhs);
     } 
+    else if(keyword == "true" || keyword == "false"){
+        return new BoolExpr(keyword == "true" ? true : false);
+    }
+    else if(keyword == "if")
+    {
+        skip_whitespace(in);
+        Expr* condition_arg = parse_expr(in);
+        Expr* then_arg;
+        Expr* else_arg;
+
+        skip_whitespace(in);
+        int c = in.peek();
+        if(c == '_'){
+            consume(in, c);
+            std::string thenKeyword = parse_word(in);
+            if(thenKeyword != "then")
+                throw std::runtime_error("_if not followed by _then");
+            then_arg = parse_expr(in);
+        }
+        else
+            throw std::runtime_error("_if not followed by _then");
+        
+        skip_whitespace(in);
+        c = in.peek();
+        if(c == '_'){
+            consume(in, c);
+            std::string elseKeyword = parse_word(in);
+            if(elseKeyword != "else")
+                throw std::runtime_error("_then not followed by _else");
+            else_arg = parse_expr(in);
+        }
+        else
+            throw std::runtime_error("_then not followed by _else");
+
+        return new IfExpr(condition_arg, then_arg, else_arg);
+    }
+    else if(keyword == "fun")
+    {
+        //paren expression, //expression
+        skip_whitespace(in);
+
+        int c = in.peek();
+        if(c == '('){
+            consume(in, '(');
+            std::string formal_arg = parse_word(in);
+            consume(in, ')');
+            return new FunExpr(formal_arg, parse_expr(in));
+        }
+        else 
+            throw std::runtime_error("_fun not followed by '('");
+    }
     else
     {
         throw std::runtime_error("Invalid keyword: " + keyword);

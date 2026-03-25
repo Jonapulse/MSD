@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
 			{ //Braces included for scoping repeated var names
 				// std::cout << "Write an expression to interpret: ";
 				Expr* parsedExpr = parse_expr(std::cin);
-				std::cout << parsedExpr->interp() << '\n';
+				std::cout << parsedExpr->interp()->to_string() << '\n';
 			}
 				break;
 			case(run_mode_t::do_print):
