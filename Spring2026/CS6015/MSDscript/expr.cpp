@@ -51,11 +51,6 @@ Val* NumExpr::interp()
     return this->rep;
 }
 
-bool NumExpr::has_variable()
-{
-    return false;
-}
-
 /**
  * \brief Returns itself, as number values do not change in substitution
  */
@@ -83,11 +78,6 @@ bool AddExpr::equals(Expr *e)
 
 Val* AddExpr::interp(){
     return lhs->interp()->add_to(rhs->interp());
-}
-
-bool AddExpr::has_variable()
-{
-    return lhs->has_variable() || rhs->has_variable();
 }
 
 Expr* AddExpr::subst(const std::string &name, Expr* substitution){
@@ -136,11 +126,6 @@ bool MultExpr::equals(Expr *e)
 Val* MultExpr::interp()
 {
     return lhs->interp()->mult_with(rhs->interp());
-}
-
-bool MultExpr::has_variable()
-{
-    return lhs->has_variable() || rhs->has_variable();
 }
 
 Expr* MultExpr::subst(const std::string &name, Expr* substitution){
@@ -194,10 +179,6 @@ Val* VarExpr::interp()
     throw std::runtime_error("Error: VarExpr does not support interp (at this stage in development)");
 }
 
-bool VarExpr::has_variable(){
-    return true;
-}
-
 Expr* VarExpr::subst(const std::string &name, Expr* substitution){
     if(this->name == name)
         return substitution;
@@ -237,13 +218,6 @@ Val* LetExpr::interp(){
 }
 
 /**
- * \brief
- */
-bool LetExpr::has_variable(){
-    return rhs->has_variable();
-}
-
-/**
  * \brief for Let we only substitue the 'lhs', the expression following '_in'
  * if substituting name that would overwrite rhs, we stop.
  * Nested Let expressions sharing variable names will substitue deeper nested names first.
@@ -252,7 +226,7 @@ Expr* LetExpr::subst(const std::string &name, Expr* substitution){
     //End substitution if the substituting name matches Let's name
     if(this->name == name)
         return this;
-    return lhs->subst(name, substitution);
+    return new LetExpr(name, rhs, lhs->subst(name, substitution));
 }
 
 void LetExpr::printExpr(std::ostream& ot){
@@ -300,13 +274,6 @@ Val* BoolExpr::interp(){
     return rep;
 }
 
-/**
- * \brief Returns itself, as boolean values do not change in substitution
- */
-bool BoolExpr::has_variable(){
-    return false;
-}
-
 Expr* BoolExpr::subst(const std::string &name, Expr* substitution){
     return this;
 }
@@ -317,7 +284,7 @@ void BoolExpr::printExpr(std::ostream& ot){
 
 IfExpr::IfExpr(Expr* condition_arg, Expr* if_arg, Expr* else_arg){
     this->condition_arg = condition_arg;
-    this->if_arg = if_arg;
+    this->then_arg = if_arg;
     this->else_arg = else_arg;
 }
 
@@ -326,23 +293,19 @@ bool IfExpr::equals(Expr* e){
     IfExpr *c = dynamic_cast<IfExpr*>(e);
     if(c == nullptr)
         return false;
-    return condition_arg->equals(c->condition_arg) && if_arg->equals(c->if_arg) && else_arg->equals(c->else_arg);
+    return condition_arg->equals(c->condition_arg) && then_arg->equals(c->then_arg) && else_arg->equals(c->else_arg);
 }
 
 Val* IfExpr::interp(){
     if(condition_arg->interp()->is_true())
-        return if_arg->interp();
+        return then_arg->interp();
     else
         return else_arg->interp();
 }
 
-bool IfExpr::has_variable(){
-    return condition_arg->has_variable() || if_arg->has_variable() || else_arg->has_variable();
-}
-
 Expr* IfExpr::subst(const std::string &name, Expr* substitution){
     return new IfExpr(condition_arg->subst(name, substitution),
-        if_arg->subst(name, substitution),
+        then_arg->subst(name, substitution),
         else_arg->subst(name, substitution));
 }
 
@@ -369,10 +332,6 @@ Val* EqExpr::interp(){
     return new BoolVal(lhs->interp()->equals(rhs->interp()));
 }
 
-bool EqExpr::has_variable(){
-    return lhs->has_variable() || rhs->has_variable();
-}
-
 Expr* EqExpr::subst(const std::string &name, Expr* substitution){
     return new EqExpr(lhs->subst(name, substitution), rhs->subst(name, substitution));
 }
@@ -383,6 +342,58 @@ void EqExpr::pretty_print(std::ostream& ot){}
 
 void EqExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){}
 
+FunExpr::FunExpr(std::string formal_arg, Expr* body){
+    this->formal_arg = formal_arg;
+    this->body = body;
+}
+
+bool FunExpr::equals(Expr* e){
+    //dynamic cast, check for null
+    FunExpr *c = dynamic_cast<FunExpr*>(e);
+    if(c == nullptr)
+        return false;
+    return formal_arg == c->formal_arg && body->equals(c->body);
+}
+
+Val* FunExpr::interp(){
+    return new FunVal(formal_arg, body);
+}
+
+Expr* FunExpr::subst(const std::string &name, Expr* substitution){
+    //End substitution if the substituting name matches Let's name
+    if(this->formal_arg == name)
+        return this;
+    return new FunExpr(name, body->subst(name, substitution));
+}
+
+void FunExpr::printExpr(std::ostream& ot){}
+void FunExpr::pretty_print(std::ostream& ot){}
+void FunExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){}
+
+CallExpr::CallExpr(Expr* to_be_called, Expr* actual_arg){
+    this->to_be_called = to_be_called;
+    this->actual_arg = actual_arg;
+}
+
+bool CallExpr::equals(Expr* e){
+    //dynamic cast, check for null
+    CallExpr *c = dynamic_cast<CallExpr*>(e);
+    if(c == nullptr)
+        return false;
+    return to_be_called->equals(c->to_be_called) && actual_arg->equals(c->actual_arg);
+}
+
+Val* CallExpr::interp(){
+    return to_be_called->interp()->call(actual_arg->interp());
+}
+
+Expr* CallExpr::subst(const std::string &name, Expr* substitution){
+    return new CallExpr(to_be_called->subst(name, substitution), actual_arg->subst(name, substitution));
+}
+
+void CallExpr::printExpr(std::ostream& ot){}
+void CallExpr::pretty_print(std::ostream& ot){}
+void CallExpr::pretty_print_at(std::ostream& ot, precedence_t prec, int depth){}
 
 ////////////////////////////////////////
 // TESTING for expr.cpp
@@ -468,13 +479,14 @@ TEST_CASE("Expression interp"){
         CHECK((new EqExpr(new NumExpr(3), new NumExpr(3)))->interp()->equals(new BoolVal(true)));
         CHECK((new EqExpr(new NumExpr(3), new NumExpr(4)))->interp()->equals(new BoolVal(false)));
     }
-}
 
-TEST_CASE("has_var"){
-    CHECK( (new AddExpr(new VarExpr("x"), new NumExpr(1)))->has_variable());
-    CHECK_FALSE( (new MultExpr(new NumExpr(2), new NumExpr(1)))->has_variable());
-    CHECK((new LetExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(5)), new AddExpr(new VarExpr("x"), new NumExpr(1))))->has_variable());
-    CHECK_FALSE((new LetExpr("x", new NumExpr(5), new AddExpr(new VarExpr("x"), new NumExpr(1))))->has_variable());
+    SECTION("Function tests"){
+        CHECK((new FunExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp()->equals(new FunVal("x", new AddExpr(new VarExpr("x"), new NumExpr(1)))));
+    }
+
+    SECTION("Call tests"){
+        CHECK((new CallExpr((new FunExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1)))), new NumExpr(1)))->interp()->equals(new NumVal(2)));
+    }
 }
 
 TEST_CASE("substitution")

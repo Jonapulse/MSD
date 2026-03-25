@@ -33,7 +33,6 @@ class Expr{
 public:
     virtual bool equals(Expr* e) = 0;
     virtual Val* interp() = 0;
-    virtual bool has_variable() = 0;
     virtual Expr* subst(const std::string &name, Expr* substitution) = 0;
     virtual void printExpr(std::ostream& ot) = 0;
     virtual std::string to_string();
@@ -53,7 +52,6 @@ public:
 
     bool equals(Expr* e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
 };
@@ -70,7 +68,6 @@ public:
 
     bool equals(Expr* e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
@@ -89,7 +86,6 @@ public:
 
     bool equals(Expr* e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
@@ -104,7 +100,6 @@ public:
 
     bool equals(Expr *e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
 };
@@ -126,7 +121,6 @@ public:
 
     bool equals(Expr *e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
@@ -141,7 +135,6 @@ public:
 
     bool equals(Expr* e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
 };
@@ -149,14 +142,13 @@ public:
 class IfExpr: public Expr{
 public:
     Expr* condition_arg;
-    Expr* if_arg;
+    Expr* then_arg;
     Expr* else_arg;
 
-    IfExpr(Expr* condition_arg, Expr* if_arg, Expr* else_arg);
+    IfExpr(Expr* condition_arg, Expr* then_arg, Expr* else_arg);
 
     bool equals(Expr* e);
     Val* interp();
-    bool has_variable();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
@@ -172,7 +164,36 @@ public:
 
     bool equals(Expr* e);
     Val* interp();
-    bool has_variable();
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+};
+
+class FunExpr: public Expr{
+public:
+    std::string formal_arg;
+    Expr* body;
+
+    FunExpr(std::string formal_arg, Expr* body);
+
+    bool equals(Expr* e);
+    Val* interp();
+    Expr* subst(const std::string &name, Expr* substitution);
+    void printExpr(std::ostream& ot);
+    void pretty_print(std::ostream& ot);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+};
+
+class CallExpr: public Expr{
+public:
+    Expr* to_be_called;
+    Expr* actual_arg;
+
+    CallExpr(Expr* to_be_called, Expr* actual_arg);
+
+    bool equals(Expr* e);
+    Val* interp();
     Expr* subst(const std::string &name, Expr* substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);

@@ -5,6 +5,7 @@
 #include "val.h"
 #include "expr.h"
 #include "catch.h"
+#include <iostream>
  
 NumVal::NumVal(int rep){
     this->rep = rep;
@@ -43,6 +44,10 @@ std::string NumVal::to_string(){
     return std::to_string(this->rep);
 }
 
+Val* NumVal::call(Val* actual_arg){
+    throw std::runtime_error("Error: NumVall calling 'call' invalid");
+}
+
 BoolVal::BoolVal(bool rep){
     this->rep = rep;
 }
@@ -72,6 +77,46 @@ std::string BoolVal::to_string(){
 
 bool BoolVal::is_true(){
     return rep;
+}
+
+Val* BoolVal::call(Val* actual_arg){
+    throw std::runtime_error("Error: BoolVal calling 'call' invalid");
+}
+
+FunVal::FunVal(std::string name, Expr* expression){
+    this->name = name;
+    this->expression = expression;
+}
+
+bool FunVal::equals(Val* e){
+    FunVal *c = dynamic_cast<FunVal*>(e);
+    if(c == nullptr)
+        return false;
+    return this->name == c->name && this->expression->equals(c->expression);
+}
+
+Val* FunVal::add_to(Val* rhs){
+    throw std::runtime_error("Error: FunVal add_to invalid");
+}
+
+Val* FunVal::mult_with(Val* rhs){
+    throw std::runtime_error("Error: FunVal mult_with invalid");
+}
+
+Expr* FunVal::to_expr(){
+    return new FunExpr(name, expression);
+}
+
+std::string FunVal::to_string(){
+    return to_expr()->to_string();
+}
+
+bool FunVal::is_true(){
+    throw std::runtime_error("Error: FunVal cannot call is_true()");
+}
+
+Val* FunVal::call(Val *actual_arg){
+    return expression->subst(name, actual_arg->to_expr())->interp();
 }
 
 TEST_CASE("NumVal"){
@@ -112,7 +157,7 @@ TEST_CASE("BoolVal"){
 
     SECTION("Mult_With")
     {
-        CHECK(((new NumVal(3))->mult_with(new NumVal(5)))->equals(new NumVal(15)));
+        CHECK_THROWS(((new BoolVal(3))->mult_with(new NumVal(5)))->equals(new NumVal(15)));
     }
 
     SECTION("to_expr")
@@ -123,5 +168,31 @@ TEST_CASE("BoolVal"){
     SECTION("to_string")
     {
         CHECK((new BoolVal(true))->to_string() == "true");
+    }
+}
+
+TEST_CASE("FunVal"){
+    SECTION("Equals"){
+        CHECK((new FunVal("x", new NumExpr(1)))->equals(new FunVal("x", new NumExpr(1))));
+        CHECK_FALSE((new FunVal("x", new NumExpr(2)))->equals(new FunVal("x", new NumExpr(1))));
+    }
+
+    SECTION("Add_to"){
+        CHECK_THROWS(((new FunVal("x", new NumExpr(1)))->add_to(new NumVal(5)))->equals(new NumVal(8)));
+    }
+
+    SECTION("Mult_With")
+    {
+        CHECK_THROWS(((new FunVal("x", new NumExpr(1)))->mult_with(new NumVal(5)))->equals(new NumVal(15)));
+    }
+
+    SECTION("to_expr")
+    {
+        CHECK((new FunVal("x", new NumExpr(1)))->to_expr()->equals(new FunExpr("x", new NumExpr(1))));
+    }
+
+    SECTION("to_string")
+    {
+       // CHECK((new FunVal(true))->to_string() == "true");
     }
 }

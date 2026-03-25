@@ -23,6 +23,7 @@ public:
     virtual Expr* to_expr() = 0;
     virtual std::string to_string() = 0;
     virtual bool is_true() = 0;
+    virtual Val *call(Val *actual_arg) = 0;
 };
 
 /**
@@ -40,6 +41,7 @@ public:
     Expr* to_expr();
     std::string to_string();
     bool is_true(); //Will error when called on NumVal
+    Val *call(Val *actual_arg); //Will error when called on NumVal
 
     int to_int();
 };
@@ -59,4 +61,24 @@ public:
     Expr* to_expr();
     std::string to_string();
     bool is_true();
+    Val *call(Val *actual_arg); //Will error when called on BoolVal
+};
+
+/**
+ * \brief Fun, representing functions
+ */
+class FunVal: public Val{
+public:
+    std::string name;
+    Expr* expression;
+
+    FunVal(std::string name, Expr* expression);
+
+    bool equals(Val* e);
+    Val* add_to(Val* rhs); //Will error when called on FunVal
+    Val* mult_with(Val* rhs); //Will error when called on FunVal
+    Expr* to_expr();
+    std::string to_string();
+    bool is_true(); //Will error when called on FunVal
+    Val *call(Val *actual_arg); 
 };
