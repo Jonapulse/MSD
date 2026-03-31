@@ -98,8 +98,7 @@ Expr* parse_inner(std::istream &in){
 		return parse_keyword(in);
 	} 
 	else { 
-		consume(in, c);
-		throw std::runtime_error("invalid input");
+		throw std::runtime_error("non-parseable input for char: " + std::to_string(c));
 	}
 }
 
@@ -211,6 +210,7 @@ Expr* parse_keyword(std::istream &in){
         if(c == '('){
             consume(in, '(');
             std::string formal_arg = parse_word(in);
+            skip_whitespace(in);
             consume(in, ')');
             return new FunExpr(formal_arg, parse_expr(in));
         }
@@ -252,7 +252,7 @@ static void consume(std::istream &in, char expected)
     int c = in.get();
     if(c != expected)
     {
-        throw std::runtime_error("consume mismatch");
+        throw std::runtime_error("consume mismatch. Expected: " + std::to_string(expected) + ", received: " + std::to_string(c));
     }
 }
 
@@ -306,5 +306,19 @@ TEST_CASE( "Parse Input") {
         //Let
         CHECK("(_let x=5 _in (x+1))" == parse_str("_let x = 5   _in   x +  1")->to_string());
         CHECK_THROWS_WITH(parse_str("_conquer)"), "Invalid keyword: conquer");
+    }
+}
+
+//Mixed Parse and Expr testing
+TEST_CASE("Mixed Parse and Expression testing")
+{
+    SECTION("Functions"){
+
+        CHECK(parse_str("_let y = _fun(x) x + 1 _in y(3))")->interp()->to_string() == "4");
+
+        CHECK(parse_str("_let f = _fun (x) _fun (g) g(x + 1) _in _let g = _fun (y) y + 2 _in (f(5))(g)")->interp()->to_string() == "8");
+        //Fibonacci
+        Expr* fibonacci = parse_str("_let factrl = _fun (factrl) _fun (x) _if x == 1  _then 1 _else x * factrl(factrl)(x + -1) _in factrl(factrl)(10)");
+        CHECK(fibonacci->interp()->to_string() == "3628800");
     }
 }

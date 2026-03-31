@@ -6,6 +6,7 @@
 #include "expr.h"
 #include "val.h"
 #include "catch.h"
+#include <iostream>
 
 std::string Expr::to_string() {
     std::stringstream st("");
@@ -176,14 +177,14 @@ bool VarExpr::equals(Expr *e)
  */
 Val* VarExpr::interp()
 {
-    throw std::runtime_error("Error: VarExpr does not support interp (at this stage in development)");
+    throw std::runtime_error("Error: VarExpr(\"" + name + "\") does not support interp (at this stage in development)");
 }
 
 Expr* VarExpr::subst(const std::string &name, Expr* substitution){
     if(this->name == name)
         return substitution;
     else
-        return this;
+        return new VarExpr(this->name);
 }
 
 void VarExpr::printExpr(std::ostream& ot){
@@ -226,7 +227,7 @@ Expr* LetExpr::subst(const std::string &name, Expr* substitution){
     //End substitution if the substituting name matches Let's name
     if(this->name == name)
         return this;
-    return new LetExpr(name, rhs, lhs->subst(name, substitution));
+    return new LetExpr(this->name, rhs, lhs->subst(name, substitution));
 }
 
 void LetExpr::printExpr(std::ostream& ot){
@@ -363,7 +364,7 @@ Expr* FunExpr::subst(const std::string &name, Expr* substitution){
     //End substitution if the substituting name matches Let's name
     if(this->formal_arg == name)
         return this;
-    return new FunExpr(name, body->subst(name, substitution));
+    return new FunExpr(this->formal_arg, body->subst(name, substitution));
 }
 
 void FunExpr::printExpr(std::ostream& ot){}
@@ -449,10 +450,6 @@ TEST_CASE("Expression interp"){
         CHECK((new MultExpr(new MultExpr(new NumExpr(2),new NumExpr(3)), new NumExpr(3)))->interp()->equals(new NumVal(18)));
     }
 
-    SECTION("VarExpr tests"){
-        CHECK_THROWS_WITH( (new VarExpr("x"))->interp(), "Error: VarExpr does not support interp (at this stage in development)" );
-    }
-
     SECTION("Assignment tests"){
         CHECK( (new MultExpr(new NumExpr(3), new NumExpr(2)))->interp()->equals(new NumVal(6)));
         CHECK( (new AddExpr(new AddExpr(new NumExpr(10), new NumExpr(15)),new AddExpr(new NumExpr(20),new NumExpr(20))))->interp()->equals(new NumVal(65)));
@@ -482,6 +479,22 @@ TEST_CASE("Expression interp"){
 
     SECTION("Function tests"){
         CHECK((new FunExpr("x", new AddExpr(new VarExpr("x"), new NumExpr(1))))->interp()->equals(new FunVal("x", new AddExpr(new VarExpr("x"), new NumExpr(1)))));
+    
+        //Factorial
+        //          _let factrl = _fun (factrl)  
+//                 _fun (x)  
+//                   _if x == 1  
+//                   _then 1  
+//                   _else x * factrl(factrl)(x + -1)  
+//         _in  factrl(factrl)(10)
+        Expr* factorial = new LetExpr("factrl", new FunExpr("factrl", 
+            new FunExpr("x", 
+                new IfExpr(new EqExpr(new VarExpr("x"), new NumExpr(1)), 
+                new NumExpr(1), 
+                new MultExpr(new VarExpr("x"), new CallExpr(new CallExpr(new VarExpr("factrl"), new VarExpr("factrl")), new AddExpr(new VarExpr("x"), new NumExpr(-1))))))), 
+            new CallExpr(new CallExpr(new VarExpr("factrl"), new VarExpr("factrl")), new NumExpr(10)));
+        std::cout << "\nIt's:" + factorial->interp()->to_string() << "\n";
+        CHECK(factorial->interp()->to_string() == "3628800");
     }
 
     SECTION("Call tests"){

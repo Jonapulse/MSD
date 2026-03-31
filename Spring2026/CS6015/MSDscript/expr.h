@@ -114,8 +114,8 @@ public:
 class LetExpr: public Expr{
 public:
     std::string name;
-    Expr *lhs;
     Expr *rhs; 
+    Expr *lhs;
 
     LetExpr(const std::string &name, Expr* rhs, Expr* lhs);
 
@@ -154,6 +154,13 @@ public:
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
 };
+
+//          _let factrl = _fun (factrl)  
+//                 _fun (x)  
+//                   _if x == 1  
+//                   _then 1  
+//                   _else x * factrl(factrl)(x + -1)  
+//         _in  factrl(factrl)(10)
 
 class EqExpr: public Expr{
 public:
