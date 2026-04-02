@@ -6,6 +6,7 @@
 #include <string>
 #include <stdexcept>
 #include <sstream>
+#include "pointer.h"
 
 //Pretty print utility enum for writing parentheses
 //
@@ -29,15 +30,15 @@ class Val;
  * | 〈variable〉
  * | _let 〈variable〉 = 〈expr〉 _in 〈expr
  */
-class Expr{
+CLASS(Expr){
 public:
-    virtual bool equals(Expr* e) = 0;
-    virtual Val* interp() = 0;
-    virtual Expr* subst(const std::string &name, Expr* substitution) = 0;
+    virtual bool equals(PTR(Expr) e) = 0;
+    virtual PTR(Val) interp() = 0;
+    virtual PTR(Expr) subst(const std::string &name, PTR(Expr) substitution) = 0;
     virtual void printExpr(std::ostream& ot) = 0;
     virtual std::string to_string();
     virtual void pretty_print(std::ostream& ot);
-    virtual void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    virtual void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
     virtual std::string to_pretty_string();
 };
 
@@ -46,13 +47,13 @@ public:
  */
 class NumExpr: public Expr{
 public:
-    Val* rep;
+    PTR(Val) rep;
 
     NumExpr(int rep);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
 };
 
@@ -61,17 +62,17 @@ public:
  */
 class AddExpr: public Expr{
 public:
-    Expr *lhs;
-    Expr *rhs;
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
 
-    AddExpr(Expr *lhs, Expr *rhs);
+    AddExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };
 
 /**
@@ -79,17 +80,17 @@ public:
  */
 class MultExpr: public Expr{
 public: 
-    Expr *lhs;
-    Expr *rhs;
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
 
-    MultExpr(Expr *lhs, Expr *rhs);
+    MultExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };
 
 class VarExpr: public Expr{
@@ -98,9 +99,9 @@ public:
 
     VarExpr(const std::string &name);
 
-    bool equals(Expr *e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
 };
 
@@ -114,95 +115,88 @@ public:
 class LetExpr: public Expr{
 public:
     std::string name;
-    Expr *rhs; 
-    Expr *lhs;
+    PTR(Expr) rhs; 
+    PTR(Expr) lhs;
 
-    LetExpr(const std::string &name, Expr* rhs, Expr* lhs);
+    LetExpr(const std::string &name, PTR(Expr) rhs, PTR(Expr) lhs);
 
-    bool equals(Expr *e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };
 
 class BoolExpr: public Expr{
 public:
-    Val* rep;
+    PTR(Val) rep;
 
     BoolExpr(bool value);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
 };
 
 class IfExpr: public Expr{
 public:
-    Expr* condition_arg;
-    Expr* then_arg;
-    Expr* else_arg;
+    PTR(Expr) condition_arg;
+    PTR(Expr) then_arg;
+    PTR(Expr) else_arg;
 
-    IfExpr(Expr* condition_arg, Expr* then_arg, Expr* else_arg);
+    IfExpr(PTR(Expr) condition_arg, PTR(Expr) then_arg, PTR(Expr) else_arg);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };
-
-//          _let factrl = _fun (factrl)  
-//                 _fun (x)  
-//                   _if x == 1  
-//                   _then 1  
-//                   _else x * factrl(factrl)(x + -1)  
-//         _in  factrl(factrl)(10)
 
 class EqExpr: public Expr{
 public:
-    Expr* lhs;
-    Expr* rhs;
+    PTR(Expr) lhs;
+    PTR(Expr) rhs;
 
-    EqExpr(Expr* lhs, Expr* rhs);
+    EqExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };
 
 class FunExpr: public Expr{
 public:
     std::string formal_arg;
-    Expr* body;
+    PTR(Expr) body;
 
-    FunExpr(std::string formal_arg, Expr* body);
+    FunExpr(std::string formal_arg, PTR(Expr) body);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };
 
 class CallExpr: public Expr{
 public:
-    Expr* to_be_called;
-    Expr* actual_arg;
+    PTR(Expr) to_be_called;
+    PTR(Expr) actual_arg;
 
-    CallExpr(Expr* to_be_called, Expr* actual_arg);
+    CallExpr(PTR(Expr) to_be_called, PTR(Expr) actual_arg);
 
-    bool equals(Expr* e);
-    Val* interp();
-    Expr* subst(const std::string &name, Expr* substitution);
+    bool equals(PTR(Expr) e);
+    PTR(Val) interp();
+    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
-    void pretty_print_at(std::ostream& ot, precedence_t prec, int depth);
+    void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
 };

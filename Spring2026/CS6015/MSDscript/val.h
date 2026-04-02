@@ -4,6 +4,8 @@
  */
 
 #include <string>
+#include "pointer.h" 
+
 
 //Referencing Expr without full #include
 //
@@ -14,16 +16,16 @@ class Expr;
  * 〈val〉 = 〈number〉
  *          |〈boolean〉 
  */
-class Val
+CLASS(Val)
 {
 public:
-    virtual bool equals(Val* e) = 0;
-    virtual Val* add_to(Val* rhs) = 0;
-    virtual Val* mult_with(Val* rhs) = 0;
-    virtual Expr* to_expr() = 0;
+    virtual bool equals(PTR(Val) e) = 0;
+    virtual PTR(Val) add_to(PTR(Val) rhs) = 0;
+    virtual PTR(Val) mult_with(PTR(Val) rhs) = 0;
+    virtual PTR(Expr) to_expr() = 0;
     virtual std::string to_string() = 0;
     virtual bool is_true() = 0;
-    virtual Val *call(Val *actual_arg) = 0;
+    virtual PTR(Val) call(PTR(Val) actual_arg) = 0;
 };
 
 /**
@@ -35,13 +37,13 @@ public:
 
     NumVal(int rep);
 
-    bool equals(Val* e);
-    Val* add_to(Val* rhs);
-    Val* mult_with(Val* rhs);
-    Expr* to_expr();
+    bool equals(PTR(Val) e);
+    PTR(Val) add_to(PTR(Val) rhs);
+    PTR(Val) mult_with(PTR(Val) rhs);
+    PTR(Expr) to_expr();
     std::string to_string();
     bool is_true(); //Will error when called on NumVal
-    Val *call(Val *actual_arg); //Will error when called on NumVal
+    PTR(Val) call(PTR(Val) actual_arg); //Will error when called on NumVal
 
     int to_int();
 };
@@ -55,13 +57,13 @@ public:
 
     BoolVal(bool rep);
 
-    bool equals(Val* e);
-    Val* add_to(Val* rhs); //Will error when called on BoolVal
-    Val* mult_with(Val* rhs); //Will error when called on BoolVal
-    Expr* to_expr();
+    bool equals(PTR(Val) e);
+    PTR(Val) add_to(PTR(Val) rhs); //Will error when called on BoolVal
+    PTR(Val) mult_with(PTR(Val) rhs); //Will error when called on BoolVal
+    PTR(Expr) to_expr();
     std::string to_string();
     bool is_true();
-    Val *call(Val *actual_arg); //Will error when called on BoolVal
+    PTR(Val) call(PTR(Val) actual_arg); //Will error when called on BoolVal
 };
 
 /**
@@ -70,15 +72,15 @@ public:
 class FunVal: public Val{
 public:
     std::string name;
-    Expr* expression;
+    PTR(Expr) expression;
 
-    FunVal(std::string name, Expr* expression);
+    FunVal(std::string name, PTR(Expr) expression);
 
-    bool equals(Val* e);
-    Val* add_to(Val* rhs); //Will error when called on FunVal
-    Val* mult_with(Val* rhs); //Will error when called on FunVal
-    Expr* to_expr();
+    bool equals(PTR(Val) e);
+    PTR(Val) add_to(PTR(Val) rhs); //Will error when called on FunVal
+    PTR(Val) mult_with(PTR(Val) rhs); //Will error when called on FunVal
+    PTR(Expr) to_expr();
     std::string to_string();
     bool is_true(); //Will error when called on FunVal
-    Val *call(Val *actual_arg); 
+    PTR(Val) call(PTR(Val) actual_arg); 
 };
