@@ -43,9 +43,11 @@ public:
      * @param x
      */
     void enqueue( const T & x ) {
+        std::unique_lock<std::mutex> my_lock(tail_m);
+
         Node *tmp = new Node{ x, nullptr };
 
-        std::unique_lock<std::mutex> my_lock(tail_m);
+        //std::unique_lock<std::mutex> my_lock(tail_m);
         tail_->next = tmp;
         tail_ = tmp;
         size_++;
@@ -66,6 +68,8 @@ public:
             Node * new_head = tmp->next;
             *ret = new_head->data;
             head_ = new_head;
+            //Wait am I removing the last element?
+            //If tail == tmp tail == head?
             size_--;
             my_lock.unlock(); //Release before the end because delete is thread-safe)
             delete tmp;

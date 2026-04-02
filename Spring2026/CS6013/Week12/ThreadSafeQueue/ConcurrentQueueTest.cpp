@@ -39,7 +39,6 @@ bool testQueue(int num_producers, int num_consumers, int num_ints) {
 
     // Wait for everyone to finish
     for (auto& t : producers) t.join();
-    std::cout<< q->size() << "\n";
     for (auto& t : consumers) t.join();
 
     return q->size() == (num_producers - num_consumers) * num_ints;

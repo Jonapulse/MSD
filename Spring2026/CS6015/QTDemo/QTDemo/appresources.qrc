@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/bucket.jpg.avif</file>
+        <file>images/thing.webp</file>
+        <file>images/butterfly.jpg</file>
+    </qresource>
+</RCC>

@@ -3,8 +3,15 @@
 QT+=widgets
 
 HEADERS += \
-    mainwidget.h
+    mainscene.h \
+    mainwidget.h \
+    man.h
 
 SOURCES += \
     main.cpp \
-    mainwidget.cpp
+    mainscene.cpp \
+    mainwidget.cpp \
+    man.cpp
+
+RESOURCES += \
+    appresources.qrc
