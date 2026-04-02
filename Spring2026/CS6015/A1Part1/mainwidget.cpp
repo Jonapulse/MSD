@@ -45,12 +45,10 @@ void mainWidget::clear(){
     summaryDisplayTE->clear();
 
     //Remove and re-add autoexclusion to deselect radio buttons
-    femaleRB->setAutoExclusive(false);
-    maleRB->setAutoExclusive(false);
+    genderRBs->setExclusive(false);
     femaleRB->setChecked(false);
     maleRB->setChecked(false);
-    femaleRB->setAutoExclusive(true);
-    maleRB->setAutoExclusive(true);
+    genderRBs->setExclusive(true);
 }
 
 /**
@@ -95,6 +93,8 @@ QGridLayout* mainWidget::initAndFillGrid(){
     genderRBs = new QButtonGroup();
     maleRB = new QRadioButton("male");
     femaleRB = new QRadioButton("female");
+    genderRBs->addButton(maleRB);
+    genderRBs->addButton(femaleRB);
     refreshPB = new QPushButton("Refresh");
 
     //Put QWidgets in Layouts
