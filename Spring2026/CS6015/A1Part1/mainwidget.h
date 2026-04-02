@@ -12,6 +12,7 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
+#include <QSpacerItem>
 
 /**
  * Layout
@@ -46,8 +47,15 @@ private:
     QRadioButton *maleRB;
     QRadioButton *femaleRB;
     QPushButton *refreshPB;
-    QTextEdit *nameDisplayTE;
+    QTextEdit *summaryDisplayTE;
     QPushButton *finishPB;
+
+    void fillSummary();
+    void clear();
+
+    //Helper functions to simplify init
+    QVBoxLayout* initAndFill();
+    QGridLayout* initAndFillGrid();
 };
 
 #endif // MAINWIDGET_H
