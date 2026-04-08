@@ -16,17 +16,17 @@
 
 #endif
 
-Expr *parse_expr(std::istream &in);
-Expr *parse_comparg(std::istream &in);
-Expr *parse_addend(std::istream &in);
-Expr *parse_multicand(std::istream &in);
-Expr *parse_inner(std::istream &in);
-Expr *parse_num(std::istream &in);
-Expr *parse_var(std::istream &in);
-Expr *parse_keyword(std::istream &in);
+PTR(Expr) parse_expr(std::istream &in);
+PTR(Expr) parse_comparg(std::istream &in);
+PTR(Expr) parse_addend(std::istream &in);
+PTR(Expr) parse_multicand(std::istream &in);
+PTR(Expr) parse_inner(std::istream &in);
+PTR(Expr) parse_num(std::istream &in);
+PTR(Expr) parse_var(std::istream &in);
+PTR(Expr) parse_keyword(std::istream &in);
 std::string parse_word(std::istream &in);
 
-Expr *parse_str(std::string str); //For testing
+PTR(Expr) parse_str(std::string str); //For testing
 
 static void consume(std::istream &in, char expected);
 static void skip_whitespace(std::istream &in);

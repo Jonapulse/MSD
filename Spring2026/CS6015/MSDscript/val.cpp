@@ -8,32 +8,32 @@
 #include <iostream>
  
 NumVal::NumVal(int rep){
-    THIS->rep = rep;
+    this->rep = rep;
 }
 
 bool NumVal::equals(PTR(Val) e){
     PTR(NumVal)c = CAST(NumVal)(e);
     if(c == nullptr)
         return false;
-    return THIS->rep == c->rep;
+    return this->rep == c->rep;
 }
 
 PTR(Val) NumVal::add_to(PTR(Val) rhs){
     PTR(NumVal)c = CAST(NumVal)(rhs);
     if(c == nullptr)
         throw std::runtime_error("Error: NumVal cannot add_to non-NumVals.");
-    return NEW(NumVal)(THIS->rep + c->rep);
+    return NEW(NumVal)(this->rep + c->rep);
 }
 
 PTR(Val) NumVal::mult_with(PTR(Val) rhs){
     PTR(NumVal)c = CAST(NumVal)(rhs);
     if(c == nullptr)
         throw std::runtime_error("Error: NumVal cannot mult_with non-NumVals.");
-    return NEW(NumVal)(THIS->rep * c->rep);
+    return NEW(NumVal)(this->rep * c->rep);
 }
 
 PTR(Expr) NumVal::to_expr(){
-    return NEW(NumExpr)(THIS->rep);
+    return NEW(NumExpr)(this->rep);
 }
 
 bool NumVal::is_true(){
@@ -41,7 +41,7 @@ bool NumVal::is_true(){
 }
 
 std::string NumVal::to_string(){
-    return std::to_string(THIS->rep);
+    return std::to_string(this->rep);
 }
 
 PTR(Val) NumVal::call(PTR(Val) actual_arg){
@@ -49,14 +49,14 @@ PTR(Val) NumVal::call(PTR(Val) actual_arg){
 }
 
 BoolVal::BoolVal(bool rep){
-    THIS->rep = rep;
+    this->rep = rep;
 }
 
 bool BoolVal::equals(PTR(Val) e){
     PTR(BoolVal)c = CAST(BoolVal)(e);
     if(c == nullptr)
         return false;
-    return THIS->rep == c->rep;
+    return this->rep == c->rep;
 }
 
 PTR(Val) BoolVal::add_to(PTR(Val) e){
@@ -68,7 +68,7 @@ PTR(Val) BoolVal::mult_with(PTR(Val) e){
 }
 
 PTR(Expr) BoolVal::to_expr(){
-    return NEW(BoolExpr)(THIS->rep);
+    return NEW(BoolExpr)(this->rep);
 }
 
 std::string BoolVal::to_string(){
@@ -84,15 +84,15 @@ PTR(Val) BoolVal::call(PTR(Val) actual_arg){
 }
 
 FunVal::FunVal(std::string name, PTR(Expr) expression){
-    THIS->name = name;
-    THIS->expression = expression;
+    this->name = name;
+    this->expression = expression;
 }
 
 bool FunVal::equals(PTR(Val) e){
     PTR(FunVal)c = CAST(FunVal)(e);
     if(c == nullptr)
         return false;
-    return THIS->name == c->name && THIS->expression->equals(c->expression);
+    return this->name == c->name && this->expression->equals(c->expression);
 }
 
 PTR(Val) FunVal::add_to(PTR(Val) rhs){

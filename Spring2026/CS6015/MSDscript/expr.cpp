@@ -10,7 +10,7 @@
 
 std::string Expr::to_string() {
     std::stringstream st("");
-    THIS->printExpr(st);
+    this->printExpr(st);
     return st.str();
 }
 
@@ -18,19 +18,19 @@ std::string Expr::to_string() {
  * \brief For Num and Add (default), printExpr prints them without considering parentheses or precence
  */
 void Expr::pretty_print(std::ostream& ot){
-    THIS->printExpr(ot);
+    this->printExpr(ot);
 }
 
 /**
  * \brief For num and Add (default), printExpr prints them without considering parentheses or precence
  */
 void Expr::pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth){
-    return THIS->printExpr(ot);
+    return this->printExpr(ot);
 }
 
 std::string Expr::to_pretty_string() {
     std::stringstream st("");
-    THIS->pretty_print(st);
+    this->pretty_print(st);
     return st.str();
 }
 
@@ -111,8 +111,8 @@ void AddExpr::pretty_print_at(std::ostream &ot, precedence_t prec, bool keywordF
 }
 
 MultExpr::MultExpr(PTR(Expr) lhs, PTR(Expr) rhs){
-    THIS->lhs = lhs;
-    THIS->rhs = rhs;
+    this->lhs = lhs;
+    this->rhs = rhs;
 }
 
 bool MultExpr::equals(PTR(Expr) e)
@@ -121,7 +121,7 @@ bool MultExpr::equals(PTR(Expr) e)
     PTR(MultExpr) c = CAST(MultExpr)(e);
     if(c == nullptr)
         return false;
-    return THIS->lhs->equals(c->lhs) && THIS->rhs->equals(c->rhs);
+    return this->lhs->equals(c->lhs) && this->rhs->equals(c->rhs);
 }
 
 PTR(Val)  MultExpr::interp()
@@ -159,7 +159,7 @@ void MultExpr::pretty_print_at(std::ostream& ot, precedence_t prec, bool keyword
 }
 
 VarExpr::VarExpr(const std::string &name){
-    THIS->name = name;
+    this->name = name;
 }
 
 bool VarExpr::equals(PTR(Expr) e)
@@ -169,7 +169,7 @@ bool VarExpr::equals(PTR(Expr) e)
     if(c == nullptr)
         return false;
     
-    return THIS->name == c->name;
+    return this->name == c->name;
 }
 
 /**
@@ -181,10 +181,10 @@ PTR(Val) VarExpr::interp()
 }
 
 PTR(Expr) VarExpr::subst(const std::string &name, PTR(Expr)  substitution){
-    if(THIS->name == name)
+    if(this->name == name)
         return substitution;
     else
-        return NEW(VarExpr)(THIS->name);
+        return NEW(VarExpr)(this->name);
 }
 
 void VarExpr::printExpr(std::ostream& ot){
@@ -199,9 +199,9 @@ void VarExpr::printExpr(std::ostream& ot){
  */
 LetExpr::LetExpr(const std::string &name, PTR(Expr)  rhs, PTR(Expr)  lhs)
 {
-    THIS->name = name;
-    THIS->rhs = rhs;
-    THIS->lhs = lhs;
+    this->name = name;
+    this->rhs = rhs;
+    this->lhs = lhs;
 }
 
 bool LetExpr::equals(PTR(Expr) e)
@@ -211,7 +211,7 @@ bool LetExpr::equals(PTR(Expr) e)
     if(c == nullptr)
         return false;
     
-    return THIS->name == c->name && THIS->lhs->equals(c->lhs) && THIS->rhs->equals(c->rhs);
+    return this->name == c->name && this->lhs->equals(c->lhs) && this->rhs->equals(c->rhs);
 }
 
 PTR(Val)  LetExpr::interp(){
@@ -225,13 +225,13 @@ PTR(Val)  LetExpr::interp(){
  */
 PTR(Expr)  LetExpr::subst(const std::string &name, PTR(Expr)  substitution){
     //End substitution if the substituting name matches Let's name
-    if(THIS->name == name)
+    if(this->name == name)
         return THIS;
-    return NEW(LetExpr)(THIS->name, rhs, lhs->subst(name, substitution));
+    return NEW(LetExpr)(this->name, rhs, lhs->subst(name, substitution));
 }
 
 void LetExpr::printExpr(std::ostream& ot){
-    ot << "(_let " << THIS->name << "=" << rhs->to_string() << " _in "<< lhs->to_string() << ")";
+    ot << "(_let " << this->name << "=" << rhs->to_string() << " _in "<< lhs->to_string() << ")";
 }
 
 void LetExpr::pretty_print(std::ostream& ot){
@@ -284,9 +284,9 @@ void BoolExpr::printExpr(std::ostream& ot){
 }
 
 IfExpr::IfExpr(PTR(Expr) condition_arg, PTR(Expr) if_arg, PTR(Expr) else_arg){
-    THIS->condition_arg = condition_arg;
-    THIS->then_arg = if_arg;
-    THIS->else_arg = else_arg;
+    this->condition_arg = condition_arg;
+    this->then_arg = if_arg;
+    this->else_arg = else_arg;
 }
 
 bool IfExpr::equals(PTR(Expr) e){
@@ -311,7 +311,7 @@ PTR(Expr) IfExpr::subst(const std::string &name, PTR(Expr) substitution){
 }
 
 void IfExpr::printExpr(std::ostream& ot){
-    ot << "(_if " << THIS->condition_arg << " == " << then_arg->to_string() << " _in "<< else_arg->to_string() << ")";
+    ot << "(_if " << this->condition_arg << " == " << then_arg->to_string() << " _in "<< else_arg->to_string() << ")";
 }
 
 void IfExpr::pretty_print(std::ostream& ot){
@@ -338,8 +338,8 @@ void IfExpr::pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFo
 }
 
 EqExpr::EqExpr(PTR(Expr) lhs, PTR(Expr) rhs){
-    THIS->lhs = lhs;
-    THIS->rhs = rhs;
+    this->lhs = lhs;
+    this->rhs = rhs;
 }
 
 bool EqExpr::equals(PTR(Expr) e){
@@ -371,8 +371,8 @@ void EqExpr::pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFo
 }
 
 FunExpr::FunExpr(std::string formal_arg, PTR(Expr) body){
-    THIS->formal_arg = formal_arg;
-    THIS->body = body;
+    this->formal_arg = formal_arg;
+    this->body = body;
 }
 
 bool FunExpr::equals(PTR(Expr) e){
@@ -389,9 +389,9 @@ PTR(Val)  FunExpr::interp(){
 
 PTR(Expr) FunExpr::subst(const std::string &name, PTR(Expr) substitution){
     //End substitution if the substituting name matches Let's name
-    if(THIS->formal_arg == name)
+    if(this->formal_arg == name)
         return THIS;
-    return NEW(FunExpr)(THIS->formal_arg, body->subst(name, substitution));
+    return NEW(FunExpr)(this->formal_arg, body->subst(name, substitution));
 }
 
 void FunExpr::printExpr(std::ostream& ot){}
@@ -399,8 +399,8 @@ void FunExpr::pretty_print(std::ostream& ot){}
 void FunExpr::pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth){}
 
 CallExpr::CallExpr(PTR(Expr)  to_be_called, PTR(Expr)  actual_arg){
-    THIS->to_be_called = to_be_called;
-    THIS->actual_arg = actual_arg;
+    this->to_be_called = to_be_called;
+    this->actual_arg = actual_arg;
 }
 
 bool CallExpr::equals(PTR(Expr)  e){
