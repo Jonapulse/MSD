@@ -1,7 +1,7 @@
-OBJS = main.o cmdline.o expr.o val.o parse.o
+OBJS = main.o cmdline.o expr.o val.o parse.o env.o
 CXX = g++
 CXXFLAGS = -g
-HEADERS = cmdline.h expr.h val.h parse.hpp pointer.h
+HEADERS = cmdline.h expr.h val.h parse.hpp pointer.h env.h
 
 all: msdscript
 
@@ -17,6 +17,8 @@ expr.o: expr.cpp expr.h pointer.h
 val.o: val.cpp val.h pointer.h
 
 parse.o: parse.cpp parse.hpp pointer.h
+
+env.o: env.cpp env.h pointer.h
 
 help: main
 	./main --help

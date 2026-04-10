@@ -314,11 +314,11 @@ TEST_CASE("Mixed Parse and Expression testing")
 {
     SECTION("Functions"){
 
-        CHECK(parse_str("_let y = _fun(x) x + 1 _in y(3))")->interp()->to_string() == "4");
+        CHECK(parse_str("_let y = _fun(x) x + 1 _in y(3))")->interp(Env::empty)->to_string() == "4");
 
-        CHECK(parse_str("_let f = _fun (x) _fun (g) g(x + 1) _in _let g = _fun (y) y + 2 _in (f(5))(g)")->interp()->to_string() == "8");
+        CHECK(parse_str("_let f = _fun (x) _fun (g) g(x + 1) _in _let g = _fun (y) y + 2 _in (f(5))(g)")->interp(Env::empty)->to_string() == "8");
         //Fibonacci
         PTR(Expr) fibonacci = parse_str("_let factrl = _fun (factrl) _fun (x) _if x == 1  _then 1 _else x * factrl(factrl)(x + -1) _in factrl(factrl)(10)");
-        CHECK(fibonacci->interp()->to_string() == "3628800");
+        CHECK(fibonacci->interp(Env::empty)->to_string() == "3628800");
     }
 }
