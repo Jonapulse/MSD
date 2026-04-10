@@ -50,6 +50,7 @@ public:
     PTR(Val) rep;
 
     NumExpr(int rep);
+    NumExpr(PTR(Val) rep);
 
     bool equals(PTR(Expr) e);
     PTR(Val) interp();

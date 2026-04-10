@@ -12,11 +12,11 @@ main.o: main.cpp $(HEADERS)
 
 cmdline.o: cmdline.cpp cmdline.h
 
-expr.o: expr.cpp expr.h
+expr.o: expr.cpp expr.h pointer.h
 
-val.o: val.cpp val.h
+val.o: val.cpp val.h pointer.h
 
-parse.o: parse.cpp parse.hpp
+parse.o: parse.cpp parse.hpp pointer.h
 
 help: main
 	./main --help

@@ -38,6 +38,10 @@ NumExpr::NumExpr(int val){
     rep = NEW(NumVal)(val);
 }
 
+NumExpr::NumExpr(PTR(Val) rep){
+    this->rep = rep;
+}
+
 bool NumExpr::equals(PTR(Expr) e)
 {
     //dynamic cast, check for null
@@ -47,7 +51,7 @@ bool NumExpr::equals(PTR(Expr) e)
     return rep->equals(c->rep);
 }
 
-PTR(Val)  NumExpr::interp()
+PTR(Val) NumExpr::interp()
 {
     return rep;
 }
@@ -55,8 +59,8 @@ PTR(Val)  NumExpr::interp()
 /**
  * \brief Returns itself, as number values do not change in substitution
  */
-PTR(Expr)  NumExpr::subst(const std::string &name, PTR(Expr)  substitution){
-    return THIS;
+PTR(Expr) NumExpr::subst(const std::string &name, PTR(Expr)  substitution){
+    return NEW(NumExpr)(this->rep);
 }
 
 void NumExpr::printExpr(std::ostream& ot){
