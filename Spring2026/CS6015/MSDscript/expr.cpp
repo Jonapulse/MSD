@@ -373,6 +373,7 @@ void CallExpr::pretty_print_at(std::ostream& ot, precedence_t prec, bool keyword
 ////////////////////////////////////////
 // TESTING for expr.cpp
 ////////////////////////////////////////
+#ifndef NTEST
 TEST_CASE( "Expression Equality") {
     SECTION("Num tests"){
         CHECK((NEW(NumExpr)(10))->equals(NEW(NumExpr)(10)));
@@ -510,3 +511,4 @@ TEST_CASE("pretty_print")
     //         NEW(CallExpr)(NEW(CallExpr)(NEW(VarExpr)("factrl"), NEW(VarExpr)("factrl")), NEW(NumExpr)(10)));
     // CHECK(factorial->to_pretty_string() == "_let factrl = _fun (factrl)\n      _fun (x)\n            _if x == 1\n            _then 1\n            _else x * factrl(factrl)(x + -1)\n_in  factrl(factrl)(10)");
 }
+#endif

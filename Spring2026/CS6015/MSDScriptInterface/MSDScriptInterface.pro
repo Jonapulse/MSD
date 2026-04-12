@@ -6,3 +6,6 @@ HEADERS += \
     mainwidget.h
 
 QT += widgets
+
+LIBS += -L$$PWD/libs -lmsdscript
+INCLUDEPATH += $$PWD/libs/msdscript

@@ -122,6 +122,7 @@ PTR(Val) FunVal::call(PTR(Val)actual_arg){
     return expression->interp(new_env);
 }
 
+#ifndef NTEST
 TEST_CASE("NumVal"){
     SECTION("Equals"){
         CHECK((NEW(NumVal)(3))->equals(NEW(NumVal)(3)));
@@ -199,3 +200,4 @@ TEST_CASE("FunVal"){
        // CHECK((NEW(FunVal)(true))->to_string() == "true");
     }
 }
+#endif

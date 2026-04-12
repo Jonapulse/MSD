@@ -266,6 +266,7 @@ static void skip_whitespace(std::istream &in)
     }
 }
 
+#ifndef NTEST
 //TESTING for parse.cpp
 //
 TEST_CASE( "Parse Input") {
@@ -322,3 +323,4 @@ TEST_CASE("Mixed Parse and Expression testing")
         CHECK(fibonacci->interp(Env::empty)->to_string() == "3628800");
     }
 }
+#endif
