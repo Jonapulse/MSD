@@ -1,0 +1,19 @@
+Diagrams from my comments in SerialQueue.hpp
+
+
+	/**
+    * Initializes SerialQueue with an empty, "dummy" node.
+    * After init, this looks like...
+    * head -> "dummy" node
+    * tail ---^
+    */
+   SerialQueue() : ...
+
+   /**
+    * Adds 'x' to the tail of the list
+    * After first enqueue, this looks like...
+    * head -> "dummy" -> new Node
+    * tail --------------^
+    * @param x
+    */
+	void enqueue ...

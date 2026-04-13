@@ -2,8 +2,8 @@
 #define WATERDROP_H
 
 #include <QObject>
+#include <QRandomGenerator>
 #include <QGraphicsPixmapItem>
-#include <QTimer>
 
 class waterdrop : public QObject, public QGraphicsPixmapItem
 {

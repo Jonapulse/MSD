@@ -65,11 +65,9 @@ public:
             return false;
         } else {
             Node * tmp = head_;
-            Node * new_head = tmp->next;
+            Node * new_head = head_->next;
             *ret = new_head->data;
             head_ = new_head;
-            //Wait am I removing the last element?
-            //If tail == tmp tail == head?
             size_--;
             my_lock.unlock(); //Release before the end because delete is thread-safe)
             delete tmp;

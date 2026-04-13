@@ -28,6 +28,9 @@ bool testQueue(int num_producers, int num_consumers, int num_ints) {
             }
         }));
     }
+
+    for (auto& t : producers) t.join();
+
     for (int i = 0; i < num_consumers; i++) {
         consumers.emplace_back(std::thread([i, num_ints]() {
             for (int j = 0; j < num_ints; j++) {
@@ -38,7 +41,6 @@ bool testQueue(int num_producers, int num_consumers, int num_ints) {
     }
 
     // Wait for everyone to finish
-    for (auto& t : producers) t.join();
     for (auto& t : consumers) t.join();
 
     return q->size() == (num_producers - num_consumers) * num_ints;
