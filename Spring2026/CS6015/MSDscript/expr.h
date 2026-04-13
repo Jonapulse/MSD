@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <sstream>
 #include "pointer.h"
+#include "env.h"
 
 //Pretty print utility enum for writing parentheses
 //
@@ -33,8 +34,7 @@ class Val;
 CLASS(Expr){
 public:
     virtual bool equals(PTR(Expr) e) = 0;
-    virtual PTR(Val) interp() = 0;
-    virtual PTR(Expr) subst(const std::string &name, PTR(Expr) substitution) = 0;
+    virtual PTR(Val) interp(PTR(Env)) = 0;
     virtual void printExpr(std::ostream& ot) = 0;
     virtual std::string to_string();
     virtual void pretty_print(std::ostream& ot);
@@ -50,10 +50,10 @@ public:
     PTR(Val) rep;
 
     NumExpr(int rep);
+    NumExpr(PTR(Val) rep);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
 };
 
@@ -68,8 +68,7 @@ public:
     AddExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
@@ -86,8 +85,7 @@ public:
     MultExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
@@ -100,8 +98,7 @@ public:
     VarExpr(const std::string &name);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
 };
 
@@ -121,8 +118,7 @@ public:
     LetExpr(const std::string &name, PTR(Expr) rhs, PTR(Expr) lhs);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
@@ -135,8 +131,7 @@ public:
     BoolExpr(bool value);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
 };
 
@@ -149,8 +144,7 @@ public:
     IfExpr(PTR(Expr) condition_arg, PTR(Expr) then_arg, PTR(Expr) else_arg);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
@@ -164,8 +158,7 @@ public:
     EqExpr(PTR(Expr) lhs, PTR(Expr) rhs);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
@@ -179,8 +172,7 @@ public:
     FunExpr(std::string formal_arg, PTR(Expr) body);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);
@@ -194,8 +186,7 @@ public:
     CallExpr(PTR(Expr) to_be_called, PTR(Expr) actual_arg);
 
     bool equals(PTR(Expr) e);
-    PTR(Val) interp();
-    PTR(Expr) subst(const std::string &name, PTR(Expr) substitution);
+    PTR(Val) interp(PTR(Env));
     void printExpr(std::ostream& ot);
     void pretty_print(std::ostream& ot);
     void pretty_print_at(std::ostream& ot, precedence_t prec, bool keywordFormsNeedParen, int depth);

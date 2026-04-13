@@ -1,7 +1,9 @@
-OBJS = main.o cmdline.o expr.o val.o parse.o
+OBJS = main.o cmdline.o expr.o val.o parse.o env.o
 CXX = g++
-CXXFLAGS = -g
-HEADERS = cmdline.h expr.h val.h parse.hpp pointer.h
+CXXFLAGS = -g -fPIC
+HEADERS = cmdline.h expr.h val.h parse.hpp pointer.h env.h
+LIB_NAME = libmsdscript.dylib
+LIB_OBJS = expr_lib.o val_lib.o parse_lib.o env_lib.o
 
 all: msdscript
 
@@ -12,17 +14,19 @@ main.o: main.cpp $(HEADERS)
 
 cmdline.o: cmdline.cpp cmdline.h
 
-expr.o: expr.cpp expr.h
+expr.o: expr.cpp expr.h pointer.h
 
-val.o: val.cpp val.h
+val.o: val.cpp val.h pointer.h
 
-parse.o: parse.cpp parse.hpp
+parse.o: parse.cpp parse.hpp pointer.h
+
+env.o: env.cpp env.h pointer.h
 
 help: main
 	./main --help
 
 clean: 
-	rm -f *.o main *~ a.out
+	rm -f *.o main *~ a.out $(LIB_NAME) *_lib.o
 
 test: msdscript
 	./msdscript --test
@@ -55,5 +59,11 @@ test_test: e_run_wc.cpp exec.cpp
 
 doc: msdscript
 	cd doc && doxygen
+
+make_lib: $(LIB_OBJS)
+	$(CXX) $(CXXFLAGS) -shared -fPIC -o $(LIB_NAME) $(LIB_OBJS)
+
+%_lib.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -DNTEST -c -o $@ $<
 
 .PHONY: clean test

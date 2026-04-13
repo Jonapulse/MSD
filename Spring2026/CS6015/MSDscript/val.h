@@ -7,9 +7,10 @@
 #include "pointer.h" 
 
 
-//Referencing Expr without full #include
+//Referencing Expr/Env without full #include
 //
 class Expr;
+class Env;
 
 /**
  * \brief Value class, supporting interpreter grammar
@@ -73,8 +74,9 @@ class FunVal: public Val{
 public:
     std::string name;
     PTR(Expr) expression;
+    PTR(Env) captured_env;
 
-    FunVal(std::string name, PTR(Expr) expression);
+    FunVal(std::string name, PTR(Expr) expression, PTR(Env) captured_env);
 
     bool equals(PTR(Val) e);
     PTR(Val) add_to(PTR(Val) rhs); //Will error when called on FunVal

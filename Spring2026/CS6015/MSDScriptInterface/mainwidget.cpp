@@ -1,4 +1,5 @@
 #include "mainwidget.h"
+#include "parse.hpp"
 
 /**
  * Layout
@@ -32,12 +33,21 @@ mainWidget::mainWidget() {
  */
 void mainWidget::callMSDScript(){
     std::string str_to_be_parsed = expressionTE->toPlainText().toStdString();
-    if(interpRB->isChecked()){
-        //Call interp
-    } else
-    {
-        //Call pretty print
+    std::string output = "";
+    try{
+        std::shared_ptr<Expr> expr = parse_str(str_to_be_parsed);
+        if(interpRB->isChecked()){
+            output = expr->interp(Env::empty)->to_string();
+        } else
+        {
+            output = expr->to_pretty_string();
+        }
     }
+    catch(std::runtime_error e){
+        output = "Error:\n";
+        output += e.what();
+    }
+    resultTE->setText(QString::fromStdString(output));
 }
 
 void mainWidget::reset(){

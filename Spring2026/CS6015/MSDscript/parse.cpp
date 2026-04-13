@@ -6,9 +6,9 @@
  * \brief parses input streams into expressions
  */
 
-Expr *parse_expr(std::istream &in)
+PTR(Expr) parse_expr(std::istream &in)
 {
-    Expr* e = parse_comparg(in);
+    PTR(Expr) e = parse_comparg(in);
 
     skip_whitespace(in);
 
@@ -18,62 +18,62 @@ Expr *parse_expr(std::istream &in)
         if(in.peek() != '=')
             throw std::runtime_error("Error: '=' not followed by 2nd '='");
         consume(in, '=');
-        Expr* rhs = parse_expr(in);
-        return new EqExpr(e, rhs);
+        PTR(Expr) rhs = parse_expr(in);
+        return NEW(EqExpr)(e, rhs);
     } else {
         return e;
     }
 
 }
 
-Expr *parse_comparg(std::istream &in)
+PTR(Expr) parse_comparg(std::istream &in)
 {
-    Expr* e = parse_addend(in);
+    PTR(Expr) e = parse_addend(in);
 
     skip_whitespace(in);
 
     int c = in.peek();
     if(c == '+'){
         consume(in, '+');
-        Expr* rhs = parse_expr(in);
-        return new AddExpr(e, rhs);
+        PTR(Expr) rhs = parse_expr(in);
+        return NEW(AddExpr)(e, rhs);
     } else {
         return e;
     }
 }
 
-Expr *parse_addend(std::istream &in)
+PTR(Expr) parse_addend(std::istream &in)
 {
-    Expr* e = parse_multicand(in);
+    PTR(Expr) e = parse_multicand(in);
 
     skip_whitespace(in);
 
     int c = in.peek();
     if (c == '*'){
         consume(in, '*');
-        Expr* rhs = parse_addend(in);
-        return new MultExpr(e, rhs);
+        PTR(Expr) rhs = parse_addend(in);
+        return NEW(MultExpr)(e, rhs);
     } else {
         return e;
     }
 }
 
-Expr *parse_multicand(std::istream &in)
+PTR(Expr) parse_multicand(std::istream &in)
 {
-    Expr* expr = parse_inner(in);
+    PTR(Expr) expr = parse_inner(in);
 
     skip_whitespace(in);
 
     while(in.peek() == '('){
 		consume(in, '(');
-		Expr* actual_arg = parse_expr(in);
+		PTR(Expr) actual_arg = parse_expr(in);
 		consume(in, ')');
-		expr = new CallExpr(expr, actual_arg);
+		expr = NEW(CallExpr)(expr, actual_arg);
 	}
 	return expr;
 }
 
-Expr* parse_inner(std::istream &in){
+PTR(Expr)  parse_inner(std::istream &in){
     skip_whitespace(in);
 	
 	int c = in.peek();
@@ -81,7 +81,7 @@ Expr* parse_inner(std::istream &in){
 		return parse_num(in);
 	else if (c == '(') {
 		consume(in, '(');
-		Expr *e = parse_expr(in);
+		PTR(Expr) e = parse_expr(in);
 		skip_whitespace(in);
 		c = in.get();
 		if(c != ')')
@@ -102,7 +102,7 @@ Expr* parse_inner(std::istream &in){
 	}
 }
 
-Expr *parse_num(std::istream &in) {
+PTR(Expr) parse_num(std::istream &in) {
     int n = 0;
     bool negative = in.peek() == '-';
     if(negative)
@@ -122,22 +122,22 @@ Expr *parse_num(std::istream &in) {
     if(negative)
         n *= -1;
 
-    return new NumExpr(n);
+    return NEW(NumExpr)(n);
 }
 
-Expr* parse_var(std::istream &in)
+PTR(Expr) parse_var(std::istream &in)
 {
-    return new VarExpr(parse_word(in));
+    return NEW(VarExpr)(parse_word(in));
 }
 
-Expr* parse_keyword(std::istream &in){
+PTR(Expr) parse_keyword(std::istream &in){
     std::string keyword = parse_word(in);
     if(keyword == "let")
     {
         skip_whitespace(in);
         std::string name = parse_word(in);
-        Expr* rhs;
-        Expr* lhs;
+        PTR(Expr) rhs;
+        PTR(Expr) lhs;
 
         //Parse rhs after "="
         skip_whitespace(in);
@@ -163,17 +163,17 @@ Expr* parse_keyword(std::istream &in){
         else
             throw std::runtime_error("_let not followed by _in");
 
-        return new LetExpr(name, rhs, lhs);
+        return NEW(LetExpr)(name, rhs, lhs);
     } 
     else if(keyword == "true" || keyword == "false"){
-        return new BoolExpr(keyword == "true" ? true : false);
+        return NEW(BoolExpr)(keyword == "true" ? true : false);
     }
     else if(keyword == "if")
     {
         skip_whitespace(in);
-        Expr* condition_arg = parse_expr(in);
-        Expr* then_arg;
-        Expr* else_arg;
+        PTR(Expr) condition_arg = parse_expr(in);
+        PTR(Expr) then_arg;
+        PTR(Expr) else_arg;
 
         skip_whitespace(in);
         int c = in.peek();
@@ -199,7 +199,7 @@ Expr* parse_keyword(std::istream &in){
         else
             throw std::runtime_error("_then not followed by _else");
 
-        return new IfExpr(condition_arg, then_arg, else_arg);
+        return NEW(IfExpr)(condition_arg, then_arg, else_arg);
     }
     else if(keyword == "fun")
     {
@@ -212,7 +212,7 @@ Expr* parse_keyword(std::istream &in){
             std::string formal_arg = parse_word(in);
             skip_whitespace(in);
             consume(in, ')');
-            return new FunExpr(formal_arg, parse_expr(in));
+            return NEW(FunExpr)(formal_arg, parse_expr(in));
         }
         else 
             throw std::runtime_error("_fun not followed by '('");
@@ -241,7 +241,7 @@ std::string parse_word(std::istream &in){
 /**
  * This is a helper function for testing
  */
-Expr* parse_str(std::string str)
+PTR(Expr) parse_str(std::string str)
 {
     std::stringstream st(str);
     return(parse_expr(st));
@@ -266,6 +266,7 @@ static void skip_whitespace(std::istream &in)
     }
 }
 
+#ifndef NTEST
 //TESTING for parse.cpp
 //
 TEST_CASE( "Parse Input") {
@@ -314,11 +315,12 @@ TEST_CASE("Mixed Parse and Expression testing")
 {
     SECTION("Functions"){
 
-        CHECK(parse_str("_let y = _fun(x) x + 1 _in y(3))")->interp()->to_string() == "4");
+        CHECK(parse_str("_let y = _fun(x) x + 1 _in y(3))")->interp(Env::empty)->to_string() == "4");
 
-        CHECK(parse_str("_let f = _fun (x) _fun (g) g(x + 1) _in _let g = _fun (y) y + 2 _in (f(5))(g)")->interp()->to_string() == "8");
+        CHECK(parse_str("_let f = _fun (x) _fun (g) g(x + 1) _in _let g = _fun (y) y + 2 _in (f(5))(g)")->interp(Env::empty)->to_string() == "8");
         //Fibonacci
-        Expr* fibonacci = parse_str("_let factrl = _fun (factrl) _fun (x) _if x == 1  _then 1 _else x * factrl(factrl)(x + -1) _in factrl(factrl)(10)");
-        CHECK(fibonacci->interp()->to_string() == "3628800");
+        PTR(Expr) fibonacci = parse_str("_let factrl = _fun (factrl) _fun (x) _if x == 1  _then 1 _else x * factrl(factrl)(x + -1) _in factrl(factrl)(10)");
+        CHECK(fibonacci->interp(Env::empty)->to_string() == "3628800");
     }
 }
+#endif
