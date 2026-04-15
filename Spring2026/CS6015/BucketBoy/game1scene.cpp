@@ -35,7 +35,6 @@ void game1scene::update()
     //Update and check spawn timers
     lastSpawnElapsed += delta;
     lastSpawnRateIncreaseElapsed += delta;
-    qDebug() << "Hi!: " << lastSpawnElapsed;
     if(lastSpawnElapsed > spawnRate)
     {
         lastSpawnElapsed = 0;
