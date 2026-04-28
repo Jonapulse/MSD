@@ -1,5 +1,3 @@
-#include "shelpers.hpp"
-
 //////////////////////////////////////////////////////////////////////////////////
 //
 // Author: Ben Jones (I think) with a lot of clean up by J. Davison de St. Germain
@@ -9,10 +7,11 @@
 //
 // Class: CS 6013 - Systems I
 //
-// Jon Pulsipher - 6013, A3 Shell.
+// Jon Pulsipher - 6013, A3 Shell. Feb, 2026.
 //
 //////////////////////////////////////////////////////////////////////////////////
 
+#include "shelpers.hpp"
 using namespace std;
 
 ////////////////////////////////////////////////////////////////////////
@@ -196,7 +195,7 @@ vector<Command> getCommands( const vector<string> & tokens )
                   break;
                }
 
-               string fileName = tokens[j + 1]; //TODO: Do we need to check for more tokens? 
+               string fileName = tokens[j + 1]; 
                int openedFD = open(fileName.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
                if(openedFD == -1)
                {
@@ -220,7 +219,8 @@ vector<Command> getCommands( const vector<string> & tokens )
                //So return an empty vector
                string fileName = tokens[j + 1]; 
                command.inputFd = open(fileName.c_str(), O_RDONLY);
-               openFDsForError.push_back(command.outputFd);
+               openFDsForError.push_back(command.inputFd);
+               j++; //and skip filename token
             }
          }
          else if( tokens[j] == "&" ){
@@ -239,17 +239,10 @@ vector<Command> getCommands( const vector<string> & tokens )
             // connect the ends to the fd's for the commands!
             
             int fds[2];
-            pipe(fds);
-            if(fds[0] == -1 || fds[1] == -1)
+            if(pipe(fds) == -1)
             {
                perror("piping returns with error codes");
                error = true;
-               if(fds[0] != -1){
-                  openFDsForError.push_back(fds[0]);
-               }
-               if(fds[1] != -1){
-                  openFDsForError.push_back(fds[1]);
-               }
             }
             else{
 
