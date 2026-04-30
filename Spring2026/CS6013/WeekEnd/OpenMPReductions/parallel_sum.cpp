@@ -6,18 +6,9 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-#include <mutex>
-#include <atomic>
 #include <chrono>
-#include <numeric>
-#include <tuple>
-#include <cassert>
-#include <cstdlib>
 #include <omp.h>
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Return type: holds the computed sum and the elapsed time in seconds.
-// ─────────────────────────────────────────────────────────────────────────────
 template<typename T>
 struct Data {
     T      sum;
