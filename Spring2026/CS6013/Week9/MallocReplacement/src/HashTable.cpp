@@ -68,15 +68,15 @@ int HashTable::get(void* key) {
  * @param cap - size (# of HashEntries)
  * @return ptr to table
  */
-HashTable::HashEntry* HashTable::allocateTable(int cap) {
+HashTable::HashEntry* HashTable::allocateTable(size_t byte_size) {
     HashTable::HashEntry* ptr = (HashTable::HashEntry*) mmap(
-        nullptr, sizeof(HashEntry) * cap,
+        nullptr, sizeof(HashEntry) * byte_size,
         PROT_READ | PROT_WRITE,
         MAP_PRIVATE | MAP_ANONYMOUS,
         -1, 0);
     if (ptr == MAP_FAILED)
         throw std::runtime_error("mmap failed");
-    for (int i = 0; i < cap; i++) {
+    for (int i = 0; i < byte_size; i++) {
         ptr[i] = {nullptr, 0, false, true};
     }
     return ptr;
@@ -89,8 +89,8 @@ HashTable::HashEntry* HashTable::allocateTable(int cap) {
  * by the hashtable. It will not copy over on rehash.
  * @param ptr
  */
-void HashTable::freeTable(void* ptr, int cap) {
-    munmap(ptr, cap);
+void HashTable::freeTable(void* ptr, size_t byte_size) {
+    munmap(ptr, byte_size);
 }
 
 int HashTable::find(void* key) {
@@ -130,6 +130,6 @@ int HashTable::hashFunction(void* key) {
     return (x >> 3) % capacity;
 }
 
-int HashTable::getSize() {
+size_t HashTable::getSize() {
     return this->size;
 }

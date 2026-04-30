@@ -11,6 +11,8 @@
  * It handles its own memory allocation and deallocation
  * through mmap/mmunmap
  */
+#include <unistd.h>
+
 class HashTable {
 public:
     HashTable();
@@ -20,7 +22,7 @@ public:
     void remove(void* key); //For chaining
     bool contains(void* key);
     int get(void* key);
-    int getSize();
+    size_t getSize();
 
 private:
     struct HashEntry {
@@ -35,12 +37,12 @@ private:
     static constexpr float GROW_FACTOR = 2;
 
     HashEntry* table;
-    int size;
+    size_t size;
     int capacity;
 
     //mmap/mmunmap memory allocation
-    HashEntry* allocateTable(int cap);
-    void freeTable(void* table, int cap);
+    HashEntry* allocateTable(size_t byte_size);
+    void freeTable(void* table, size_t byte_size);
 
     int find(void* key);
     void grow();

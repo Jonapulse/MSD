@@ -10,7 +10,7 @@
 
 class MyMalloc {
 public:
-    void* allocate(int bytesToAllocate);
+    void* allocate(size_t bytesToAllocate);
     void deallocate(void* ptr);
 
     MyMalloc();

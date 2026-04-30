@@ -3,7 +3,6 @@ project(MallocReplacement)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Download and configure GoogleTest
 include(FetchContent)
 FetchContent_Declare(
         googletest
@@ -17,8 +16,8 @@ add_library(hashtable_lib
 )
 
 add_library(mymalloc_lib
-    src/MyMalloc.cpp
-    src/MyMalloc.h
+        src/MyMalloc.cpp
+        src/MyMalloc.h
 )
 
 add_executable(MallocReplacement src/main.cpp)
@@ -32,10 +31,20 @@ target_link_libraries(HashTableTests
 
 add_executable(MyMallocTests tests/MyMallocTest.cpp)
 target_link_libraries(MyMallocTests
-    mymalloc_lib
-    hashtable_lib
-    GTest::gtest_main
+        mymalloc_lib
+        hashtable_lib
+        GTest::gtest_main
 )
+
+add_executable(OverrideTests tests/OverrideTest.cpp)
+target_link_libraries(OverrideTests
+        mymalloc_lib
+        hashtable_lib
+        GTest::gtest_main
+)
+target_link_options(OverrideTests PRIVATE -Wl,-interposable)
 
 include(GoogleTest)
 gtest_discover_tests(HashTableTests)
+gtest_discover_tests(MyMallocTests)
+gtest_discover_tests(OverrideTests)
