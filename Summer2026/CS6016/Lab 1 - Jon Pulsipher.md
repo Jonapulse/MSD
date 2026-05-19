@@ -12,55 +12,42 @@
 - AssignedSeller `[__VIN(string)__, __SSN(integer)__]`
 
 ### Part 2
-1) Grocery Store
 ```
-CREATE TABLE Inventory(
-	SKU STRING,
-	Name STRING,
-	Quantity INTEGER,
-	Price REAL,
-	PRIMARY KEY(SKU)
-);
-```
-2) Grocery store v2 (by aisle)
-```
-CREATE TABLE Inventory(
-	SKU STRING,
-	Name STRING,
-	Price REAL,
-	PRIMARY KEY(SKU)
-);
-CREATE TABLE Aisles(
-	AisleNumber INTEGER,
-	SKU STRING,
-	PRIMARY KEY(AisleNumber, SKU),
-	FOREIGN KEY(SKU) REFERENCES Inventory(ParentSKU)
-);
-```
-3) Car Sales - 
-```
-CREATE TABLE Stock(
-	VIN STRING,
-	Make STRING,
-	Model STRING,
-	Year INTEGER,
-	Color STRING,
-	PRIMARY KEY(VIN)
-);
+CREATE TABLE Patrons(
+    Name (string),
+    CardNum (integer) UNIQUE,
+    PRIMARY KEY(CardNum) //Every card number will have only one account-holder name associated with it.
+) 
+//As written, the database does not restrict a user from having multiple library cards. To do that, some identifying information more unique than a name would be needed - Key(CardNum, Name, PrimaryPhone) would be enough and the PhoneNumbers table could still provide the option for multiple phone numbers.
 
-CREATE TABLE Salespeople(
-	SSN INTEGER,
-	Name STRING,
-	PRIMARY KEY(SSN)
-);
+CREATE TABLE PhoneNumbers(
+    CardNum (integer) UNIQUE,
+    Phone (string),
+    PRIMARY KEY(CardNum, Phone) //To allow multiple phones per cardNum (cell/landline) or multiple CardNums per phone (same household with multiple account holders)
+    FOREIGN KEY(CardNum) RFERENCES Patrons(CardNum)
+)
 
-CREATE TABLE AssignedSellers(
-	VIN STRING,
-	SSN INTEGER,
-	PRIMARY KEY(VIN, SSN),
-	FOREIGN KEY(VIN) REFERENCES Stock(ParentVIN),
-	FOREIGN KEY(SSN) REFERENCES Salespeople(ParentSSN)
-);
+CREATE TABLE Titles(
+    ISBN (integer) UNIQUE,
+    Title (string),
+    PRIMARY KEY(ISBN) //ISBNs only have one title, but different ISBNs can share the same string title.
+)
+
+CREATE TABLE Inventory(
+    Serial (integer) UNIQUE,
+    ISBN (integer),
+    PRIMARY KEY(Serial), 
+    FOREIGN KEY(ISBN) REFERENCES Titles(ISBN) 
+)
+//Multiple copies of an ISBN can be held under different serial numbers
+
+CREATE TABLE CheckedOut(
+    Serial (integer) UNIQUE, 
+    CardNum (integer),
+    PRIMARY KEY(Serial),
+    FOREIGN KEY(CardNum) REFERENCES Patrons(CardNum)
+)
+//One card can check out multiple copies of the same book
 ```
 ### Part 3
 **Stock**
