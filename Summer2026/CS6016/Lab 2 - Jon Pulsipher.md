@@ -1,14 +1,11 @@
 ### ER Diagram
-![[Screenshot 2026-05-25 at 9.20.58 PM.png]]
+![[Lab 2 ER Diagram.png]]
 ### Schemas
 Player(player_id (serial) PK, player_name (varchar(255), player_elo (small_int))
 
 Event(event_date (date) PK, event_name (varchar(255) PK, event_site (varchar(255)))
 
 Game(game_round (serial) PK, white_player_id (integer) FK -> Player, black_player_id (integer) FK -> Player), result (varchar(7)), movelist (varchar(1000)))
-
-**Fixes** 
-- need to be able to connect game to event and identify those separately. Check Claude! It's genuinely useful stuff. Might need to update your schema.
 
 ### SQL Commands
 
