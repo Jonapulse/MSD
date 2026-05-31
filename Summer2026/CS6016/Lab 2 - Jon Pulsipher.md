@@ -1,5 +1,5 @@
 ### ER Diagram
-![diagram](./Lab_2_ER_Diagram.png)
+![diagram](./Lab2ERDiagram.png)
 ### Schemas
 Player(player_id (serial) PK, player_name (varchar(255), player_elo (small_int))
 
