@@ -32,15 +32,22 @@
 4. $\pi_{Name}(Players\bowtie_{Players.pID=Games.wpID \lor Players.pID=Games.bpID}Games\bowtie(\sigma_{Year = 2018}(Events)))$
 5. 
 $\rho(tPlayer, \sigma_{Name = "Magnus Carlsen"}(Players))$
+
 $\rho(lostAsWhite, \sigma_{Result="0-1"}(Games\bowtie_{tPlayer.pID=Games.wpID}tPlayer))$
+
 $\rho(lostAsBlack, \sigma_{Result="1-0"}(Games\bowtie_{tPlayer.pID=Games.bpID}tPlayer))$
+
 $\pi_{Name, Year}(Events \bowtie \pi_{eID}(lostAsWhite \cup lostAsBlack))$
 
 6. 
 $\rho(tPlayer, \sigma_{Name = "Magnus Carlsen"}(Players))$
+
 $\rho(whiteOpponents, \pi_{wID}(Games\bowtie_{tPlayer.pID=Games.bID}tPlayer))$
+
 $\rho(blackOpponents, \pi_{bID}(Games\bowtie_{tPlayer.pID=Games.wID}tPlayer))$
+
 $\rho(allOpponents, \pi_{wID \rightarrow pID}(whiteOpponents) \cup \pi_{bID \rightarrow pID}(blackOpponents))$
+
 $\pi_{Name}(allOpponents \bowtie Players)$
 ### Part 3 - LMS Queries
 ##### 3.1:
