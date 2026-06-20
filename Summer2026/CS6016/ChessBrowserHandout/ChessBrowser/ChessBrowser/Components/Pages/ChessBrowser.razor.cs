@@ -31,22 +31,24 @@ namespace ChessBrowser.Components.Pages
             string round, 
             string result, 
             string moves, 
-            string blackPlayerName, 
-            string whitePlayerName, 
-            int eid
+            string blackPlayerName, //key for bPid lookup
+            string whitePlayerName, //key for wPid lookup
+            string eventName, //identifiers for eid lookup
+            string eventSite,
+            string eventDate
         );
 
         private record struct ChessEvent(
             string name,
             string site,
             string date,
-            string eid
+            int eid
         );
 
         private record struct Player(
             string name,
             string elo,
-            string pid
+            int pid
         );
 
         private record struct ChessData(
@@ -63,9 +65,6 @@ namespace ChessBrowser.Components.Pages
         /// <param name="PGNFileLines">The lines from the selected file</param>
         private async Task InsertGameData(string[] PGNFileLines)
         {
-            // This will build a connection string to your user's database on atr,
-            // assuimg you've filled in the credentials in the GUI
-      
             string connectionString = GetConnectionString();
       
             //wrap this in try/catch with exception printing so the UI doesn't swallow your exceptions
@@ -76,10 +75,11 @@ namespace ChessBrowser.Components.Pages
         
                 //Upload Data
                 Progress = 0;
-                int uploadObjectSum = data.events.Count + data.players.Count + data.games.Count;
+                int uploadSum = 0;
+                int uploadTarget = data.events.Count + data.players.Count + data.games.Count;
 
                 await using var dataSource =
-                    NpgsqlDataSource.Create("Host=atr.eng.utah.edu;Username=" + Username + ";Database=" + Database);
+                    NpgsqlDataSource.Create(connectionString);
                 await using var commandMakeEventTable =
                     dataSource.CreateCommand(
                         """
@@ -88,7 +88,8 @@ namespace ChessBrowser.Components.Pages
                             site VARCHAR(255), 
                             date DATE, 
                             eid SERIAL, 
-                            PRIMARY KEY(eid)
+                            PRIMARY KEY(eid),
+                            CONSTRAINT unique_event UNIQUE(name, site, date)
                         );
                         """);
                 await using var commandMakePlayerTable =
@@ -98,7 +99,8 @@ namespace ChessBrowser.Components.Pages
                             name VARCHAR(255), 
                             elo INTEGER, 
                             pid SERIAL, 
-                            PRIMARY KEY(pid)
+                            PRIMARY KEY(pid),
+                            CONSTRAINT unique_player UNIQUE(name)
                         );
                         """);
                     await using var commandMakeGameTable =
@@ -121,31 +123,90 @@ namespace ChessBrowser.Components.Pages
                 await commandMakeEventTable.ExecuteNonQueryAsync();
                 await commandMakePlayerTable.ExecuteNonQueryAsync();
                 await commandMakeGameTable.ExecuteNonQueryAsync();
-               
+                
                 //Insert events
-                for (int i = 0; i < data.events.Count; i++)
+                foreach(ChessEvent pgnEvent in data.events.Values)
                 {
-          
+                    await using var insertCommand = dataSource.CreateCommand(
+                        "INSERT INTO events (name, site, date) VALUES(@name,@site,@date) " +
+                        "ON CONFLICT (name, site, date) DO UPDATE SET name = EXCLUDED.name RETURNING eid");
+                    insertCommand.Parameters.AddWithValue("name", pgnEvent.name);
+                    insertCommand.Parameters.AddWithValue("site", pgnEvent.site);
+                    insertCommand.Parameters.AddWithValue("date", NpgsqlTypes.NpgsqlDbType.Date, DateTime.Parse(pgnEvent.date.Replace('.', '-'))); //PostgreSQL's Date wants '-'
+
+                    var result = await insertCommand.ExecuteScalarAsync();
+                    if (result != null)
+                    {
+                        string key = pgnEvent.name + pgnEvent.site + pgnEvent.date;
+                        ChessEvent updatedEvent = data.events[key];
+                        updatedEvent.eid = (int)result;
+                        data.events[key] = updatedEvent;
+                    }
+
+                    //Update progress
+                    uploadSum++;
+                    int newProgress = (int)((float)uploadSum / uploadTarget * 100);
+                    if (Progress != newProgress)
+                    {
+                        Progress = newProgress;
+                        await InvokeAsync(StateHasChanged);
+                    }
+                }
+                
+                //Insert Players
+                foreach(Player pgnPlayer in data.players.Values)
+                {
+                    await using var insertCommand = dataSource.CreateCommand(
+                        "INSERT INTO players (name, elo) VALUES(@name,@elo) " +
+                        "ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name RETURNING pid");
+                    insertCommand.Parameters.AddWithValue("name", pgnPlayer.name);
+                    insertCommand.Parameters.AddWithValue("elo", int.Parse(pgnPlayer.elo));
+
+                    var result = await insertCommand.ExecuteScalarAsync();
+                    if (result != null)
+                    {
+                        string key = pgnPlayer.name;
+                        Player updatedEvent = data.players[key];
+                        updatedEvent.pid = (int)result;
+                        data.players[key] = updatedEvent;
+                    }
+
+                    //Update progress
+                    uploadSum++;
+                    int newProgress = (int)((float)uploadSum / uploadTarget * 100);
+                    if (Progress != newProgress)
+                    {
+                        Progress = newProgress;
+                        await InvokeAsync(StateHasChanged);
+                    }
                 }
 
-                //Insert players
-                for (int i = 0; i < data.players.Count; i++)
-                {
-          
-                }
-        
                 //Insert games
-                for(int i = 0; i < data.games.Count; i++)
-                {}
-        
-        
-                //Only call awai
- 
-                // This tells the GUI to redraw after you update Progress (this should go inside your loop)
-                // Only call this when your calculated value != Progress, because int-wise it often won't
-                await InvokeAsync(StateHasChanged);
-          
+                foreach(Game pgnGame in data.games.Values)
+                {
+                    await using var insertCommand = dataSource.CreateCommand(
+                        "INSERT INTO games (round, result, moves, blackplayer, whiteplayer, eid) " + 
+                        "VALUES(@round, @result, @moves, @blackplayer, @whiteplayer, @eid) " +
+                        "ON CONFLICT (round, blackplayer, whiteplayer, eid)  DO NOTHING");
+                    insertCommand.Parameters.AddWithValue("round", pgnGame.round);
+                    insertCommand.Parameters.AddWithValue("result",
+                        pgnGame.result == "1-0" ? 'W' : pgnGame.result == "0-1" ? 'B' : 'D');
+                    insertCommand.Parameters.AddWithValue("moves", pgnGame.moves);
+                    insertCommand.Parameters.AddWithValue("blackplayer", data.players[pgnGame.blackPlayerName].pid);
+                    insertCommand.Parameters.AddWithValue("whiteplayer", data.players[pgnGame.whitePlayerName].pid);
+                    insertCommand.Parameters.AddWithValue("eid", data.events[GetEventKey(pgnGame.eventName, pgnGame.eventSite, pgnGame.eventDate)].eid);
 
+                    await insertCommand.ExecuteNonQueryAsync();
+
+                    //Update progress
+                    uploadSum++;
+                    int newProgress = (int)((float)uploadSum / uploadTarget * 100);
+                    if (Progress != newProgress)
+                    {
+                        Progress = newProgress;
+                        await InvokeAsync(StateHasChanged);
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -217,13 +278,16 @@ namespace ChessBrowser.Components.Pages
                 result = gameData["Result"],
                 moves = moveList,
                 whitePlayerName = gameData["White"],
-                blackPlayerName = gameData["Black"]
+                blackPlayerName = gameData["Black"],
+                eventName =  gameData["Event"], //duplicate data kept for key lookup
+                eventSite =  gameData["Site"],
+                eventDate =  gameData["Date"]
             };
             ChessEvent pgnEvent = new ChessEvent()
             {
                 name = gameData["Event"],
                 site = gameData["Site"],
-                date = gameData["Date"].Replace('.', '-'), //PostgreSQL's Date wants '-'
+                date = gameData["Date"]
             };
             Player pgnWhitePlayer = new Player()
             {
@@ -243,13 +307,25 @@ namespace ChessBrowser.Components.Pages
             //  Games uniquely identified by round, event identifiers, and player identifiers
             fullPgnData.players[pgnWhitePlayer.name] = pgnWhitePlayer;
             fullPgnData.players[pgnBlackPlayer.name] = pgnBlackPlayer;
-            fullPgnData.events[pgnEvent.name + pgnEvent.site + pgnEvent.date] = pgnEvent;
+            fullPgnData.events[GetEventKey(pgnEvent.name, pgnEvent.site, pgnEvent.date)] = pgnEvent;
             fullPgnData.games[
                     pgnGame.round + pgnEvent.name + pgnEvent.site + pgnEvent.date + pgnWhitePlayer.name +
                     pgnBlackPlayer.name] =
                 pgnGame;
-
         }
+
+        /// <summary>
+        /// Returns key for ChessData.events (for consistency)
+        /// </summary>
+        /// <param name="eventName"></param>
+        /// <param name="eventSite"></param>
+        /// <param name="eventDate"></param>
+        /// <returns></returns>
+        string GetEventKey(string eventName, string eventSite, string eventDate)
+        {
+            return eventName + eventSite + eventDate;
+        }
+        
 
         /// <summary>
         /// Queries the database for games that match all the given filters.
