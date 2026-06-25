@@ -358,15 +358,24 @@ namespace ChessBrowser.Components.Pages
 
             try
             {
+                var conditions = new List<string>();
+
+                if (opening != "") conditions.Add("g.moves LIKE '" + opening + "%'");
+                if (winner != "") conditions.Add("g.result = '" + winner + "'");
+                if (useDate) conditions.Add("e.date BETWEEN '" + start.ToString("yyyy-MM-dd") + "' AND '" + end.ToString("yyyy-MM-dd") + "'");
+
+                string whereClause = conditions.Count > 0 ? "WHERE " + string.Join(" AND ", conditions) : "";
                 
                 await using var selectCommand = conn.CreateCommand(
                     "SELECT e.name, e.site, e.date, wp.name, wp.elo, bp.name, bp.elo, g.result, g.moves " +
                     "FROM games g " + 
                     "JOIN events e ON g.eid = e.eid " + 
                     "JOIN players wp ON g.whiteplayer = wp.pid " + 
-                    (white != "" ? "AND wp.name = " + white + " ": "") + 
+                    (white != "" ? "AND wp.name = '" + white + "' ": "") + 
                     "JOIN players bp ON g.blackplayer = bp.pid " +
-                    "LIMIT 10;");
+                    (black != "" ? "AND bp.name = '" + black + "' ": "") + 
+                    whereClause +
+                ";");
 
                 var reader = await selectCommand.ExecuteReaderAsync();
                 
