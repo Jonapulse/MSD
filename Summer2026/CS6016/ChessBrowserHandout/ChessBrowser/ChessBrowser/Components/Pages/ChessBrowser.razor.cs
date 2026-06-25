@@ -360,9 +360,9 @@ namespace ChessBrowser.Components.Pages
             {
                 var conditions = new List<string>();
 
-                if (opening != "") conditions.Add("g.moves LIKE '" + opening + "%'");
-                if (winner != "") conditions.Add("g.result = '" + winner + "'");
-                if (useDate) conditions.Add("e.date BETWEEN '" + start.ToString("yyyy-MM-dd") + "' AND '" + end.ToString("yyyy-MM-dd") + "'");
+                if (opening != "") conditions.Add("g.moves LIKE @opening");
+                if (winner != "") conditions.Add("g.result = @winner");
+                if (useDate) conditions.Add("e.date BETWEEN @start AND @end");
 
                 string whereClause = conditions.Count > 0 ? "WHERE " + string.Join(" AND ", conditions) : "";
                 
@@ -371,11 +371,20 @@ namespace ChessBrowser.Components.Pages
                     "FROM games g " + 
                     "JOIN events e ON g.eid = e.eid " + 
                     "JOIN players wp ON g.whiteplayer = wp.pid " + 
-                    (white != "" ? "AND wp.name = '" + white + "' ": "") + 
+                    (white != "" ? "AND wp.name = @white ": "") + 
                     "JOIN players bp ON g.blackplayer = bp.pid " +
-                    (black != "" ? "AND bp.name = '" + black + "' ": "") + 
+                    (black != "" ? "AND bp.name = @black ": "") + 
                     whereClause +
                 ";");
+                if(white != "") selectCommand.Parameters.AddWithValue("@white", white);
+                if(black != "") selectCommand.Parameters.AddWithValue("@black", black);
+                if(opening != "") selectCommand.Parameters.AddWithValue("@opening", opening + "%");
+                if(winner != "") selectCommand.Parameters.AddWithValue("@winner", winner);
+                if (useDate)
+                {
+                    selectCommand.Parameters.AddWithValue("@start", start);
+                    selectCommand.Parameters.AddWithValue("@end", end);
+                }
 
                 var reader = await selectCommand.ExecuteReaderAsync();
                 
@@ -389,16 +398,11 @@ namespace ChessBrowser.Components.Pages
                         "\nDate: " + reader.GetDateTime(2) + 
                         "\nWhite: " + reader.GetString(3) + " (" + reader.GetInt32(4) + ")" +
                         "\nBlack: " + reader.GetString(5) + " (" + reader.GetInt32(6) + ")" + 
-                        "\nResult " + reader.GetChar(7);
+                        "\nResult: " + reader.GetChar(7);
                     if (showMoves)
-                        parsedResult += reader.GetString(8);
+                        parsedResult +="\nMoves: " + reader.GetString(8);
                     parsedResult += "\n";
                 }
-
-
-                // TODO:
-                //   Generate and execute an SQL command,
-                //   then parse the results into an appropriate string and return it.
             }
             catch (Exception e)
             {
