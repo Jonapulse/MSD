@@ -38,6 +38,11 @@ class MyViewModel : ViewModel()
     {
         classesMutable.value += ClassInfo(dep_abbrv, class_num.toIntOrNull()?:0)
     }
+
+    fun dropItem(info: ClassInfo)
+    {
+        classesMutable.value -= info
+    }
 }
 
 
@@ -152,9 +157,20 @@ fun MyClassesList(myVM: MyViewModel)
     Row{
         LazyColumn() {
             items(classList){
-                ClassListItem(it)
+                ClassListContainer(myVM, it)
             }
         }
+    }
+}
+
+@Composable
+fun ClassListContainer(myVM: MyViewModel, item: ClassInfo)
+{
+    Row{
+        ClassListItem(item)
+        Button(onClick = {
+            myVM.dropItem(item)
+        }){Text("Remove")}
     }
 }
 

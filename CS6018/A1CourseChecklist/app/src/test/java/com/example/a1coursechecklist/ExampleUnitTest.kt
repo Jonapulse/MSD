@@ -18,7 +18,6 @@ class ExampleUnitTest {
     @Test
     fun validateRequirementCheck()
     {
-        myVM
         requirementsSatisfied()
 
     }
