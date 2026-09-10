@@ -23,12 +23,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a1coursechecklist.ui.theme.A1CourseChecklistTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Icon
+import androidx.compose.ui.graphics.Color
 
 class MyViewModel : ViewModel()
 {
@@ -38,7 +42,6 @@ class MyViewModel : ViewModel()
     {
         classesMutable.value += ClassInfo(dep_abbrv, class_num.toIntOrNull()?:0)
     }
-
     fun dropItem(info: ClassInfo)
     {
         classesMutable.value -= info
@@ -55,14 +58,12 @@ class MainActivity : ComponentActivity() {
                 Column{
                     val vm: com.example.a1coursechecklist.MyViewModel = viewModel()
 
-                    DegreeRequirementList(vm,getDefaultRecList())
+                    DegreeRequirementList(vm.classesReadOnly.collectAsStateWithLifecycle().value,getDefaultRecList())
                     Spacer(Modifier.height(20.dp))
-                    //TODO: text edit and swap
-                    //ClassModButton(vm)
-                    ClassEntry(vm)
+                    ClassEntry(vm::addItem, vm::dropItem)
                     Spacer(Modifier.height(20.dp))
                     Text("My Classes")
-                    MyClassesList (vm)
+                    MyClassesList (vm.classesReadOnly.collectAsStateWithLifecycle().value, vm::addItem, vm::dropItem)
                 }
             }
         }
@@ -119,77 +120,80 @@ fun OptionalClassListItemPreview()
 }
 
 @Composable
-fun DegreeRequirementList(myVM: MyViewModel, requirements: DegreeRequirements)
+fun DegreeRequirementList(myClasses: List<ClassInfo>, requirements: DegreeRequirements)
 {
+    val satisfiedText = remember(myClasses, requirements){
+        if(requirementsSatisfied(myClasses, requirements)) "satisfied" else "not satisfied"
+    }
+
     Column{
         Row{
             Text("${requirements.degree_name} degree requirements:")
         }
         Row{
-            val satisfiedText = if(requirementsSatisfied(myVM, requirements)) "satisfied" else "not satisfied"
             Text("Requirements are $satisfiedText")
         }
         Row{
             LazyColumn() {
                 items(requirements.class_reqs){
-                    ClassListItem(it)
+                    Row {
+                        ClassListItem(it)
+                        if (requirementSatisfied(myClasses, it)) BasicCheckmark()
+                    }
                 }
                 items(requirements.class_choice_reqs){
-                    OptionalClassListItem(it)
+                    Row {
+                        OptionalClassListItem(it)
+                        if (it.class_choices.any { classReq ->
+                                requirementSatisfied(myClasses, classReq)
+                            }) BasicCheckmark()
+                    }
                 }
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun DegreeRequirementListPreview()
+fun MyClassesList(classList: List<ClassInfo>, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit)
 {
-    //DegreeRequirementList(getDefaultRecList())
-}
-
-@Composable
-fun MyClassesList(myVM: MyViewModel)
-{
-    val classList by myVM.classesReadOnly.collectAsState()
-
     Row{
         LazyColumn() {
             items(classList){
-                ClassListContainer(myVM, it)
+                ClassListContainer(it, addItem, dropItem)
             }
         }
     }
 }
 
 @Composable
-fun ClassListContainer(myVM: MyViewModel, item: ClassInfo)
+fun ClassListContainer(item: ClassInfo, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit)
 {
+    var isEditing by remember {mutableStateOf(false)}
     Row{
-        ClassListItem(item)
-        Button(onClick = {
-            myVM.dropItem(item)
-        }){Text("Remove")}
+        if(isEditing)
+        {
+            Column {
+                ClassEntry(addItem, dropItem, resetListItem = { isEditing = !isEditing }, item)
+                Button(onClick = { isEditing = !isEditing }) { Text("Cancel") }
+            }
+        }
+        else
+        {
+            ClassListItem(item)
+            Button(onClick = { isEditing = !isEditing }){Text("Edit")}
+            Button(onClick = {
+                dropItem(item)
+            }){Text("Remove")}
+        }
     }
 }
 
 @Composable
-fun ClassModButton(myVM: MyViewModel)
+fun ClassEntry(addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit, resetListItem : (() -> Unit) ? = null, prevValues: ClassInfo? = null)
 {
-    val classList by myVM.classesReadOnly.collectAsState()
-
-    Button(onClick = {
-        //myVM.addItem(dep_abbrv_text, class_num_text)
-        myVM.addItem("Test", "101")
-    }){Text("Add Class")}
-}
-
-@Composable
-fun ClassEntry(myVM: MyViewModel)
-{
-    var dep_abbrv_text by remember {mutableStateOf("")}
-    var class_num_text by remember {mutableStateOf("")}
+    var dep_abbrv_text by remember {mutableStateOf(prevValues?.dep_code?:"")}
+    var class_num_text by remember {mutableStateOf(prevValues?.class_num.toString()?:"")}
 
     Row {
         Column {
@@ -210,17 +214,28 @@ fun ClassEntry(myVM: MyViewModel)
     Row {
         Column {
             Button(onClick = {
-                myVM.addItem(dep_abbrv_text, class_num_text)
+                if(prevValues != null) //when editing, we drop previous values
+                    dropItem(prevValues)
+
+                addItem(dep_abbrv_text, class_num_text)
                 dep_abbrv_text = ""
                 class_num_text = ""
+
+                if(prevValues != null)
+                    resetListItem?.invoke()
+
             }) { Text("Add Class") }
         }
-        Column {
-            Button(onClick = {
-                //TODO: Toggle back
-            }) { Text("Cancel") }
-        }
     }
+}
+
+@Composable
+fun BasicCheckmark(modifier: Modifier = Modifier) {
+    Icon(
+        imageVector = Icons.Default.Check,
+        contentDescription = "Checkmark", // Crucial for screen readers
+        tint = Color.Green // Optional: Defaults to the local text/content color
+    )
 }
 
 
@@ -231,13 +246,7 @@ fun getDefaultRecList() : DegreeRequirements
         class_reqs = listOf(
             ClassInfo("CS", 6010),
             ClassInfo("CS", 6011),
-            ClassInfo("CS", 6012),
-            ClassInfo("CS", 6013),
-            ClassInfo("CS", 6014),
-            ClassInfo("CS", 6015),
-            ClassInfo("CS", 6016),
-            ClassInfo("CS", 6017),
-            ClassInfo("CS", 6018)
+            ClassInfo("CS", 6012)
         ),
         class_choice_reqs = listOf(
             OptionalClassGroup(listOf(
@@ -251,13 +260,17 @@ fun getDefaultRecList() : DegreeRequirements
     )
 }
 
-fun requirementsSatisfied(myVM: MyViewModel, requirements: DegreeRequirements) : Boolean
+fun requirementsSatisfied(myClasses: List<ClassInfo>, requirements: DegreeRequirements) : Boolean
 {
-    val myClasses = myVM.classesReadOnly.value
     val satisfiedRequired = myClasses.containsAll(requirements.class_reqs)
     val satisfiedElectives = requirements.class_choice_reqs.isEmpty() ||
             requirements.class_choice_reqs.all{choice -> choice.class_choices.any{
                 class_choice -> myClasses.contains((class_choice))
             }}
     return satisfiedRequired && satisfiedElectives
+}
+
+fun requirementSatisfied(myClasses: List<ClassInfo>, requiredClass: ClassInfo) : Boolean
+{
+    return myClasses.contains(requiredClass)
 }

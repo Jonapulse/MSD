@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.a1coursechecklist"
+    namespace = "com.example.storagedemo"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.a1coursechecklist"
+        applicationId = "com.example.storagedemo"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -51,6 +51,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
-    implementation("androidx.compose.material:material-icons-extended")
 }

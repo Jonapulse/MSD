@@ -4,21 +4,28 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
-    }
 
+class BusinessLogic {
     @Test
     fun validateRequirementCheck()
     {
-        requirementsSatisfied()
+        val defaultRecs = getDefaultRecList()
 
+        val myClassList = defaultRecs.class_reqs + defaultRecs.class_choice_reqs.map { it.class_choices.first() }
+        val incompleteList = defaultRecs.class_reqs
+
+        assertTrue(requirementsSatisfied(myClassList, defaultRecs))
+        assertFalse(requirementsSatisfied(incompleteList, defaultRecs))
+    }
+
+    @Test
+    fun validatePerClassReqCheck()
+    {
+        val classInfo = ClassInfo("CS", 101)
+        val missingClass = ClassInfo("ART", 304)
+        val myClasses = listOf(classInfo, classInfo,classInfo)
+
+        assertTrue(requirementSatisfied(myClasses, classInfo))
+        assertFalse(requirementSatisfied(myClasses, missingClass))
     }
 }
