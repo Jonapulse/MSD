@@ -14,7 +14,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,31 +22,153 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a1coursechecklist.ui.theme.A1CourseChecklistTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.android.Android
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.Serializable
 
-class MyViewModel : ViewModel()
-{
-    private val classesMutable = MutableStateFlow(listOf<ClassInfo>())
-    val classesReadOnly : StateFlow<List<ClassInfo>> = classesMutable.asStateFlow()
-    fun addItem(dep_abbrv:String, class_num:String)
-    {
-        classesMutable.value += ClassInfo(dep_abbrv, class_num.toIntOrNull()?:0)
+data class ClassInfo(val dep_code: String, val class_num: Int)
+data class OptionalClassGroup(val class_choices: List<ClassInfo>)
+data class DegreeRequirements(
+    val degree_name: String,
+    val class_reqs: List<ClassInfo>,
+    val class_choice_reqs: List<OptionalClassGroup>
+)
+
+/**
+ * Data classes and functions for JSON grab/deserialize
+ * Note: documenting use of an llm to help me with this approach
+ */
+@Serializable
+data class DegreePlanSummaryDto(val name: String, val path: String)
+
+@Serializable
+data class DegreePlanListDto(val plans: List<DegreePlanSummaryDto>)
+
+@Serializable
+data class CourseDto(val department: String, val number: String)
+
+@Serializable
+data class RequirementDto(
+    val type: String,
+    val course: CourseDto? = null,
+    val courses: List<CourseDto>? = null
+)
+
+@Serializable
+data class DegreeRequirementsDto(val name: String, val requirements: List<RequirementDto>)
+
+
+fun CourseDto.toClassInfo(): ClassInfo = ClassInfo(department, number.toIntOrNull() ?: 0)
+
+fun DegreeRequirementsDto.toDegreeRequirements(): DegreeRequirements {
+    val required = mutableListOf<ClassInfo>()
+    val choiceGroups = mutableListOf<OptionalClassGroup>()
+
+    requirements.forEach { req ->
+        when (req.type) {
+            "requiredCourse" -> req.course?.let { required.add(it.toClassInfo()) }
+            "oneOf" -> req.courses?.let { choiceGroups.add(OptionalClassGroup(it.map { c -> c.toClassInfo() })) }
+            // Unknown requirement types are ignored rather than crashing — the
+            // server could add new ones later.
+        }
     }
-    fun dropItem(info: ClassInfo)
-    {
-        classesMutable.value -= info
+
+    return DegreeRequirements(name, required, choiceGroups)
+}
+
+class DegreeRepository(private val client: HttpClient) {
+    private val baseUrl = "https://msd2026.github.io/degreePlans/"
+
+    suspend fun getAvailablePlans(): List<DegreePlanSummaryDto> {
+        return client.get(baseUrl + "degreePlans.json").body<DegreePlanListDto>().plans
+    }
+
+    suspend fun getDegreeRequirements(planPath: String): DegreeRequirements {
+        return client.get(baseUrl + planPath).body<DegreeRequirementsDto>().toDegreeRequirements()
     }
 }
 
+class MyViewModel : ViewModel() {
+
+    private val client = HttpClient(Android) {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
+    private val repository = DegreeRepository(client)
+
+    private val classesMutable = MutableStateFlow(listOf<ClassInfo>())
+    val classesReadOnly: StateFlow<List<ClassInfo>> = classesMutable.asStateFlow()
+
+    private val availablePlansMutable = MutableStateFlow(listOf<DegreePlanSummaryDto>())
+    val availablePlansReadOnly: StateFlow<List<DegreePlanSummaryDto>> = availablePlansMutable.asStateFlow()
+
+    private val selectedPlanMutable = MutableStateFlow<DegreePlanSummaryDto?>(null)
+    val selectedPlanReadOnly: StateFlow<DegreePlanSummaryDto?> = selectedPlanMutable.asStateFlow()
+
+    private val selectedRequirementsMutable = MutableStateFlow<DegreeRequirements?>(null)
+    val selectedRequirementsReadOnly: StateFlow<DegreeRequirements?> = selectedRequirementsMutable.asStateFlow()
+
+    private val errorMutable = MutableStateFlow<String?>(null)
+    val errorReadOnly: StateFlow<String?> = errorMutable.asStateFlow()
+
+    init {
+        refreshAvailablePlans()
+    }
+
+    fun refreshAvailablePlans() {
+        viewModelScope.launch {
+            runCatching { repository.getAvailablePlans() }
+                .onSuccess { availablePlansMutable.value = it }
+                .onFailure { errorMutable.value = "Couldn't load degree plan list: ${it.message}" }
+        }
+    }
+
+    fun selectDegreePlan(plan: DegreePlanSummaryDto) {
+        selectedPlanMutable.value = plan
+        viewModelScope.launch {
+            runCatching { repository.getDegreeRequirements(plan.path) }
+                .onSuccess {
+                    selectedRequirementsMutable.value = it
+                    errorMutable.value = null
+                }
+                .onFailure { errorMutable.value = "Couldn't load '${plan.name}' requirements: ${it.message}" }
+        }
+    }
+
+    fun addItem(dep_abbrv: String, class_num: String) {
+        classesMutable.value += ClassInfo(dep_abbrv, class_num.toIntOrNull() ?: 0)
+    }
+
+    fun dropItem(info: ClassInfo) {
+        classesMutable.value -= info
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        client.close()
+    }
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,49 +176,59 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             A1CourseChecklistTheme {
-                Column{
-                    val vm: com.example.a1coursechecklist.MyViewModel = viewModel()
+                val vm: MyViewModel = viewModel()
 
-                    DegreeRequirementList(vm.classesReadOnly.collectAsStateWithLifecycle().value,getDefaultRecList())
+                val myClasses by vm.classesReadOnly.collectAsStateWithLifecycle()
+                val availablePlans by vm.availablePlansReadOnly.collectAsStateWithLifecycle()
+                val selectedPlan by vm.selectedPlanReadOnly.collectAsStateWithLifecycle()
+                val selectedRequirements by vm.selectedRequirementsReadOnly.collectAsStateWithLifecycle()
+                val error by vm.errorReadOnly.collectAsStateWithLifecycle()
+
+                Column {
+                    DegreePlanDropdown(
+                        plans = availablePlans,
+                        selectedPlan = selectedPlan,
+                        onPlanSelected = vm::selectDegreePlan
+                    )
+
+                    error?.let { Text(it) }
+
+                    selectedRequirements?.let { requirements ->
+                        Spacer(Modifier.height(20.dp))
+                        DegreeRequirementList(myClasses, requirements)
+                    }
+
                     Spacer(Modifier.height(20.dp))
                     ClassEntry(vm::addItem, vm::dropItem)
                     Spacer(Modifier.height(20.dp))
                     Text("My Classes")
-                    MyClassesList (vm.classesReadOnly.collectAsStateWithLifecycle().value, vm::addItem, vm::dropItem)
+                    MyClassesList(myClasses, vm::addItem, vm::dropItem)
                 }
             }
         }
     }
 }
 
-
-data class ClassInfo(val dep_code: String, val class_num: Int )
-data class OptionalClassGroup(val class_choices: List<ClassInfo>)
-data class DegreeRequirements(val degree_name: String, val class_reqs: List<ClassInfo>, val class_choice_reqs: List<OptionalClassGroup>)
-
 @Composable
-fun ClassListItem(info: ClassInfo)
-{
+fun ClassListItem(info: ClassInfo) {
     Text("${info.dep_code} ${info.class_num}")
 }
 
 @Preview
 @Composable
-fun ClassListItemPreview()
-{
-    A1CourseChecklistTheme() {
+fun ClassListItemPreview() {
+    A1CourseChecklistTheme {
         ClassListItem(ClassInfo("CS", 6018))
     }
 }
 
 @Composable
-fun OptionalClassListItem(class_options: OptionalClassGroup)
-{
-    Row{
+fun OptionalClassListItem(class_options: OptionalClassGroup) {
+    Row {
         Text("Choose one from ")
         class_options.class_choices.forEachIndexed { index, info ->
             ClassListItem(info)
-            when{
+            when {
                 index == class_options.class_choices.lastIndex - 1 -> Text(" and ")
                 index < class_options.class_choices.lastIndex - 1 -> Text(", ")
             }
@@ -107,41 +238,39 @@ fun OptionalClassListItem(class_options: OptionalClassGroup)
 
 @Preview
 @Composable
-fun OptionalClassListItemPreview()
-{
+fun OptionalClassListItemPreview() {
     val options = listOf(
         ClassInfo("CS", 6010),
         ClassInfo("CS", 6011),
         ClassInfo("CS", 6012)
     )
-    A1CourseChecklistTheme() {
+    A1CourseChecklistTheme {
         OptionalClassListItem(OptionalClassGroup(options))
     }
 }
 
 @Composable
-fun DegreeRequirementList(myClasses: List<ClassInfo>, requirements: DegreeRequirements)
-{
-    val satisfiedText = remember(myClasses, requirements){
-        if(requirementsSatisfied(myClasses, requirements)) "satisfied" else "not satisfied"
+fun DegreeRequirementList(myClasses: List<ClassInfo>, requirements: DegreeRequirements) {
+    val satisfiedText = remember(myClasses, requirements) {
+        if (requirementsSatisfied(myClasses, requirements)) "satisfied" else "not satisfied"
     }
 
-    Column{
-        Row{
+    Column {
+        Row {
             Text("${requirements.degree_name} degree requirements:")
         }
-        Row{
+        Row {
             Text("Requirements are $satisfiedText")
         }
-        Row{
-            LazyColumn() {
-                items(requirements.class_reqs){
+        Row {
+            LazyColumn {
+                items(requirements.class_reqs) {
                     Row {
                         ClassListItem(it)
                         if (requirementSatisfied(myClasses, it)) BasicCheckmark()
                     }
                 }
-                items(requirements.class_choice_reqs){
+                items(requirements.class_choice_reqs) {
                     Row {
                         OptionalClassListItem(it)
                         if (it.class_choices.any { classReq ->
@@ -155,11 +284,10 @@ fun DegreeRequirementList(myClasses: List<ClassInfo>, requirements: DegreeRequir
 }
 
 @Composable
-fun MyClassesList(classList: List<ClassInfo>, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit)
-{
-    Row{
-        LazyColumn() {
-            items(classList){
+fun MyClassesList(classList: List<ClassInfo>, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit) {
+    Row {
+        LazyColumn {
+            items(classList) {
                 ClassListContainer(it, addItem, dropItem)
             }
         }
@@ -167,33 +295,31 @@ fun MyClassesList(classList: List<ClassInfo>, addItem: (String, String) -> Unit,
 }
 
 @Composable
-fun ClassListContainer(item: ClassInfo, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit)
-{
-    var isEditing by remember {mutableStateOf(false)}
-    Row{
-        if(isEditing)
-        {
+fun ClassListContainer(item: ClassInfo, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit) {
+    var isEditing by remember { mutableStateOf(false) }
+    Row {
+        if (isEditing) {
             Column {
                 ClassEntry(addItem, dropItem, resetListItem = { isEditing = !isEditing }, item)
                 Button(onClick = { isEditing = !isEditing }) { Text("Cancel") }
             }
-        }
-        else
-        {
+        } else {
             ClassListItem(item)
-            Button(onClick = { isEditing = !isEditing }){Text("Edit")}
-            Button(onClick = {
-                dropItem(item)
-            }){Text("Remove")}
+            Button(onClick = { isEditing = !isEditing }) { Text("Edit") }
+            Button(onClick = { dropItem(item) }) { Text("Remove") }
         }
     }
 }
 
 @Composable
-fun ClassEntry(addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit, resetListItem : (() -> Unit) ? = null, prevValues: ClassInfo? = null)
-{
-    var dep_abbrv_text by remember {mutableStateOf(prevValues?.dep_code?:"")}
-    var class_num_text by remember {mutableStateOf(prevValues?.class_num.toString()?:"")}
+fun ClassEntry(
+    addItem: (String, String) -> Unit,
+    dropItem: (ClassInfo) -> Unit,
+    resetListItem: (() -> Unit)? = null,
+    prevValues: ClassInfo? = null
+) {
+    var dep_abbrv_text by remember { mutableStateOf(prevValues?.dep_code ?: "") }
+    var class_num_text by remember { mutableStateOf(prevValues?.class_num?.toString() ?: "") }
 
     Row {
         Column {
@@ -214,16 +340,15 @@ fun ClassEntry(addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit,
     Row {
         Column {
             Button(onClick = {
-                if(prevValues != null) //when editing, we drop previous values
+                if (prevValues != null) // when editing, we drop previous values
                     dropItem(prevValues)
 
                 addItem(dep_abbrv_text, class_num_text)
                 dep_abbrv_text = ""
                 class_num_text = ""
 
-                if(prevValues != null)
+                if (prevValues != null)
                     resetListItem?.invoke()
-
             }) { Text("Add Class") }
         }
     }
@@ -238,39 +363,56 @@ fun BasicCheckmark(modifier: Modifier = Modifier) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DegreePlanDropdown(
+    plans: List<DegreePlanSummaryDto>,
+    selectedPlan: DegreePlanSummaryDto?,
+    onPlanSelected: (DegreePlanSummaryDto) -> Unit
+) {
+    var showDropdown by remember { mutableStateOf(false) }
 
-fun getDefaultRecList() : DegreeRequirements
-{
-    return DegreeRequirements(
-        degree_name = "Software Development",
-        class_reqs = listOf(
-            ClassInfo("CS", 6010),
-            ClassInfo("CS", 6011),
-            ClassInfo("CS", 6012)
-        ),
-        class_choice_reqs = listOf(
-            OptionalClassGroup(listOf(
-                ClassInfo("CS", 6019),
-                ClassInfo("CS", 6020))),
-            OptionalClassGroup(listOf(
-                ClassInfo("CS", 4050),
-                ClassInfo("CS", 4150),
-                ClassInfo("CS", 4250)))
+    ExposedDropdownMenuBox(
+        expanded = showDropdown,
+        onExpandedChange = { showDropdown = !showDropdown }
+    ) {
+        OutlinedTextField(
+            value = selectedPlan?.name ?: "Select degree",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Degree") },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = showDropdown)
+            },
+            modifier = Modifier.menuAnchor()
         )
-    )
+
+        ExposedDropdownMenu(
+            expanded = showDropdown,
+            onDismissRequest = { showDropdown = false }
+        ) {
+            plans.forEach { plan ->
+                DropdownMenuItem(
+                    text = { Text(plan.name) },
+                    onClick = {
+                        onPlanSelected(plan)
+                        showDropdown = false
+                    }
+                )
+            }
+        }
+    }
 }
 
-fun requirementsSatisfied(myClasses: List<ClassInfo>, requirements: DegreeRequirements) : Boolean
-{
+fun requirementsSatisfied(myClasses: List<ClassInfo>, requirements: DegreeRequirements): Boolean {
     val satisfiedRequired = myClasses.containsAll(requirements.class_reqs)
     val satisfiedElectives = requirements.class_choice_reqs.isEmpty() ||
-            requirements.class_choice_reqs.all{choice -> choice.class_choices.any{
-                class_choice -> myClasses.contains((class_choice))
-            }}
+            requirements.class_choice_reqs.all { choice ->
+                choice.class_choices.any { class_choice -> myClasses.contains(class_choice) }
+            }
     return satisfiedRequired && satisfiedElectives
 }
 
-fun requirementSatisfied(myClasses: List<ClassInfo>, requiredClass: ClassInfo) : Boolean
-{
+fun requirementSatisfied(myClasses: List<ClassInfo>, requiredClass: ClassInfo): Boolean {
     return myClasses.contains(requiredClass)
 }

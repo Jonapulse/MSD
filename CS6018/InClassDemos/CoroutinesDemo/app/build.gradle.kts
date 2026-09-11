@@ -60,4 +60,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    implementation("io.ktor:ktor-client-core:2.3.x")
+    implementation("io.ktor:ktor-client-android:2.3.x")      // engine — pick one platform engine
+    implementation("io.ktor:ktor-client-content-negotiation:2.3.x")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.x")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.x")
 }
