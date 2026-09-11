@@ -4,10 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -32,12 +36,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -184,7 +191,9 @@ class MainActivity : ComponentActivity() {
                 val selectedRequirements by vm.selectedRequirementsReadOnly.collectAsStateWithLifecycle()
                 val error by vm.errorReadOnly.collectAsStateWithLifecycle()
 
-                Column {
+                Column (
+                    modifier = Modifier.safeDrawingPadding()
+                ){
                     DegreePlanDropdown(
                         plans = availablePlans,
                         selectedPlan = selectedPlan,
@@ -297,18 +306,27 @@ fun MyClassesList(classList: List<ClassInfo>, addItem: (String, String) -> Unit,
 @Composable
 fun ClassListContainer(item: ClassInfo, addItem: (String, String) -> Unit, dropItem: (ClassInfo) -> Unit) {
     var isEditing by remember { mutableStateOf(false) }
-    Row {
-        if (isEditing) {
-            Column {
-                ClassEntry(addItem, dropItem, resetListItem = { isEditing = !isEditing }, item)
-                Button(onClick = { isEditing = !isEditing }) { Text("Cancel") }
+    Card(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ){
+        Row (
+            modifier = Modifier.padding(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ){
+            if (isEditing) {
+                Column {
+                    ClassEntry(addItem, dropItem, resetListItem = { isEditing = !isEditing }, item)
+                    Button(onClick = { isEditing = !isEditing }) { Text("Cancel") }
+                }
+            } else {
+                ClassListItem(item)
+                Button(onClick = { isEditing = !isEditing }) { Text("Edit") }
+                Button(onClick = { dropItem(item) }) { Text("Remove") }
             }
-        } else {
-            ClassListItem(item)
-            Button(onClick = { isEditing = !isEditing }) { Text("Edit") }
-            Button(onClick = { dropItem(item) }) { Text("Remove") }
         }
     }
+
 }
 
 @Composable

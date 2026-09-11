@@ -11,6 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 
 /**
+ * Generated some basic tests with llm
  * Runs on-device/emulator — createComposeRule() needs a real Compose runtime.
  * Location: app/src/androidTest/java/com/example/a1coursechecklist/
  */
