@@ -95,8 +95,6 @@ fun DegreeRequirementsDto.toDegreeRequirements(): DegreeRequirements {
         when (req.type) {
             "requiredCourse" -> req.course?.let { required.add(it.toClassInfo()) }
             "oneOf" -> req.courses?.let { choiceGroups.add(OptionalClassGroup(it.map { c -> c.toClassInfo() })) }
-            // Unknown requirement types are ignored rather than crashing — the
-            // server could add new ones later.
         }
     }
 
@@ -192,7 +190,7 @@ class MainActivity : ComponentActivity() {
                 val error by vm.errorReadOnly.collectAsStateWithLifecycle()
 
                 Column (
-                    modifier = Modifier.safeDrawingPadding()
+                    modifier = Modifier.safeDrawingPadding().padding(horizontal = 20.dp)
                 ){
                     DegreePlanDropdown(
                         plans = availablePlans,
