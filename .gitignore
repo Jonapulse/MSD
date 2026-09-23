@@ -3,6 +3,9 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+# Secret github security prohibits
+CS6018/InClassDemos/TextSummarizerDemoV2/secrets.properties
+
 ## User settings
 **/xcuserdata/
 
@@ -36,3 +39,5 @@
 
 ## Specific execs to ignore
 MSDScript/msdscript
+CS6018/InClassDemos/TextSummarizerDemoV2/secrets.properties
+CS6018/InClassDemos/TextSummarizerDemoV2/
