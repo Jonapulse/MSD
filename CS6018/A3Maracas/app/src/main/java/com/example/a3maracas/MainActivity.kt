@@ -67,7 +67,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlin.math.sqrt
 
-private const val MAX_EXPECTED_INTENSITY = 5f
+private const val MIN_EXPECTED_INTENSITY = 5f
+private const val MAX_EXPECTED_INTENSITY = 15f
 private const val MIN_SCALE = 1f
 private const val MAX_SCALE = 3f
 //Remove shakes before this time from database on button press
@@ -160,7 +161,7 @@ fun MaracasDisplay(shakes: Int, intensity: Float, modifier: Modifier = Modifier)
     val maracas = ImageBitmap.imageResource(R.drawable.maracas)
     val rotation = remember {Animatable(0f)}
 
-    val targetScale = lerp(MIN_SCALE, MAX_SCALE, (intensity / MAX_EXPECTED_INTENSITY).coerceIn(0f, 1f))
+    val targetScale = lerp(MIN_SCALE, MAX_SCALE, ((intensity - MIN_EXPECTED_INTENSITY) / (MAX_EXPECTED_INTENSITY - MIN_EXPECTED_INTENSITY)).coerceIn(0f, 1f))
     val scale by animateFloatAsState(targetScale, label = "maracasScale")
 
     LaunchedEffect(shakes) {
