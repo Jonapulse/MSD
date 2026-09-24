@@ -11,5 +11,11 @@ void bucket::keyPressEvent(QKeyEvent *event){
     if(event->key() == (Qt::Key_Left))
         x_mov -= 1;
 
-    this->setPos(this->x() + x_mov * MOV_SPEED, this->y());
+    float move_x = this->x() + x_mov * MOV_SPEED;
+    if(move_x < 0)
+        move_x = 0;
+    else if(move_x + PLAYER_HEIGHT > SCREEN_WIDTH)
+        move_x = SCREEN_WIDTH - PLAYER_HEIGHT;
+
+    this->setPos(move_x, this->y());
 }

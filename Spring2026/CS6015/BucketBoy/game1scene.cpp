@@ -73,12 +73,4 @@ void game1scene::update()
         delete drop;
     }
 
-    //TODO: update score
-
-    if(lives <= 0)
-    {
-        //Update text and stop timer
-        update_timer->stop();
-    }
-
 }
