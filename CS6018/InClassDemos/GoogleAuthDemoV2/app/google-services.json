@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "270503786555",
+    "project_id": "inclassfirebasedemo-b5391",
+    "storage_bucket": "inclassfirebasedemo-b5391.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:270503786555:android:6e0f98a8e27bb73523c41e",
+        "android_client_info": {
+          "package_name": "com.example.googleauthdemov2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk4RZc-DFY3B0T1JQAUjcGOoE1bxw4nI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
