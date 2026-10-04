@@ -5,7 +5,13 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.compose.CameraXViewfinder
+import androidx.camera.core.CameraSelector
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,8 +20,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -39,7 +47,13 @@ fun CameraScreen(modifier : Modifier, viewModel: CamViewModel = viewModel()){
     }
 
     if(hasPermission){
-        CameraPreview(modifier = modifier, viewModel = viewModel)
+        Box( modifier = Modifier.fillMaxSize()){
+            CameraPreview(modifier = Modifier, viewModel = viewModel)
+            SwapButton(modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 32.dp),
+            viewModel::toggleCamera)
+        }
     } else {
         Text("Camera permission is required.", modifier = modifier)
     }
@@ -60,5 +74,16 @@ fun CameraPreview(modifier: Modifier = Modifier, viewModel: CamViewModel){
             surfaceRequest = request,
             modifier = modifier.fillMaxSize()
         )
+    }
+}
+
+@Composable
+fun SwapButton(modifier: Modifier = Modifier, toggleCamera: () -> Unit){
+    var camFaceForward by remember {mutableStateOf(true)}
+    Button(onClick = {
+        camFaceForward = !camFaceForward;
+        toggleCamera();
+    }, modifier = modifier) {
+        Text("Swap")
     }
 }
