@@ -1,10 +1,10 @@
 package com.example.a4camera
 
+import android.app.Application
 import android.content.ContentValues
 import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
-import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
@@ -13,12 +13,10 @@ import androidx.camera.core.Preview
 import androidx.camera.core.SurfaceRequest
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
-import androidx.compose.runtime.currentComposer
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,9 +25,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.Closeable
 import java.util.concurrent.Executors
 
-class CamViewModel : ViewModel(){
+class CamViewModel(application: Application) : AndroidViewModel(application) {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
     val surfaceRequest: StateFlow<SurfaceRequest?> = _surfaceRequest.asStateFlow()
 
@@ -40,6 +39,7 @@ class CamViewModel : ViewModel(){
 
     private val _analysisMode = MutableStateFlow(AnalysisMode.BRIGHTNESS)
     val analysisMode: StateFlow<AnalysisMode> = _analysisMode.asStateFlow()
+    private var currentAnalyzer: ImageAnalysis.Analyzer? = null
 
     private val _analysisResult = MutableStateFlow<AnalysisResult?>(null)
     val analysisResult: StateFlow<AnalysisResult?> = _analysisResult.asStateFlow()
@@ -60,23 +60,6 @@ class CamViewModel : ViewModel(){
         .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
         .build()
 
-    init{
-        viewModelScope.launch{
-            _analysisMode.collect { mode ->
-                _analysisResult.value = null
-                imageAnalysisUseCase.setAnalyzer(analysisExecutor, analyzerFor(mode))
-            }
-        }
-    }
-
-    private fun analyzerFor(mode: AnalysisMode): ImageAnalysis.Analyzer = when(mode) {
-        AnalysisMode.BRIGHTNESS -> BrightnessAnalyzer(threshold = 120) { result ->
-            _analysisResult.value = result
-        }
-        AnalysisMode.ML_KIT -> ImageAnalysis.Analyzer{ image -> image.close()} //TODO: STUB
-        AnalysisMode.EFF_DET -> ImageAnalysis.Analyzer{ image -> image.close()} //TODO: STUB
-    }
-
     fun setAnalysisMode(mode: AnalysisMode){
         _analysisMode.value = mode
     }
@@ -91,6 +74,36 @@ class CamViewModel : ViewModel(){
         } finally {
             cameraProvider.unbindAll()
         }
+    }
+
+    init {
+        viewModelScope.launch {
+            _analysisMode.collect { mode ->
+                _analysisResult.value = null
+                val old = currentAnalyzer
+                val new = analyzerFor(mode)
+                imageAnalysisUseCase.setAnalyzer(analysisExecutor, new)
+                currentAnalyzer = new
+                if (old is Closeable) analysisExecutor.execute { old.close() }
+            }
+        }
+    }
+
+    private fun analyzerFor(mode: AnalysisMode): ImageAnalysis.Analyzer = when (mode) {
+        AnalysisMode.BRIGHTNESS -> BrightnessAnalyzer(threshold = 200, onResult = ::publish)
+        AnalysisMode.ML_KIT -> MlKitAnalyzer(::publish)
+        AnalysisMode.EFF_DET -> EfficientDetAnalyzer(getApplication(), ::publish)
+    }
+
+    private fun publish(result: AnalysisResult) {
+        _analysisResult.value = result
+    }
+
+    override fun onCleared() {
+        imageAnalysisUseCase.clearAnalyzer()
+        val last = currentAnalyzer
+        if (last is Closeable) analysisExecutor.execute { last.close() }
+        analysisExecutor.shutdown()
     }
 
     fun toggleCamera()
