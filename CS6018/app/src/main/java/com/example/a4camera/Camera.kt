@@ -5,23 +5,24 @@ import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.compose.CameraXViewfinder
-import androidx.camera.core.CameraSelector
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -49,10 +50,17 @@ fun CameraScreen(modifier : Modifier, viewModel: CamViewModel = viewModel()){
     if(hasPermission){
         Box( modifier = Modifier.fillMaxSize()){
             CameraPreview(modifier = Modifier, viewModel = viewModel)
-            SwapButton(modifier = Modifier
+            AnalysisOverlay(modifier = Modifier.fillMaxSize(), viewModel = viewModel)
+            Row(modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 32.dp),
-            viewModel::toggleCamera)
+                .padding(bottom = 32.dp)) {
+                SwapButton(
+                    modifier = Modifier,
+                    viewModel::toggleCamera
+                )
+                Button(onClick = {viewModel.takePicture(context.applicationContext)})
+                { Text("Take Picture")}
+            }
         }
     } else {
         Text("Camera permission is required.", modifier = modifier)
@@ -74,6 +82,23 @@ fun CameraPreview(modifier: Modifier = Modifier, viewModel: CamViewModel){
             surfaceRequest = request,
             modifier = modifier.fillMaxSize()
         )
+    }
+}
+
+@Composable
+fun AnalysisOverlay(modifier: Modifier = Modifier, viewModel: CamViewModel)
+{
+    val result by viewModel.analysisResult.collectAsStateWithLifecycle()
+    val isFront by viewModel.isFrontCamera.collectAsStateWithLifecycle()
+
+    when (val r = result){
+        is AnalysisResult.Overlay -> Image(
+            bitmap = r.bitmap.asImageBitmap(),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = modifier.graphicsLayer{scaleX = if (isFront) -1f else 1f}
+        )
+        null -> Unit
     }
 }
 
