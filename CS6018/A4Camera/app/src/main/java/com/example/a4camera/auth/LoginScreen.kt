@@ -1,6 +1,5 @@
 package com.example.a4camera.auth
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,26 +14,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.a4camera.CameraScreen
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 @Composable
 fun LoginScreen(
     message: String,
-    onSignIn: (email: String, password: String) -> Unit,
-    onSignUp: (email: String, password: String) -> Unit,
+    onSignIn: (username: String, password: String) -> Unit,
+    onSignUp: (username: String, password: String) -> Unit,
     modifier : Modifier = Modifier){
 
-    var email by rememberSaveable { mutableStateOf("") }
+    var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
     Column(
@@ -48,9 +42,9 @@ fun LoginScreen(
         )
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Username") }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -65,13 +59,13 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Row {
-            Button(onClick = {onSignIn(email, password)},
+            Button(onClick = {onSignIn(username, password)},
                 modifier = Modifier.width(120.dp)) {
                 Text("Login")
             }
             Spacer(modifier = Modifier.width(16.dp))
 
-            Button(onClick = {onSignUp(email, password)},
+            Button(onClick = {onSignUp(username, password)},
                 modifier = Modifier.width(120.dp)) {
                 Text("Sign up")
             }
