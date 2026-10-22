@@ -14,10 +14,20 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.Serializable
+import io.ktor.client.call.body
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.readRawBytes
 
 @Serializable
 data class Credentials(val username: String, val password: String)
 
+@Serializable
+data class UploadResponse(val id: UInt)
+
+@Serializable
+data class PhotoInfo(val id: UInt, val createdAt: Long)
 class ApiException(val status: HttpStatusCode, message: String) : Exception(message)
 
 object ServerApi {
@@ -62,5 +72,29 @@ object ServerApi {
         } finally {
             sessionToken = null  // clear locally even if the server call fails
         }
+    }
+
+    suspend fun uploadPhoto(bytes: ByteArray): UInt {
+        val res = client.post("/photos") {
+            contentType(ContentType.Image.JPEG)
+            setBody(bytes)
+        }
+        if (!res.status.isSuccess()) throw ApiException(res.status, res.bodyAsText())
+        return res.body<UploadResponse>().id
+    }
+
+    private suspend fun HttpResponse.requireSuccess(): HttpResponse {
+        if (!status.isSuccess()) throw ApiException(status, bodyAsText())
+        return this
+    }
+
+    suspend fun listPhotos(): List<PhotoInfo> =
+        client.get("/photos").requireSuccess().body()
+
+    suspend fun downloadPhoto(id: UInt): ByteArray =
+        client.get("/photos/$id").requireSuccess().readRawBytes()
+
+    suspend fun deletePhoto(id: UInt) {
+        client.delete("/photos/$id").requireSuccess()
     }
 }

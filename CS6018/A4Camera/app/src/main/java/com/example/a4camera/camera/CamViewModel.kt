@@ -27,6 +27,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.Closeable
 import java.util.concurrent.Executors
+import com.example.a4camera.network.ServerApi
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 class CamViewModel(application: Application) : AndroidViewModel(application) {
     private val _surfaceRequest = MutableStateFlow<SurfaceRequest?>(null)
@@ -43,6 +48,9 @@ class CamViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _analysisResult = MutableStateFlow<AnalysisResult?>(null)
     val analysisResult: StateFlow<AnalysisResult?> = _analysisResult.asStateFlow()
+
+    private val _uploadStatus = MutableStateFlow<String?>(null)
+    val uploadStatus: StateFlow<String?> = _uploadStatus.asStateFlow()
 
     private val analysisExecutor = Executors.newSingleThreadExecutor()
 
@@ -140,6 +148,7 @@ class CamViewModel(application: Application) : AndroidViewModel(application) {
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     Log.d("CamViewModel", "Capture saved! To: ${output.savedUri}")
+                    output.savedUri?.let { upload(appContext, it) }
                 }
 
                 override fun onError(exception: ImageCaptureException){
@@ -147,5 +156,28 @@ class CamViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         )
+    }
+
+    private fun upload(appContext: Context, uri: android.net.Uri) {
+        viewModelScope.launch {
+            _uploadStatus.value = "Uploading..."
+            val result = try {
+                val bytes = withContext(Dispatchers.IO) {
+                    appContext.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+                        ?: error("Could not read saved photo")
+                }
+                val id = ServerApi.uploadPhoto(bytes)
+                "Uploaded (#$id)"
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e("CamViewModel", "Upload failed", e)
+                "Upload failed"
+            }
+            _uploadStatus.value = result
+            delay(3000)
+            // Only clear if a newer upload hasn't replaced the message
+            if (_uploadStatus.value == result) _uploadStatus.value = null
+        }
     }
 }

@@ -41,9 +41,11 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.max
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 
 @Composable
-fun CameraScreen(modifier : Modifier, onSignOut: () -> Unit, viewModel: CamViewModel = viewModel()){
+fun CameraScreen(modifier : Modifier, onOpenGallery: () -> Unit, viewModel: CamViewModel = viewModel()){
     val context = LocalContext.current
     var hasPermission by remember{
         mutableStateOf(
@@ -90,8 +92,19 @@ fun CameraScreen(modifier : Modifier, onSignOut: () -> Unit, viewModel: CamViewM
                 )
                 Button(onClick = {viewModel.takePicture(context.applicationContext)})
                 { Text("Take Picture")}
-                Button(onClick = {onSignOut()})
-                { Text("Sign Out")}
+                Button(onClick = onOpenGallery) { Text("Gallery") }
+            }
+            val uploadStatus by viewModel.uploadStatus.collectAsStateWithLifecycle()
+            uploadStatus?.let { status ->
+                Text(
+                    text = status,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 96.dp)
+                        .background(Color.Black.copy(alpha = 0.6f), RoundedCornerShape(8.dp))
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                )
             }
         }
     } else {
