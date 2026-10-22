@@ -43,7 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.max
 
 @Composable
-fun CameraScreen(modifier : Modifier, viewModel: CamViewModel = viewModel()){
+fun CameraScreen(modifier : Modifier, onSignOut: () -> Unit, viewModel: CamViewModel = viewModel()){
     val context = LocalContext.current
     var hasPermission by remember{
         mutableStateOf(
@@ -60,7 +60,7 @@ fun CameraScreen(modifier : Modifier, viewModel: CamViewModel = viewModel()){
     }
 
     if(hasPermission){
-        Box( modifier = Modifier.fillMaxSize()){
+        Box( modifier = modifier.fillMaxSize()){
             val mode by viewModel.analysisMode.collectAsStateWithLifecycle()
 
             CameraPreview(modifier = Modifier, viewModel = viewModel)
@@ -90,6 +90,8 @@ fun CameraScreen(modifier : Modifier, viewModel: CamViewModel = viewModel()){
                 )
                 Button(onClick = {viewModel.takePicture(context.applicationContext)})
                 { Text("Take Picture")}
+                Button(onClick = {onSignOut()})
+                { Text("Sign Out")}
             }
         }
     } else {

@@ -12,6 +12,8 @@ cameraX = "1.6.1"
 media3Effect = "1.11.1"
 mlkitObjectDetection = "17.0.2"
 mediapipeTasksVision = "0.10.26"
+firebaseBom = "34.19.0"
+googleServices = "4.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,4 +43,4 @@ mediapipe-tasks-vision = { group = "com.google.mediapipe", name = "tasks-vision"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
