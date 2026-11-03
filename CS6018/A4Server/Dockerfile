@@ -1,20 +1,22 @@
-# Build the Ktor application inside a Linux container
-FROM eclipse-temurin:21-jdk AS build
+# B# Build the Ktor application inside a Linux container
+   FROM eclipse-temurin:21-jdk AS build
 
-WORKDIR /app
+   WORKDIR /app
 
-COPY . .
+   COPY . .
 
-RUN chmod +x gradlew
-RUN ./gradlew installDist --no-daemon
+   # Strip Windows line endings from gradlew, then make it executable
+   RUN sed -i 's/\r$//' gradlew && chmod +x gradlew
+   RUN ./gradlew installDist --no-daemon
 
-# Run only the packaged application
-FROM eclipse-temurin:21-jre
+   # Run only the packaged application
+   FROM eclipse-temurin:21-jre
 
-WORKDIR /app
+   WORKDIR /app
 
-COPY --from=build /app/build/install/ktor-server-6018/ ./
+   COPY --from=build /app/build/install/ktor-server-6018/ ./
 
-EXPOSE 8080
+   ENV PHOTO_DIR=/data/photos
+   EXPOSE 8080
 
-ENTRYPOINT ["./bin/ktor-server-6018"]
+   ENTRYPOINT ["./bin/ktor-server-6018"]

@@ -1,9 +1,29 @@
-name: ktor-notes-demo
+name: a4-camera
 
 services:
-  notes-server:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      LDAP_URL: ldap://openldap:1389
+      LDAP_USERS_DN: ou=users,dc=example,dc=org
+      LDAP_ADMIN_DN: cn=admin,dc=example,dc=org
+      LDAP_ADMIN_PASSWORD: adminpassword
+    depends_on:
+      - openldap
+
+  openldap:
+    image: ghcr.io/ripolin/openldap:2.6.13
+    environment:
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: adminpassword
+      LDAP_USERS: jon,alice
+      LDAP_PASSWORDS: secret1,secret2
+    volumes:
+      - ldap_data:/bitnami/openldap
+
+volumes:
+  ldap_data:

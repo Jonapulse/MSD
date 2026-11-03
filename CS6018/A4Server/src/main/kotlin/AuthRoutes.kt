@@ -8,35 +8,39 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
-import org.mindrot.jbcrypt.BCrypt
 
 @Serializable
 data class Credentials(val username: String, val password: String)
 
-suspend fun Application.configureAuthRoutes() {
-    val users = UsersDAO(DatabaseConnection.database).also { it.createSchema() }
+// Usernames go into an LDAP DN, so only allow characters with no special meaning there
+private val USERNAME_REGEX = Regex("^[A-Za-z0-9_.-]{1,50}$")
+
+fun Application.configureAuthRoutes() {
+    val directory = createUserDirectory()
 
     routing {
         post("/register") {
             val creds = call.receive<Credentials>()
-            if (creds.username.isBlank() || creds.password.length < 4) {
+            if (!creds.username.matches(USERNAME_REGEX) || creds.password.length < 4) {
                 return@post call.respond(HttpStatusCode.BadRequest, "Invalid username or password")
             }
-            if (users.findByUsername(creds.username) != null) {
+            if (!directory.register(creds.username, creds.password)) {
                 return@post call.respond(HttpStatusCode.Conflict, "Username taken")
             }
-            users.create(creds.username, BCrypt.hashpw(creds.password, BCrypt.gensalt()))
             call.sessions.set(UserSession(creds.username))
             call.respond(HttpStatusCode.Created)
         }
 
         post("/login") {
             val creds = call.receive<Credentials>()
-            val user = users.findByUsername(creds.username)
-            if (user == null || !BCrypt.checkpw(creds.password, user.passwordHash)) {
+            // Empty password must be rejected here: LDAP treats it as an anonymous bind
+            val valid = creds.username.matches(USERNAME_REGEX) &&
+                    creds.password.isNotEmpty() &&
+                    directory.authenticate(creds.username, creds.password)
+            if (!valid) {
                 return@post call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
             }
-            call.sessions.set(UserSession(user.username))
+            call.sessions.set(UserSession(creds.username))
             call.respond(HttpStatusCode.OK)
         }
 

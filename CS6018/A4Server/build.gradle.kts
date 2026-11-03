@@ -36,6 +36,8 @@ dependencies {
     implementation(ktorLibs.server.auth)
     implementation(ktorLibs.server.sessions)
     implementation(libs.jbcrypt)
+
+    implementation(ktorLibs.server.auth.ldap)
 }
 
 tasks.test {
