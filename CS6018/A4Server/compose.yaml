@@ -12,8 +12,10 @@ services:
       LDAP_USERS_DN: ou=users,dc=example,dc=org
       LDAP_ADMIN_DN: cn=admin,dc=example,dc=org
       LDAP_ADMIN_PASSWORD: adminpassword
+      ML_URL: http://ml:8000
     depends_on:
       - openldap
+      - ml
 
   openldap:
     image: ghcr.io/ripolin/openldap:2.6.13
@@ -24,6 +26,10 @@ services:
       LDAP_PASSWORDS: secret1,secret2
     volumes:
       - ldap_data:/bitnami/openldap
+
+  ml:
+    build:
+      context: ./ml
 
 volumes:
   ldap_data:

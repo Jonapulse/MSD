@@ -38,6 +38,10 @@ dependencies {
     implementation(libs.jbcrypt)
 
     implementation(ktorLibs.server.auth.ldap)
+
+    implementation(ktorLibs.client.core)
+    implementation(ktorLibs.client.cio)
+    implementation(ktorLibs.client.contentNegotiation)
 }
 
 tasks.test {
