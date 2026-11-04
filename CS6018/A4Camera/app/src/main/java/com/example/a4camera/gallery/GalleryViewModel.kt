@@ -18,7 +18,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.nio.ByteBuffer
 
-data class FullPhoto(val id: UInt, val bitmap: ImageBitmap?)
+data class FullPhoto(
+    val id: UInt,
+    val bitmap: ImageBitmap?,
+    val caption: String? = null,
+    val analyzing: Boolean = false
+)
 
 class GalleryViewModel : ViewModel() {
     private val _photos = MutableStateFlow<List<PhotoInfo>>(emptyList())
@@ -74,8 +79,7 @@ class GalleryViewModel : ViewModel() {
             try {
                 val bytes = ServerApi.downloadPhoto(id)
                 val bitmap = withContext(Dispatchers.Default) { decode(bytes, maxSide = 2048) }
-                // Ignore the result if the user already closed or switched photos
-                if (_selected.value?.id == id) _selected.value = FullPhoto(id, bitmap)
+                _selected.update { if (it?.id == id) it.copy(bitmap = bitmap) else it }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -83,6 +87,22 @@ class GalleryViewModel : ViewModel() {
                 _status.value = "Couldn't open photo"
                 _selected.value = null
             }
+        }
+    }
+
+    fun analyze(id: UInt) {
+        _selected.update { if (it?.id == id) it.copy(analyzing = true, caption = null) else it }
+        viewModelScope.launch {
+            val text = try {
+                ServerApi.analyzePhoto(id)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Log.e("GalleryViewModel", "Analyze $id failed", e)
+                "Analysis failed"
+            }
+            // Only apply if the user is still looking at this photo
+            _selected.update { if (it?.id == id) it.copy(analyzing = false, caption = text) else it }
         }
     }
 

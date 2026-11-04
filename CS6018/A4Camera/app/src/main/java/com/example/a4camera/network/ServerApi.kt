@@ -19,6 +19,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.readRawBytes
+import io.ktor.client.plugins.HttpTimeout
 
 @Serializable
 data class Credentials(val username: String, val password: String)
@@ -28,6 +29,9 @@ data class UploadResponse(val id: UInt)
 
 @Serializable
 data class PhotoInfo(val id: UInt, val createdAt: Long)
+
+@Serializable
+data class CaptionResponse(val caption: String)
 class ApiException(val status: HttpStatusCode, message: String) : Exception(message)
 
 object ServerApi {
@@ -45,6 +49,10 @@ object ServerApi {
     }
 
     val client = HttpClient(OkHttp) {
+        install(HttpTimeout) {
+            requestTimeoutMillis = 60_000
+            socketTimeoutMillis = 60_000
+        }
         install(ContentNegotiation) { json() }
         install(SessionHeader)
         defaultRequest { url(BASE_URL) }
@@ -97,4 +105,7 @@ object ServerApi {
     suspend fun deletePhoto(id: UInt) {
         client.delete("/photos/$id").requireSuccess()
     }
+
+    suspend fun analyzePhoto(id: UInt): String =
+        client.post("/photos/$id/analysis").requireSuccess().body<CaptionResponse>().caption
 }

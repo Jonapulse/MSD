@@ -32,6 +32,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 
 @Composable
 fun GalleryScreen(
@@ -57,6 +59,7 @@ fun GalleryScreen(
         FullPhotoView(
             photo = photo,
             onClose = viewModel::closePhoto,
+            onAnalyze = { viewModel.analyze(photo.id) },
             onDelete = { viewModel.delete(photo.id) },
             modifier = modifier
         )
@@ -113,29 +116,50 @@ fun GalleryScreen(
 private fun FullPhotoView(
     photo: FullPhoto,
     onClose: () -> Unit,
+    onAnalyze: () -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier.fillMaxSize()) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(onClick = onClose) { Text("Back") }
             Spacer(Modifier.weight(1f))
+            Button(onClick = onAnalyze, enabled = !photo.analyzing) { Text("Analyze") }
             Button(
                 onClick = onDelete,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) { Text("Delete") }
         }
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+
+        when {
+            photo.analyzing -> Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp)
+                Spacer(Modifier.width(8.dp))
+                Text("Analyzing...")
+            }
+            photo.caption != null -> Text(
+                text = photo.caption,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+        }
+
+        // weight(1f) so the image takes the remaining space instead of pushing the caption off screen
+        Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
             val bitmap = photo.bitmap
             if (bitmap == null) {
                 CircularProgressIndicator()
             } else {
                 Image(
                     bitmap = bitmap,
-                    contentDescription = "Photo ${photo.id}",
+                    contentDescription = photo.caption ?: "Photo ${photo.id}",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.fillMaxSize()
                 )
